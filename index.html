@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>京丹雅行・紅葉海岸十日慢旅</title>
+<meta name="description" content="京都、奈良、京丹後與舞鶴 10 日慢旅行程，含紅葉機動方案、每日景點、天氣、行李與家人共享。">
+<meta property="og:title" content="京丹雅行・紅葉海岸十日慢旅">
+<meta property="og:description" content="京都・奈良・丹後 10 日慢旅行程與家人共享指南。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+</head>
+<body class="family-locked">
+<div id="familyGate" class="family-gate" aria-hidden="false">
+  <div class="family-gate-card">
+    <div class="family-gate-icon">🌿</div>
+    <h2>京都・奈良・丹後家庭旅行</h2>
+    <p>請輸入家人共用密碼後進入。所有裝置會共用同一份景點、照片、購物與餐點資料。</p>
+    <input id="familyGateInput" type="password" inputmode="text" autocomplete="current-password" placeholder="家人共用密碼">
+    <button id="familyGateButton" type="button">進入行程</button>
+    <div id="familyGateError" class="family-gate-error" role="alert"></div>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- Header -->
+  <div class="header" id="main-header" style="background-size: cover; background-position: center;">
+    <div class="net-status" id="netStatus"><span class="net-dot online"></span><span class="net-txt">線上</span></div>
+    <div class="cloud-sync-status" id="cloudSyncStatus">☁️ 家人共享同步中</div>
+    <div class="eyebrow">KYOTO · NARA · TANGO, JAPAN</div>
+    <h1>京丹雅行<br>紅葉、古都與海岸的十日慢旅</h1>
+    <div class="dates">📅 2026.11.27 出發 – 12.06 抵台・10天9夜</div>
+    <div class="stat-row">
+      <div class="stat"><b>10</b><span>旅行天數</span></div>
+      <div class="stat"><b>6</b><span>住宿地</span></div>
+      <div class="stat"><b id="spotCount">--</b><span>精選推薦</span></div>
+    </div>
+  </div>
+
+  <!-- Top Tabs -->
+  <div class="tabbar-top">
+    <button class="tab-btn active" onclick="setTab('itinerary')">🚗 行程</button>
+    <button class="tab-btn" onclick="setTab('route')">🗺️ 環線</button>
+    <button class="tab-btn" onclick="setTab('guide')">🧳 指南</button>
+    <button class="tab-btn" onclick="setTab('weather')">☀️ 天氣</button>
+  </div>
+
+  <!-- ================= ITINERARY VIEW ================= -->
+  <div class="view active" id="view-itinerary">
+    <div class="day-scroll" id="dayScroll"></div>
+    <div id="dayContent"></div>
+  </div>
+
+  <!-- ================= ROUTE MAP VIEW ================= -->
+  <div class="view" id="view-route">
+    <div class="map-wrap" style="margin-top:0; padding-bottom:24px;">
+      <h3 style="margin:0 0 10px; font-size:18px; font-weight:900; text-align:center; color:var(--ink);">🗺️ 京都・奈良・丹後 10 日移動路線</h3>
+      
+      <div id="kyotoTangoRouteMap" class="svg-map-container" style="position:relative;">
+        <img id="handDrawnMapImg" src="images/map.webp" alt="京都、奈良、龜岡、京丹後、天橋立與舞鶴 10 日紅葉慢旅行程手繪地圖" loading="lazy" class="route-main-image" onclick="openAttachModal('images/map.webp')">
+        <div id="mapFallback" style="display:none; padding:24px 16px; border:2px dashed #c9e2e9; border-radius:var(--r-md); background:#f7fbfd; text-align:center;">
+          <p style="font-size:13px; color:#2f3a4a; font-weight:700; line-height:1.6; margin-top:0;">⚠️ 找不到地圖圖片！<br><span style="font-size:11px; font-weight:400;">請點擊下方按鈕手動選擇：</span></p>
+          <input type="file" id="mapUploader" style="display:none;" accept="image/*" onchange="loadLocalMap(event)">
+          <button onclick="document.getElementById('mapUploader').click()" style="background:var(--blue); color:#fff; border:none; padding:10px 20px; border-radius:999px; font-size:12px; font-weight:700; cursor:pointer;">📁 手動載入圖片</button>
+        </div>
+      </div>
+      <div class="map-zoom-hint">🔍 點擊手繪地圖可全螢幕放大</div>
+      <div class="route-summary-card">
+        <h4>🍁 D1–D10 路線摘要</h4>
+        <div class="route-summary-grid">
+          <div><b>D1｜11/27</b><span>KIX → 京都站，抵達日輕鬆散步</span></div>
+          <div><b>D2｜11/28</b><span>紅葉機動日：大原／高雄／鞍馬三選一</span></div>
+          <div><b>D3｜11/29</b><span>東山：真如堂 → 永觀堂 → 南禪寺</span></div>
+          <div><b>D4｜11/30</b><span>修學院 → 宇治 → 奈良</span></div>
+          <div><b>D5｜12/1</b><span>奈良 → 龜岡 → 保津川／嵐山</span></div>
+          <div><b>D6｜12/2</b><span>龜岡 → 龍穩寺 → 綾部 → 京丹後</span></div>
+          <div><b>D7｜12/3</b><span>京丹後海岸慢遊 → 艸花入住</span></div>
+          <div><b>D8｜12/4</b><span>金剛院 → 天橋立 → 西舞鶴</span></div>
+          <div><b>D9｜12/5</b><span>舞鶴市場・五老塔・紅磚公園 → 京都</span></div>
+          <div><b>D10｜12/6</b><span>西本願寺 → 京都御苑 → 下鴨神社 → KIX</span></div>
+        </div>
+      </div>
+      <a href="https://www.google.com/maps/dir/Kyoto/Nara/Kameoka/Kyotango/Amanohashidate/Maizuru/Kyoto" target="_blank" rel="noopener" class="btn btn-map" style="display:flex; margin-top:12px; text-decoration:none;">🗺️ 在 Google 地圖開啟主要路線</a>
+    </div>
+
+    <!-- Flights -->
+    <div class="section-card">
+      <h3>✈️ 飛航與主要交通</h3>
+      <div class="flight-box"><div class="ftitle">🛫 去程 TPE → KIX</div><div class="flight-row"><span>日期</span><span>2026.11.27</span></div><div class="flight-row"><span>時間</span><span>08:05 → 11:35</span></div><div class="flight-row"><span>接續</span><span>HARUKA 前往京都站</span></div></div>
+      <div class="flight-box"><div class="ftitle">🛬 回程 KIX → TPE</div><div class="flight-row"><span>日期</span><span>2026.12.06</span></div><div class="flight-row"><span>時間</span><span>19:00 → 21:15</span></div><div class="flight-row"><span>建議</span><span>15:00 前從京都站出發</span></div></div>
+      <div class="source-note">※ 航班、HARUKA 與租車時間仍以最終票券為準。</div>
+    </div>
+
+    <!-- Docs -->
+    <div class="section-card">
+      <h3>📁 行程票券與住宿總匯</h3>
+      <div class="sub">可上傳憑證截圖。點擊「出示截圖」即可全螢幕放大給櫃檯人員確認！</div>
+      <div id="docsListWrap"></div>
+    </div>
+    
+    <!-- Driving -->
+    <div class="section-card">
+      <h3>🚗 自駕與季節提醒</h3>
+      <div class="sub">12/1 奈良取車，12/5 京都還車；丹後與舞鶴建議冬季胎。</div>
+      <div class="rule-item"><span class="dot">🚣</span><span><b>保津川：</b>漂流依天候、風況與當日營運決定，雨風版改搭 JR。</span></div>
+      <div class="rule-item"><span class="dot">❄️</span><span><b>北部道路：</b>京丹後、舞鶴與山區可能低溫，取車時確認冬季胎與保險。</span></div>
+      <div class="rule-item"><span class="dot">🌇</span><span><b>日照：</b>12 月日落早，戶外景點盡量在 16:00 前完成。</span></div>
+    </div>
+  </div>
+
+  <!-- ================= GUIDE VIEW ================= -->
+  <div class="view" id="view-guide">
+
+    <div class="section-card">
+      <h3>🎒 行李打包清單</h3>
+      <div class="sub">京都 11 月底至 12 月初早晚偏冷，山區與丹後海岸風更強，建議洋蔥式穿搭。點擊項目可勾選完成。</div>
+      <div id="packListWrap"></div>
+    </div>
+
+    <div class="section-card">
+      <h3>🛍️ 京都・丹後購物清單</h3>
+      <div class="sub">記得預留行李空間＆秤重額度。您可以自行上傳商品截圖！</div>
+      <div id="shopListWrap"></div>
+    </div>
+
+    <div class="section-card">
+      <h3>📋 旅遊規範與提醒</h3>
+      <div class="sub">您可以自行新增行前準備規範或攜帶物品注意事項，並附上截圖（如海關申報單範例）。</div>
+      <div id="rulesListWrap"></div>
+    </div>
+
+  </div>
+
+  <!-- ================= WEATHER VIEW ================= -->
+  <div class="view" id="view-weather">
+    <div class="section-card" style="margin-bottom:14px;">
+      <h3>🍁 即時氣象與紅葉季穿搭指南</h3>
+      <div class="sub">串接 Open-Meteo 即時氣象，提供京都、奈良、丹後與舞鶴的氣溫、風雨與穿搭建議。</div>
+      <div class="add-row" style="margin-bottom:10px;">
+        <button onclick="loadLiveWeather()" style="flex:1; background:var(--blue); color:#fff; border:none; border-radius:999px; padding:10px 0; font-family:inherit; font-weight:700; font-size:12.5px; cursor:pointer; box-shadow:var(--shadow-sm);">🔄 取得最新即時氣象與穿搭</button>
+      </div>
+      <div id="liveWeatherList"></div>
+      <div class="source-note" id="liveWeatherTime">即時資料尚未更新</div>
+    </div>
+
+    <div class="section-card" style="margin-bottom:14px;">
+      <h3>🛰️ 即時衛星雲圖</h3>
+      <div class="sub">Windy 即時圖涵蓋京都府、奈良與丹後，可拖曳縮放並重新整理。</div>
+      <div class="add-row" style="margin-bottom:10px;">
+        <button onclick="refreshRainRadar()" style="flex:1; background:var(--blue); color:#fff; border:none; border-radius:999px; padding:10px 0; font-family:inherit; font-weight:700; font-size:12.5px; cursor:pointer; box-shadow:var(--shadow-sm);">🔄 重新整理雲圖</button>
+      </div>
+      <div id="rainRadarMap" class="windy-embed-wrap"></div>
+      <div class="source-note" id="rainRadarTime">衛星雲圖尚未更新</div>
+      <a href="https://www.jma.go.jp/bosai/map.html#5/35.228/135.176/&elem=precipitation&contents=radar" target="_blank" rel="noopener" style="display:block; text-align:center; margin-top:10px; background:#fff; border:1.5px solid var(--blue); color:var(--blue); border-radius:999px; padding:10px 0; font-family:inherit; font-weight:700; font-size:12.5px; text-decoration:none;">🔗 查看日本氣象廳雨雲雷達（另開新分頁）</a>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <button class="nav-btn active" onclick="setTab('itinerary')"><span class="ic">🚗</span><span class="lb">行程</span></button>
+    <button class="nav-btn" onclick="setTab('route')"><span class="ic">🗺️</span><span class="lb">環線</span></button>
+    <button class="nav-btn" onclick="setTab('guide')"><span class="ic">🧳</span><span class="lb">指南</span></button>
+    <button class="nav-btn" onclick="setTab('weather')"><span class="ic">☀️</span><span class="lb">天氣</span></button>
+  </div>
+</div>
+
+<!-- Modal for Images -->
+<div class="attach-modal" id="attachModal" onclick="closeAttachModal()">
+  <button class="attach-modal-close" onclick="event.stopPropagation(); closeAttachModal()">✕</button>
+  <img id="attachModalImg" src="" onclick="event.stopPropagation()">
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
