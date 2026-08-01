@@ -295,7 +295,7 @@ function applyRemoteRow(row, forceApply=false){
 }
 function applyStoreUpdate(key,jsonStr){
   let parsed;try{parsed=JSON.parse(jsonStr);}catch(e){return;}
-  switch(key){case'kyoto_notes':notesStore=parsed;break;case'kyoto_photos':photoStore=parsed;break;case'kyoto_covers':coverStore=parsed;break;case'kyoto_custom_spots':customSpotsStore=parsed;break;case'kyoto_order':orderStore=parsed;break;case'kyoto_block_order':blockOrderStore=parsed;break;case'kyoto_route_maps':routeMapStore=parsed;break;case'kyoto_pack':packData=migratePackCategoryNames(parsed);if(isPackComposerEditing()){window._packRemoteRenderPending=true;}else{renderPackList();}return;case'kyoto_shop':shopData=normalizeStructuredList('kyoto_shop',parsed);renderShopList();return;case'kyoto_rules':rulesData=normalizeStructuredList('kyoto_rules',parsed);renderRulesList();return;case'kyoto_docs':docsData=normalizeStructuredList('kyoto_docs',parsed);renderDocsList();return;case'kyoto_hidden_fixed_spots':hiddenFixedSpotsStore=parsed||{};renderDayContent();return;default:return;}
+  switch(key){case'kyoto_notes':notesStore=parsed;break;case'kyoto_photos':photoStore=parsed;break;case'kyoto_covers':coverStore=parsed;break;case'kyoto_custom_spots':customSpotsStore=parsed;break;case'kyoto_order':orderStore=parsed;break;case'kyoto_block_order':blockOrderStore=parsed;break;case'kyoto_route_maps':routeMapStore=parsed;break;case'kyoto_pack':packData=migratePackCategoryNames(parsed);if(isPackComposerEditing()){window._packRemoteRenderPending=true;}else{renderPackList();}return;case'kyoto_shop':shopData=normalizeStructuredList('kyoto_shop',parsed);renderShopList();return;case'kyoto_rules':rulesData=normalizeStructuredList('kyoto_rules',parsed);renderRulesList();return;case'kyoto_docs':docsData=mergeDocsWithDefaults(parsed);persistDocs();renderDocsList();return;case'kyoto_hidden_fixed_spots':hiddenFixedSpotsStore=parsed||{};renderDayContent();return;default:return;}
   if(typeof renderDayContent==='function')renderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();
 }
 function scheduleCloudPush(key,valueObj){
@@ -791,6 +791,28 @@ Object.keys(notesStore).forEach(k=>{
   }
 });
 function persistNotes(){ safeSetItem('kyoto_notes', notesStore); }
+
+/* 內建「評論與資訊」也可由使用者修改或刪除。undefined=沿用預設、null=隱藏、字串=自訂版本。 */
+let infoOverrideStore = JSON.parse(localStorage.getItem('kyoto_info_overrides') || '{}');
+function persistInfoOverrides(){ safeSetItem('kyoto_info_overrides', infoOverrideStore); }
+function currentBuiltInInfo(key, fallback){
+  return Object.prototype.hasOwnProperty.call(infoOverrideStore,key) ? infoOverrideStore[key] : fallback;
+}
+function editBuiltInInfo(key, fallback){
+  const current=currentBuiltInInfo(key,fallback);
+  const next=prompt('編輯這筆評論與資訊', current==null?'':current);
+  if(next===null)return;
+  const value=next.trim();
+  infoOverrideStore[key]=value||null;
+  persistInfoOverrides(); renderDayContent();
+  setTimeout(()=>document.getElementById('spot-card-'+key)?.classList.add('open'),50);
+}
+function deleteBuiltInInfo(key){
+  if(!confirm('要刪除這筆預設評論與資訊嗎？'))return;
+  infoOverrideStore[key]=null; persistInfoOverrides(); renderDayContent();
+  setTimeout(()=>document.getElementById('spot-card-'+key)?.classList.add('open'),50);
+}
+
 function addNote(key) {
   const input = document.getElementById('note-input-'+key);
   if(!input) return;
@@ -1148,8 +1170,8 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
   
   const infoBits = [];
   if(spot.dur) infoBits.push(`<div class="info-item"><div class="k">建議停留</div><div class="v">${spot.dur}</div></div>`);
-  if(spot.hours) infoBits.push(`<div class="info-item"><div class="k">營業/開放時間</div><div class="v" style="color:#2f8a52;">${spot.hours}</div></div>`);
-  if(spot.note) infoBits.push(`<div class="info-item" style="grid-column: 1 / -1;"><div class="k">重要提點 / 門票</div><div class="v" style="font-weight:500; font-size:11.5px; color:#c1502f;">${spot.note}</div></div>`);
+  if(spot.hours) infoBits.push(`<div class="info-item"><div class="k">營業／開放時間</div><div class="v info-hours">${spot.hours}</div></div>`);
+  if(spot.note) infoBits.push(`<div class="info-item full-w important-info"><div class="k">重要提點／門票</div><div class="v">${spot.note}</div></div>`);
   
   const userPhotos = photoStore[idx] || [];
   let thumbImgs = userPhotos.length > 0 ? userPhotos : (spot.img ? [spot.img] : []);
@@ -1166,13 +1188,14 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
   /* 使用者新增的資訊：可新增多筆，各自獨立刪除，不會互相覆蓋 */
   let userNotes = notesStore[idx] || [];
   let notesListHTML = userNotes.length ? userNotes.map((n,ni)=>`<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-top:6px; padding-top:6px; border-top:1px dashed rgba(0,0,0,0.12);"><span style="flex:1; white-space:pre-line;">${n}</span><span class="note-actions"><button onclick="event.stopPropagation(); editNote('${idx}', ${ni})" title="編輯">✎</button><button onclick="event.stopPropagation(); deleteNote('${idx}', ${ni})" title="刪除">✕</button></span></div>`).join('') : '';
+  const builtInInfo = currentBuiltInInfo(idx, spot.customInfo || null);
   let displayInfo = '';
-  if (spot.customInfo) displayInfo += spot.customInfo;
-  if (notesListHTML) displayInfo += `<div style="margin-top:${spot.customInfo ? '8px' : '0'};"><span style="color:#7A5A42; font-weight:700; font-size:11px;">✏️ 您新增的資訊：</span>${notesListHTML}</div>`;
+  if (builtInInfo) displayInfo += `<div class="built-in-info-row"><span class="built-in-info-text">${builtInInfo}</span><span class="note-actions built-in-actions"><button onclick="event.stopPropagation(); editBuiltInInfo('${idx}', ${JSON.stringify(spot.customInfo||'')})" title="編輯這筆">✎</button><button onclick="event.stopPropagation(); deleteBuiltInInfo('${idx}')" title="刪除這筆">✕</button></span></div>`;
+  if (notesListHTML) displayInfo += `<div class="user-info-list" style="margin-top:${builtInInfo ? '8px' : '0'};"><span class="user-info-label">✏️ 您新增的資訊：</span>${notesListHTML}</div>`;
 
   let customInfoBox = '';
   if (displayInfo) {
-    customInfoBox = `<div class="custom-info-box" onclick="event.stopPropagation()"><b>💬 評論與資訊：</b><br>${displayInfo}<button onclick="toggleEditNote(event, '${idx}')" style="position:absolute; top:8px; right:8px; background:none; border:none; cursor:pointer; font-size:12px; opacity:0.6;">➕ 新增</button></div>`;
+    customInfoBox = `<div class="custom-info-box" onclick="event.stopPropagation()"><div class="custom-info-heading"><b>💬 評論與資訊</b><button class="custom-info-add" onclick="toggleEditNote(event, '${idx}')">＋ 新增</button></div>${displayInfo}</div>`;
   }
 
   let noteEditArea = `<div class="note-edit-area" style="margin-top:10px; display:none;" id="edit-note-${idx}" onclick="event.stopPropagation()"><textarea id="note-input-${idx}" placeholder="新增一筆攻略、必點菜單或提醒...（可重複新增多筆）" style="width:100%; border:1px solid var(--line); border-radius:8px; padding:8px; font-size:12px; font-family:inherit; resize:vertical; min-height:60px; outline:none; margin-bottom:6px;"></textarea><div style="display:flex; gap:6px;"><button onclick="addNote('${idx}')" style="padding:6px 14px; font-size:11px; background:var(--blue); color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:700;">💾 新增這筆</button><button onclick="toggleEditNote(event, '${idx}')" style="padding:6px 14px; font-size:11px; background:#f2f3ec; color:var(--ink); border:none; border-radius:6px; cursor:pointer; font-weight:700;">收合</button></div></div>${!displayInfo ? `<button class="btn-note-toggle" onclick="toggleEditNote(event, '${idx}')" style="background:transparent; border:1px dashed #c1c8cf; border-radius:999px; padding:6px 12px; font-size:11.5px; color:#7A5A42; cursor:pointer; font-family:inherit; margin-top:6px; margin-bottom:10px;" id="btn-note-${idx}">➕ 新增評論與資訊</button>` : ''}`;
@@ -1830,7 +1853,18 @@ const defaultDocsData = [
   {ic:'🚣',t:'保津川漂流',s:'12/1・依天候與營運確認',chip:'機動',link:'',img:null,confirmed:false},
   {ic:'✈️',t:'回程航班 KIX → TPE',s:'12/6 19:00 → 21:19',chip:'待確認',link:'',img:null,confirmed:false}
 ];
-let docsData = normalizeStructuredList('kyoto_docs', JSON.parse(localStorage.getItem('kyoto_docs')) || defaultDocsData);
+function mergeDocsWithDefaults(value){
+  const existing=normalizeStructuredList('kyoto_docs', Array.isArray(value)?value:[]);
+  const map=new Map(existing.map(d=>[String(d.t||'').trim(),d]));
+  defaultDocsData.forEach(def=>{
+    const key=String(def.t||'').trim();
+    map.set(key,map.has(key)?{...def,...map.get(key)}:{...def});
+  });
+  return [...map.values()];
+}
+let docsData = mergeDocsWithDefaults(JSON.parse(localStorage.getItem('kyoto_docs')||'null'));
+/* 把舊版缺少的住宿卡補回本機／雲端。 */
+setTimeout(()=>persistDocs(),0);
 function persistDocs(){ safeSetItem('kyoto_docs', docsData); }
 
 function renderDocsList() {
@@ -1943,6 +1977,120 @@ function removeUnneededUtilityUI(){
   });
 }
 
+
+
+/* ============ 餐飲內容精修：每間店改為具體介紹，不再套用通用句型 ============ */
+(function refineKyotoFoodCopy(){
+  const all=()=>days.flatMap(d=>[...(d.spots||[]),...(d.moreSpots||[])]);
+  const copy={
+    '京豆富不二乃':{
+      desc:'京都站伊勢丹內的豆腐料理專門店，以京豆腐、湯葉與豆乳料理組成套餐。',
+      fullDesc:'京豆富不二乃位於 JR 京都伊勢丹，以京都藤野豆腐的豆腐、湯葉與豆乳製品為核心。套餐通常會把冷豆腐、湯豆腐、田樂、湯葉或豆乳甜點依不同形式組合，口味清雅但品項豐富。座位在車站百貨內，抵達日不用再拖行李跨區移動，特別適合想吃一頓安穩京都料理的人。它不是追求濃重調味的店，而是用大豆香氣與細緻口感呈現京都家常料理的溫和層次。'
+    },
+    '名代とんかつ かつくら':{
+      desc:'京都起家的炸豬排店，主打厚切豬排、現磨芝麻醬與麥飯高麗菜。',
+      fullDesc:'名代とんかつ かつくら是京都發跡的炸豬排品牌，特色是麵衣薄而酥、肉排仍保有水分。上桌前可自行研磨芝麻，再加入店家的濃口或甘口醬汁調整味道。套餐通常搭配麥飯、味噌湯與高麗菜，適合剛抵達京都、需要一頓飽足但不必研究菜單太久的晚餐。京都站店交通方便，尖峰時段容易候位，可把它視為車站內的可靠選項而非一定要久排的名店。'
+    },
+    '京都鶏白湯そば 純':{
+      desc:'以濃厚雞白湯為主角的拉麵店，湯頭乳白滑順並搭配雞叉燒。',
+      fullDesc:'京都鶏白湯そば 純以長時間熬煮的雞白湯為主軸，湯色乳白、質地濃稠，卻比豚骨少一點厚重油脂感。麵體與雞叉燒會承接湯汁，常見配料包含洋蔥、蔥與調味蛋，讓濃湯多一些清爽層次。它適合抵達日想快速吃熱食、又不想安排正式會席的情況。店面座位與供應數量有限，若現場排隊太長，可直接改吃京都站 Porta 內其他麵店。'
+    },
+    '京都天ぷら天天天':{
+      desc:'以現炸天婦羅搭配季節食材的料理店，適合安排較完整的晚餐。',
+      fullDesc:'京都天ぷら天天天以現點現炸的天婦羅為核心，會依季節使用蔬菜、魚介與京都食材。天婦羅分批上桌，可依食材選擇鹽、天露或檸檬，口感比一次盛盤更能維持酥脆。秋冬菜色通常會出現根菜、菇類與較有旨味的魚介，適合在紅葉行程後慢慢用餐。這類店的價值在炸製節奏與食材狀態，建議預約並保留完整用餐時間，不要塞在需要趕路的晚上。'
+    },
+    '京の焼肉処 弘':{
+      desc:'京都在地燒肉品牌，擅長以多部位和牛與內臟拼盤呈現肉質差異。',
+      fullDesc:'京の焼肉処 弘是京都常見的在地燒肉品牌，菜單從赤身、霜降部位到內臟都有完整選擇。適合多人點拼盤共享，用不同厚度與油脂比例比較各部位，而不是只集中點高霜降肉。部分分店由町家改造，空間較有京都氣氛，但各店菜單與座位型態不完全相同。晚餐熱門時段建議先訂位，並確認預約的是哪一家分店，避免跑錯地址。'
+    },
+    '空蟬亭':{
+      desc:'以熟成豬肉與炸豬排為特色的小店，重點是肉質甜味與低溫火候。',
+      fullDesc:'空蟬亭以豬肉料理與炸豬排聞名，會依肉品部位與熟成狀態調整炸製方式。成品通常保留柔嫩中心與細緻肉汁，和傳統全熟、厚重醬汁型炸豬排的方向不同。店內座位不多，用餐節奏偏向專心品嘗主菜，而不是快速翻桌的大型餐廳。若想安排這家，建議事前確認當日供應與預約方式，避免到了現場才發現售完。'
+    },
+    'DRAGON BURGER':{
+      desc:'東福寺附近的京都風漢堡店，把九條蔥、柴漬等元素放進漢堡。',
+      fullDesc:'DRAGON BURGER 位於東福寺周邊，特色是以漢堡形式結合京都食材與日式調味。菜單常見九條蔥、柴漬、柚子或味噌等元素，整體仍保留牛肉漢堡的飽足感。店面適合從東福寺或東山行程中間停下來吃一頓，不需要再進市中心找午餐。紅葉旺季周邊人流大，若候位過久，應以不影響永觀堂與南禪寺入場時間為優先。'
+    },
+    '祇園辻利':{
+      desc:'祇園老字號宇治茶店，可品嘗抹茶甜點、茶飲與季節限定品。',
+      fullDesc:'祇園辻利以宇治茶與抹茶製品為主，從單純茶飲到聖代、霜淇淋與伴手禮都有選擇。抹茶甜點的重點在茶味與苦甜平衡，不只是鮮綠色外觀。若只想補充體力，可外帶茶飲或霜淇淋；想坐下休息則要把候位時間算進去。祇園店在觀光旺季經常排隊，不必為了吃到指定品項犧牲東山主要景點。'
+    },
+    '辻利兵衛本店':{
+      desc:'宇治老茶舖的本店茶寮，以濃厚抹茶甜點與日式庭院空間見長。',
+      fullDesc:'辻利兵衛本店位於宇治，茶寮由老建築改造，保留較安靜的庭院與町家氛圍。甜點常把抹茶用在聖代、蛋糕、蕨餅與冰品中，茶味通常比一般觀光區甜點更鮮明。它適合宇治行程中安排一段完整休息，而不是匆忙外帶後邊走邊吃。若平等院與宇治上神社停留較久，可改選簡單茶飲，以免壓縮前往奈良的時間。'
+    },
+    'クウネルノツヅキ':{
+      desc:'宇治的個性甜點店，以造型鮮明的甜點與季節水果作品受到注意。',
+      fullDesc:'クウネルノツヅキ以帶有設計感的甜點聞名，作品常結合季節水果、奶油、慕斯與酥脆元素。相較傳統抹茶茶寮，它更像現代甜點工作室，適合想在宇治行程中穿插不同風格的人。品項會隨季節與當日製作量改變，看到想吃的款式不一定每天都有。若是外帶，需留意甜點保存與後續移動時間，尤其當天還要前往奈良。'
+    },
+    'ごちそう焼むすび おにまる':{
+      desc:'把炙燒配料鋪在飯糰上的外帶店，適合離境日快速解決午餐。',
+      fullDesc:'ごちそう焼むすび おにまる主打份量較大的烤飯糰，會在米飯上搭配肉類、魚卵、蛋或蔬菜等配料。它比一般便利商店飯糰更像一份可以手拿的完整餐點，適合需要掌握時間的離境日。可依當天路線帶回京都站、車上或機場前食用，但含醬汁與配料的款式不一定方便邊走邊吃。選購時以一至兩個主食搭配飲品即可，避免買太多增加隨身行李。'
+    },
+    'イノダコーヒ本店':{
+      desc:'京都代表性老咖啡館，本店以復古洋館、早餐與深焙咖啡著稱。',
+      fullDesc:'イノダコーヒ本店是京都老牌咖啡館，本店由町家與洋館空間構成，氣氛帶有昭和時代的端正感。招牌咖啡偏深焙，傳統喝法會預先加入砂糖與牛奶，也可依喜好另外調整。早餐、三明治與甜點都屬經典洋食風格，適合作為京都最後一天較從容的開場。週末早晨可能需要候位，若離境時間緊，就不適合在此久等。'
+    },
+    'つるや食堂':{
+      desc:'籠神社附近的食堂，以宮津魚介與在地丼飯銜接府中側行程。',
+      fullDesc:'つるや食堂位於天橋立府中側，從籠神社與傘松公園動線前往較自然。料理重點是宮津灣與丹後周邊魚介，常見丼飯、定食或依漁獲調整的在地料理。它的優勢不是豪華擺盤，而是能在觀景前後吃到有地域感、份量適中的午餐。漁獲與供應內容會依季節變動，當天若已售完，直接改用傘松公園餐廳最省時間。'
+    },
+    'AmaTerrace':{
+      desc:'傘松公園內的展望餐廳，可邊看天橋立邊吃海鮮丼與輕食。',
+      fullDesc:'AmaTerrace 位於傘松公園展望區，不必下山就能完成午餐，特別適合只走府中側的安排。餐點以海鮮丼、咖哩、麵食與輕食為主，料理本身走觀景設施餐廳路線。最大優點是窗外或露台就能看天橋立，省下重新停車和找餐廳的時間。若纜車因強風停駛或餐廳休業，則需回到籠神社周邊用餐。'
+    },
+    'Cafe du Pin':{
+      desc:'廻旋橋旁的水岸咖啡館，以運河景觀、日替午餐和輕食為主。',
+      fullDesc:'Cafe du Pin 位於文珠側廻旋橋附近，窗邊可看到運河、松並木與船隻通行。菜單以日替午餐、三明治、咖啡與甜點為主，適合不想吃太重、但需要坐下休息的人。它的位置便於接續智恩寺與天橋立 View Land，不必另外開車移動。遇到廻旋橋開啟或觀光船進出時，景觀很有趣，但熱門座位不一定能指定。'
+    },
+    '海鮮工房 はしだて物産・かにめし':{
+      desc:'天橋立站周邊的外帶蟹飯，以蟹高湯炊飯鋪上蟹肉，適合帶走。',
+      fullDesc:'這類かにめし以蟹高湯炊煮米飯，再鋪上蟹肉或蟹鬆，是丹後冬季很直觀的外帶選擇。它比正式蟹會席省時，也更適合當天還要前往西舞鶴的行程。可帶到車上、海邊休息點或飯店食用，但購買後仍應留意保存溫度與食用時間。冬季與假日數量可能有限，若確定想吃，抵達天橋立後先詢問預留最穩妥。'
+    },
+    'HAMAKAZE Café':{
+      desc:'道之驛海の京都宮津內的咖啡餐廳，停車方便並供應在地魚介料理。',
+      fullDesc:'HAMAKAZE Café 位於道之驛海の京都宮津，適合自駕離開天橋立後順路停靠。菜單把宮津魚介放進洋食、咖哩、漢堡或套餐中，選擇比純海鮮食堂更容易配合不同口味。停車與洗手間都方便，可作為較晚午餐、早晚餐或簡單休息點。若天橋立行程拖到接近關店時間，應直接前往西舞鶴，不要為了這一站繞路久候。'
+    },
+    '天橋立酒店・冬季蟹料理':{
+      desc:'冬季限定的蟹御膳或蟹會席，適合願意用兩小時換一頓完整蟹料理。',
+      fullDesc:'天橋立酒店冬季常推出以松葉蟹或紅楚蟹為主題的御膳與會席，可能包含蟹刺身、燒蟹、蟹鍋與蟹飯。這種安排能一次品嘗不同烹調方式，完整度遠高於便當或單點。相對地，用餐時間通常較長，且多數方案需要預約，取消規定也較嚴格。若選擇正式蟹餐，當天景點只走天橋立一岸，才能避免整天都在趕時間。'
+    },
+    '道之驛 京丹波 味夢之里':{
+      desc:'京都縱貫道旁的大型休息站，可吃丹波食材定食並採買便當熟食。',
+      fullDesc:'道之驛 京丹波 味夢之里結合餐廳、熟食、農產與伴手禮，停車和洗手間都比市區餐廳方便。餐飲常見丹波黑豆、栗子、蔬菜、肉類與地方加工品，能快速完成一頓有在地感的午餐。若不想坐下內用，也可買飯糰、麵包或便當帶走，掌握前往綾部與京丹後的時間。它適合作為穩定的移動日備案，不必因排隊名店打亂 15:00 左右入住旅館的目標。'
+    },
+    '綾部站周邊簡餐／外帶':{
+      desc:'利用綾部站周邊停車與商店快速補給，重點是準時銜接京丹後入住。',
+      fullDesc:'綾部站周邊適合在梅松苑參觀後短暫停車，選擇蕎麥、定食、麵包或飯糰。這不是指定單一餐廳，而是為長途移動日保留的彈性用餐區。若龍穩寺與梅松苑停留順利，可以坐下吃一頓簡餐；若已落後，就改買外帶並在安全休息點食用。核心原則是不要讓午餐拖延京丹後旅館的入住與晚餐時間。'
+    },
+    '舞鶴港とれとれセンター':{
+      desc:'舞鶴港旁的海鮮市場，可選現場魚介料理、壽司與燒物作早餐或早午餐。',
+      fullDesc:'舞鶴港とれとれセンター集合鮮魚店、海產加工品與可現場食用的料理攤位。可依當日漁獲選生魚片、壽司、烤魚、海鮮丼或貝類，不必全桌人都點同一套套餐。市場型態適合早上邊看邊選，也方便採買冷藏或常溫伴手禮。各店開門時間、休市日與可料理品項不完全一致，出發前需確認當日營業狀況。'
+    },
+    '天橋立午餐':{
+      desc:'依府中側或文珠側擇一用餐，優先選與當日觀景動線相同的一岸。',
+      fullDesc:'天橋立午餐不應為了單一店家跨岸往返，先決定走府中側或文珠側，再從同岸選餐廳。府中側可安排籠神社周邊魚介料理或傘松公園 AmaTerrace；文珠側則可選廻旋橋附近咖啡、海鮮或蟹飯外帶。想吃正式冬季蟹料理，需要預約並預留約兩小時。只想快速補充體力時，蟹飯或海鮮便當最符合傍晚前往西舞鶴的節奏。'
+    },
+    '綾部午餐':{
+      desc:'以綾部市區的定食、蕎麥或外帶為主，保留下午前往京丹後的車程。',
+      fullDesc:'綾部午餐的重點是位置與出餐速度，而不是安排一頓耗時的目的型餐廳。可在車站周邊找定食或蕎麥，也可使用麵包、飯糰與便當作外帶。當天前段還有龍穩寺與梅松苑，實際抵達時間可能浮動，因此不適合訂無法延遲的精緻餐廳。吃完後應直接往京丹後移動，避免壓縮旅館入住與晚餐。'
+    },
+    '間人／網野午餐':{
+      desc:'在間人或網野選海鮮、定食或咖啡輕食，配合當天海岸路線決定。',
+      fullDesc:'這天 11:00 退房後才開始海岸慢遊，午餐可依天候和路線在間人或網野解決。晴天走立岩與後ヶ濱，可優先找間人一帶魚介料理；走琴引濱與網野，則選網野市區定食或咖啡更順。若前一晚旅館早餐較豐盛，可把午餐延後並選輕食。冬季海岸店家營業較不固定，當天應準備道之驛或便利商店備案。'
+    },
+    '雨天版：午餐＋道之驛＋咖啡':{
+      desc:'遇到強風或降雨時，用室內午餐、道之驛與咖啡取代長時間海岸停留。',
+      fullDesc:'丹後海岸遇到強風或持續降雨時，不必勉強在礁岸與沙灘久留。可先找一間海鮮定食或麵店坐下吃午餐，再到道之驛採買丹後食品與伴手禮。下午以網野或峰山的咖啡店作休息點，提早前往 HOTEL＆湖邸 艸花。這個版本仍保留在地飲食與購物，但把濕滑、低溫和海風暴露降到最低。'
+    },
+    '最後晚餐候選':{
+      desc:'回到京都後依還車與入住時間，從天婦羅、燒肉或熟成豬排中擇一。',
+      fullDesc:'最後一晚不必再跨區蒐集景點，晚餐應依還車、進飯店與行李整理的實際時間選擇。想吃較完整的料理可預約京都天ぷら天天天；多人想共享可選京の焼肉処 弘；偏好豬肉主菜則考慮空蟬亭。三者風格與用餐時間不同，不建議同時保留多個熱門預約。若舞鶴回程延誤，就直接改吃京都站周邊，讓最後一晚保持從容。'
+    }
+  };
+  all().forEach(s=>{if(s.cat==='food'&&copy[s.name])Object.assign(s,copy[s.name]);});
+})();
+
 /* ============ INIT ============ */
 updateSpotCount();
 renderDayChips();
@@ -1985,3 +2133,52 @@ function editFoliageMap(i){ const next=prompt('修改地圖名稱',foliageMapSto
 async function replaceFoliageMap(e,i){ const f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f)return; foliageMapStore[i].url=await fileToDataURL(f); persistFoliageMaps(); renderFoliageMaps(); }
 function removeFoliageMap(i){ if(!confirm('刪除這張紅葉地圖？'))return; foliageMapStore.splice(i,1);persistFoliageMaps();renderFoliageMaps();}
 document.addEventListener('DOMContentLoaded',renderFoliageMaps);
+
+/* ============ 景點封面一句話簡介重寫（2026-08） ============ */
+(function rewriteAttractionCardSummaries(){
+  const summaries = {
+    '京都站周邊':'以巨型車站建築、空中步道、百貨與地下街組成的京都交通與購物樞紐。',
+    '東福寺':'以通天橋俯瞰洗玉澗楓林聞名，是京都最具規模感的紅葉名所之一。',
+    '三千院＋大原散步':'在苔庭、杉林與山里小徑之間感受大原安靜而柔和的秋日景色。',
+    '高雄：神護寺＋西明寺':'沿清瀧川串起山寺、朱橋與密集楓林，是京都近郊紅葉最濃烈的區域之一。',
+    '鞍馬＋貴船':'從鞍馬山的杉林古寺一路延伸至貴船水岸，兼具山林健行與神社聚落風景。',
+    '真如堂':'三重塔、本堂與大片楓林構成層次豐富、古意濃厚的東山紅葉景觀。',
+    '永觀堂':'以放生池、多寶塔與滿山楓色聞名，被視為京都最具代表性的紅葉寺院。',
+    '南禪寺':'宏偉三門、禪寺伽藍與磚造水路閣交織出京都少見的歷史建築景觀。',
+    '天授庵':'一座同時擁有枯山水與池泉庭園的南禪寺塔頭，秋色精緻而集中。',
+    '無鄰菴':'以東山為借景、疏水為溪流的明治名園，呈現開闊自然的近代庭園美學。',
+    '詩仙堂':'白砂、杜鵑丘與山居書院共同形成小巧而雅致的洛北庭園。',
+    '圓光寺':'以十牛之庭、苔地與額緣紅葉聞名，是洛北最具畫框感的秋景寺院。',
+    '曼殊院':'白砂庭園、門跡寺院建築與沉靜楓色展現典雅內斂的洛北秋意。',
+    '平等院':'鳳凰堂倒映阿字池的經典景色，是宇治最具象徵性的世界遺產。',
+    '宇治川＋宇治上神社':'沿宇治川散步可串接古橋、水岸與日本最古老神社建築之一。',
+    '宇治上神社':'藏在宇治川東岸林蔭中的古社，以樸實而珍貴的平安時代建築聞名。',
+    '興聖寺':'通往山門的琴坂在秋季被楓葉包圍，是宇治最有幽谷氣氛的紅葉步道。',
+    '奈良公園・浮見堂・飛火野':'鹿群、草地、池畔亭閣與古都山景共同構成奈良最經典的清晨風景。',
+    '保津川漂流':'搭乘傳統木船穿越保津峽溪谷，在近距離感受岩壁、山林與水勢變化。',
+    '天龍寺':'以曹源池庭園借景嵐山，是嵯峨野最具代表性的禪寺與世界遺產。',
+    '常寂光寺':'沿小倉山石階穿行楓林，可一路眺望多寶塔與嵯峨野秋景。',
+    '寶筐院':'密集楓樹包圍細緻苔庭，形成近距離而沉浸感十足的秋色空間。',
+    '玉寶山 龍穩寺':'山門、石階與滿地落葉交織出南丹山寺深沉靜謐的晚秋景象。',
+    '大本本部 梅松苑':'廣大園區集結神苑、殿堂與近代宗教建築，是綾部最具代表性的文化景觀。',
+    '立岩＋後ヶ濱海岸':'巨大玄武岩岩柱矗立日本海邊，展現京丹後粗獷而開闊的海岸地貌。',
+    '琴引濱＋網野咖啡':'以會鳴響的細砂海灘結合悠閒海邊聚落，呈現京丹後柔和的海岸日常。',
+    '金剛院':'三重塔、山門與山間楓林相映，是舞鶴近郊古樸而清幽的紅葉寺院。',
+    '府中側：籠神社＋傘松公園':'從丹後一宮古社登上傘松公園，可俯瞰天橋立經典的「昇龍觀」。',
+    '文珠側：View Land＋智恩寺':'從飛龍觀展望台俯瞰沙洲，再走訪以智慧信仰聞名的智恩寺。',
+    '五老天空塔':'位於舞鶴灣中央制高點，可一次俯瞰港灣、島嶼與曲折海岸線。',
+    '舞鶴紅磚公園':'保存近代海軍紅磚倉庫群，展現舞鶴獨特的港町工業歷史風貌。',
+    '舞鶴港とれとれセンター':'結合鮮魚市場、現吃海鮮與地方物產，是認識舞鶴港飲食文化的最佳入口。',
+    '西本願寺':'以巨大木造伽藍、華麗唐門與百年銀杏聞名，是京都站旁的重要世界遺產。',
+    '京都御苑':'廣闊林蔭、御所建築與四季樹木構成京都市中心最從容的自然空間。',
+    '下鴨神社＋糺之森':'穿過原生古森林走向朱紅神社，可同時感受晚楓、古道與世界遺產氛圍。'
+  };
+  const all = days.flatMap(d => [...(d.spots || []), ...(d.moreSpots || [])]);
+  all.forEach(s => {
+    const normalized = String(s.name || '')
+      .replace(/\s*[（(](機動|二選一|三選二|天氣好版|晴天版|雨風版)[）)]/g, '')
+      .trim();
+    if (summaries[s.name]) s.desc = summaries[s.name];
+    else if (summaries[normalized]) s.desc = summaries[normalized];
+  });
+})();
