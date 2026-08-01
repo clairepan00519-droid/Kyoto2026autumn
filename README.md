@@ -1,15 +1,11 @@
 # 京都・奈良・丹後 10 日慢旅網站
 
-沿用 NZ Trip Family Sync v17 架構製作，並將所有 localStorage／Supabase 同步鍵改為 `kyoto_` 命名空間，避免與紐西蘭網站資料互相覆蓋。
+## 第一次設定 kyoto_sync
+1. 登入 Supabase 專案。
+2. 左側開啟 **SQL Editor**，按 **New query**。
+3. 打開本資料夾的 `SUPABASE_SETUP.sql`，全選複製到 SQL Editor。
+4. 按 **Run**。
+5. 到 **Table Editor** 確認出現 `kyoto_sync`。
+6. 重新整理網站；頁首顯示「家人共享已同步」即完成。
 
-## 使用方式
-1. 將本資料夾全部檔案上傳到新的 GitHub Pages 儲存庫根目錄。
-2. `SUPABASE_SETUP.sql` 若原本已執行過，不需再次執行；本網站會使用同一張資料表，但以不同 key 儲存。
-3. 首次上線後重新整理一次，讓新的 Service Worker 接管離線快取。
-4. 航班、訂房、租車與保津川漂流請在出發前依最終票券更新。
-
-
-## v2 秋楓地圖版
-- 套用紅葉色盤：#D0F4FC、#FC7D2E、#A56428、#AD1E17、#D2D4D2、#F9DD90、#F3AF11、#7A3201。
-- 環線頁改用手繪地圖，點擊可全螢幕放大。
-- 地圖下新增 D1–D10 路線摘要。
+這張表與原本紐西蘭網站的 `nz_sync` 分開，因此兩個網站的筆記、照片、行李與購物清單不會互相覆蓋。

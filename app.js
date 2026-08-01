@@ -313,11 +313,11 @@ function updateSyncStatus(err,state){
 }
 /* ============ HEADER IMAGES ============ */
 const headerBgs = [
-  {url:'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=82', pos:'center 48%'},
-  {url:'https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82', pos:'center 48%'},
-  {url:'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&w=1200&q=82', pos:'center 50%'},
-  {url:'https://images.unsplash.com/photo-1584545284372-f22510eb7c26?auto=format&fit=crop&w=1200&q=82', pos:'center 45%'},
-  {url:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd4297?auto=format&fit=crop&w=1200&q=82', pos:'center 52%'}
+  {url:"https://caede-kyoto.com/wp/wp-content/uploads/2018/11/%E6%9D%B1%E5%AF%BA%E3%81%AE%E7%B4%85%E8%91%89%E3%80%80%E5%A4%9C%E6%99%AF.jpg", pos:'center 50%'},
+  {url:"https://souda-kyoto.jp/blog/pknb6o0000007ogc-img/ogp.jpg", pos:'center 50%'},
+  {url:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBPtfFM6kQwqbDkxpbj4Hh5wZRXg_FqIcCwCuUuVmXVfYBLpr_CxeUppSX&s=10", pos:'center 50%'},
+  {url:"https://res.klook.com/image/upload/activities/mrjn0ysimpxxnbhjlctx.jpg", pos:'center 50%'},
+  {url:"https://tripper.tw/wp-content/uploads/%E8%A5%BF%E6%9C%AC%E9%A1%98%E5%AF%BA%E9%8A%80%E6%9D%8F01.jpg", pos:'center 50%'}
 ];
 document.addEventListener('DOMContentLoaded', () => {
   const pick = headerBgs[Math.floor(Math.random() * headerBgs.length)];
@@ -447,6 +447,134 @@ const days = [
     S("ごちそう焼むすび おにまる","food","適合帶走的飯糰。",{img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"})
   ]}
 ];
+
+
+/* ============ 京都內容精修（2026-08） ============ */
+(function refineKyotoContent(){
+  const imageMap = {"TPE → KIX 航班": "https://preview.redd.it/during-my-flight-to-kyoto-v0-hlohiahw1rse1.jpeg?auto=webp&s=2a56c05f02ca2827b16ac9ff3dd224bfe0155136", "京都站周邊": "https://www.agoda.com/wp-content/uploads/2020/02/Shijo-dori-street-Takashimaya-MARUI-Kyoto-shopping-Japan.jpg", "東福寺": "https://caede-kyoto-asia.com/wp/wp-content/uploads/2020/10/01-81.jpg", "Richmond Hotel 京都站": "https://richmondhotel.jp/datas/cache/images/2023/03/16/1920x800_ea1e9d427fb5664c32c517a73e421e58_6b6a3d25465b474f3daed67958cbbf3e53054f50.jpg", "京豆富不二乃": "https://www.kyotofu.co.jp/wordpress/wp-content/uploads/2016/11/742eca49c8febf7bb8071f2fab2d03f8_up.jpg", "名代とんかつ かつくら": "https://www.katsukura.jp/wp/wp-content/uploads/2020/08/%E2%96%B3%E7%89%B9%E4%B8%8A%E3%83%AD%E3%83%BC%E3%82%B9200%EF%BD%9C20180314_6913.jpg", "京都鶏白湯そば 純": "https://www.leafkyoto.net/leaf/wp-content/uploads/2023/02/230225-jun-1-1024x682.jpg", "三千院＋大原散步": "https://www.tabirai.net/tabirai-uploader/img/0040920/s1_0040920.png", "高雄：神護寺＋西明寺": "https://farm66.static.flickr.com/65535/54736539956_fa37fb8581_b.jpg", "鞍馬寺": "https://caede-kyoto-asia.com/wp/wp-content/uploads/2020/10/02-14.jpg", "真如堂": "https://lh4.googleusercontent.com/proxy/LqrQznuDfV3n5sfPn5of1ZChxBeGBieQDVv_P4DtZEtJMoxk6TV6kT2brT1-XHz5raANlle8PKSwmn2PsCW0pNr2HMKi6IR_8jXQ1PG2T-obA7aRaA", "永觀堂": "https://cdn.zekkei-japan.jp/images/articles/2a49a79e5bae0f2b3ae829133ddf8254.jpg", "南禪寺": "https://tw.wamazing.com/media/wp-content/uploads/sites/4/2021/09/pixta_13874853_M-1.jpg.webp", "天授庵": "https://immay.tw/wp-content/uploads/pixnet/1480130872-2300882830.jpg", "無鄰菴": "https://image.walkerplus.com/wpimg/walkertouch/wtd/event/75/n/321275_1.jpg?x=1920&notupsize=1", "大和魯內飯店 京都四條烏丸": "https://www.daiwaroynet.jp/datas/cache/images/2026/05/01/1760x790_ea1e9d427fb5664c32c517a73e421e58_9be1fcf273f3f8b55bfd470c73bf86754c6cdb69.jpg", "新風館＋LE LABO": "https://static.gltjp.com/glt/data/directory/14000/13502/20220821_072100_cddb5e78_w1920.webp", "京都天婦羅 天天天": "https://tblg.k-img.com/restaurant/images/Rvw/350587/640x640_rect_f8d6b6be333bd5851317c1ac254c8085.jpg", "京の焼肉処 弘": "https://rimage.hitosara.com/gg/image/0006078791/0006078791F2_740x555y.jpg?t=1779683033", "空蟬亭": "https://live.staticflickr.com/65535/55284753095_a0c5cd61eb_c.jpg", "DRAGON BURGER": "https://media.vogue.com.tw/photos/63b56fd292e09ec5550899a4/2:3/w_2560%2Cc_limit/IMG_1406.jpg", "祇園辻利": "https://tw.tabiiro.travel/lpimg/gourmet/316016/main/img1.jpg", "BAL": "https://www.bal-bldg.com/app/uploads/sites/2/2024/10/kyoto-pop-up.jpg", "Kyoto LOFT": "https://marukoblog.tw/wp-content/uploads/2023/07/loft-_4.jpg", "SOU・SOU 一条街": "https://file001.shop-pro.jp/PA01018/434/shop_img/info/tabi01_sp.jpg", "詩仙堂": "https://caede-kyoto-asia.com/wp/wp-content/uploads/2020/06/04-2.jpg", "圓光寺": "https://farm66.static.flickr.com/65535/54199970608_6cbb5f5f23_b.jpg", "曼殊院": "https://kavana.tw/wp-content/uploads/thumb_20200828122401_50.jpg", "平等院": "https://img.japanyokoso.com/pac_dir/spot/2021/L00781_A_01_fan.jpg", "宇治上神社": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8QWfgazaHjXjfET6R2Q5_WoJkJD0ejcM2zYONj487kQVi946hpswXs0ji&s=10", "興聖寺": "https://static.gltjp.com/glt/data/directory/15000/14548/20230721_205450_930c1f08_w640.webp", "辻利兵衛本店": "https://www.tsujirihei.co.jp/shop/images/img13.jpg", "クウネルノツヅキ": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEkXIPQW3BlTbBoxf_OBURJ7wYFl-zSMMcov8MfsQXEpwvH2IAP8bucV4&s=10", "Daiwa Roynet Hotel 奈良": "https://www.daiwaroynet.jp/datas/cache/images/2022/01/31/1760x790_ea1e9d427fb5664c32c517a73e421e58_1e3ed9f95d00c160b50aeeed0f36998c4d499d33.jpg", "奈良公園・浮見堂・飛火野": "https://ak-d.tripcdn.com/images/1mi3712000p672el42D70.jpg?proc=source/trip", "保津川漂流": "https://cdn.jeepe.jp/uploads/public_image/image/221/normal_545cb563-d31e-4929-99de-680651f197e6.jpg", "天龍寺": "https://static.japan-food.guide/uploads/ckeditor_asset/data/000/012/365/1562a0d6b690843513e57450a5b0879766183e64dc2b714bfb9be66d7b399b16/image.jpeg", "常寂光寺": "https://farm66.static.flickr.com/65535/54258308911_40eb264834_b.jpg", "寶筐院": "https://lh3.googleusercontent.com/proxy/Dv1UuAW4MxO4yobYsqIyWtbdcMVMI0S-ZDzk05A_Jfr_rCK1PYeAAH4IA26ZpfvAZChfyMl7Uix8adys8D9cyx-N9xkfdHT0yNzL9qziFYdEge_g", "玉寶山 龍穩寺": "https://img.vocus.cc/5oZfPImpIJY-lnsyppvZN0siZt1Cg0DgTpXkqZ61O20/w:740/f:webp/plain/https://images.vocus.cc/498f3673-00c3-474c-ae65-262413c0ed39.jpg", "大本本部 梅松苑": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStUHt0pAA-sVoB4xkrOdJVvV3uPDt-kdExpZnWKlMvAVBQfk9ZGzFuJ94&s=10", "シーサイド佐竹": "https://www.kyotango.gr.jp/wp-content/uploads/2019/03/3ee03f2a84c5f48ee7287dbf1648e62d.jpg", "後ヶ濱海岸": "https://www.kyotango.gr.jp/wp-content/uploads/2023/01/fe7fbedcc24d6c1aef81e6e21480e05d.jpg", "道之驛 てんきてんき丹後": "https://www.kyotango.gr.jp/wp-content/uploads/2019/03/b0760acfdbc23c07950bd21d5b2436c3-1.jpg", "HOTEL＆湖邸 艸花": "https://www.kyotango.gr.jp/wp-content/uploads/2022/06/912aa273f1b2884cd4959f013e2177e9.jpg", "金剛院": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQY33QTqQOPwtY8a2jDECPvbZnvnv1OE3X457MM1ysBfI8qrVzfnkdavg&s=10", "府中側：籠神社＋傘松公園": "https://farm66.static.flickr.com/65535/55341985802_5d219dc002_b.jpg", "文珠側：View Land＋智恩寺": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS6wcfUt3Zl6gR1o-yC-g312RI2CObFOIiL5_nqe7EE2UAlryBKJhnuCI&s=10", "Route Inn 西舞鶴": "https://trvis.r10s.com/d/strg/ctrl/26/184983e9172cb121da6459bedf69d5cb9deb447d.47.9.26.3.jpg", "五老天空塔": "https://www.kyototourism.org/wp/wp-content/uploads/2021/01/Sea_Goro-Sky-Tower-01.jpg", "舞鶴紅磚公園": "https://www.e-japannavi.com/syuyu/kyoto/tango_images/akarenga_park_img700465_01.jpg", "舞鶴港とれとれセンター": "https://toretore.org/wp/wp-content/uploads/2015/10/de2b208e096e93812571d01a60225507-1024x681.jpg", "西本願寺": "https://tripper.tw/wp-content/uploads/%E8%A5%BF%E6%9C%AC%E9%A1%98%E5%AF%BA%E9%8A%80%E6%9D%8F01.jpg", "京都御苑": "https://kyoto-tabiya.com/wp-content/uploads/62a0bd2937ef4acb8fbc6caae2e6f7f2.jpg", "下鴨神社＋糺之森": "https://www.tw-kyoto.yumeyakata.com/wp-content/uploads/2024/11/autumn-leaves1-2-757x1024.jpg", "KIX → TPE 航班": "https://media.cntraveller.com/photos/692844606d000544b56e4083/master/w_1600%2Cc_limit/Japan_271125_GettyImages-1656936311.jpg", "イノダコーヒ本店": "https://ja.kyoto.travel/resource/tourism/2527-1.jpg", "まるき製パン所／fiveran": "https://img.hanako.tokyo/2023/09/02234344/DMA-DSCF5666-768x512.jpg", "Point Pour Point": "https://www.leafkyoto.net/leaf/wp-content/uploads/2025/04/250408-pointpourpoint-1-1024x682.jpg", "ごちそう焼むすび おにまる": "https://www.onimaru-net.com/build/images/index/teaser/menu_hati.78cf1ee9.png"};
+  const dayTitles = [
+    "楓都初章・京都駅前的暖色序曲",
+    "山里錦秋・三境擇一的紅葉物語",
+    "東山錦繡・古寺與庭園的秋日長卷",
+    "洛北茶旅・由修學院走向宇治奈良",
+    "川舟嵐影・保津川與嵯峨野的一日",
+    "丹波晚楓・穿越山寺奔向日本海",
+    "潮騷慢泊・丹後海岸的靜謐休日",
+    "海之京都・金剛院與天橋立遠景",
+    "港町餘韻・舞鶴紅磚與灣景之晨",
+    "京洛惜別・銀杏晚楓與歸途"
+  ];
+  days.forEach((d,i)=>d.title=dayTitles[i]);
+
+  const all=()=>days.flatMap(d=>[...d.spots,...d.moreSpots]);
+  function find(name){ return all().find(s=>s.name===name); }
+  function addTag(s,tag){ if(s && !s.tags.includes(tag)) s.tags.push(tag); }
+  function split(dayIndex, oldName, newSpots){
+    const d=days[dayIndex], idx=d.spots.findIndex(s=>s.name===oldName);
+    if(idx>=0) d.spots.splice(idx,1,...newSpots);
+  }
+  function moveToMore(dayIndex,name){
+    const d=days[dayIndex],idx=d.spots.findIndex(s=>s.name===name);
+    if(idx>=0)d.moreSpots.unshift(d.spots.splice(idx,1)[0]);
+  }
+
+  // 標題中的機動字樣改為標籤
+  all().forEach(s=>{
+    const labels=[];
+    s.name=s.name.replace(/\s*[（(](機動|二選一|三選二|天氣好版|雨風版)[）)]/g,(_,x)=>{labels.push(x);return "";});
+    labels.forEach(x=>addTag(s,x));
+  });
+
+  // 拆分合併景點
+  split(2,"天授庵／無鄰菴二選一",[
+    S("天授庵","attraction","南禪寺塔頭，以枯山水與池泉庭園展現截然不同的秋景。",{tags:["與無鄰菴擇一"],dur:"約45–60分鐘",fullDesc:"天授庵緊鄰南禪寺三門，動線最順。前庭以白砂、苔地與幾何石組構成，後庭則有池泉、楓樹與竹林；紅葉旺季空間不大，若入口排隊過長，可把時間留給無鄰菴。"}),
+    S("無鄰菴","attraction","明治時代名園，以東山為借景、琵琶湖疏水為庭園注入流動感。",{tags:["與天授庵擇一","建議預約"],dur:"約45–60分鐘",fullDesc:"無鄰菴的魅力不在密集楓紅，而在草地、溪流、石景和遠方東山共同構成的開闊景深。適合想避開寺院式庭園、慢慢坐看水聲與秋色的人；熱門時段常採預約或分流，出發前先確認。"})
+  ]);
+  split(3,"詩仙堂・圓光寺・曼殊院三選二",[
+    S("詩仙堂","attraction","小巧而層次分明的山居庭園，白砂、杜鵑丘與楓色相互映襯。",{tags:["三選二"],dur:"約45–60分鐘",fullDesc:"詩仙堂由書院望向庭園的框景十分優雅，秋季色彩集中、停留節奏安靜。入口到庭園有些坡度，建議開門前後抵達；若院內已擁擠，不必久候經典空景。"}),
+    S("圓光寺","attraction","十牛之庭與額緣庭園是洛北紅葉代表，落葉期也很有韻味。",{tags:["三選二","紅葉重點"],dur:"約60–75分鐘",fullDesc:"圓光寺從書院向外望，可看到楓樹、苔庭與石燈籠形成如畫框般的景致；後方高處還能俯瞰京都。旺季通常需注意預約或入場安排，若當年紅葉狀況最好，可優先保留。"}),
+    S("曼殊院","attraction","門跡寺院氣質典雅，白砂庭園與勅使門周邊楓色較沉靜。",{tags:["三選二","較清幽"],dur:"約45–60分鐘",fullDesc:"曼殊院的庭園留白較多，氛圍比圓光寺安靜，適合作為洛北散步的收尾。三處全走會壓縮宇治時間，因此只選兩處；若希望少一點人潮，可把曼殊院排進組合。"})
+  ]);
+  split(4,"常寂光寺／寶筐院二選一",[
+    S("常寂光寺","attraction","小倉山坡地上的紅葉名所，仁王門、多寶塔與嵯峨野遠景層層展開。",{tags:["與寶筐院擇一"],dur:"約60分鐘",fullDesc:"常寂光寺需要走一段階梯，但沿途楓樹密度高，登高後視野開闊。搭船抵達嵐山後若體力仍好，這裡較有完整的『山寺紅葉』體驗；雨後石階濕滑，鞋底抓地力要足。"}),
+    S("寶筐院","attraction","以細緻苔庭和密集楓樹聞名，庭園近距離、秋色包覆感強。",{tags:["與常寂光寺擇一"],dur:"約45–60分鐘",fullDesc:"寶筐院面積不大，秋季庭園色彩非常集中，適合不想再爬太多坡、想在較小空間細看楓葉的人。入口與庭園通道狹窄，旺季若排隊過長，就選常寂光寺避免消耗時間。"})
+  ]);
+  // 逛街拆分
+  const d3=days[2], shopIdx=d3.moreSpots.findIndex(s=>s.name==="BAL・Kyoto LOFT・KIDDY LAND");
+  if(shopIdx>=0)d3.moreSpots.splice(shopIdx,1,
+    S("BAL","shopping","河原町一帶偏設計與質感選物的商場，適合傍晚慢逛。",{fullDesc:"京都 BAL 聚集服飾、生活選物、書店與咖啡空間，比大型百貨更偏成熟質感。東山行程提早結束時可來休息，不必為了逛完每層延後晚餐。"}),
+    S("Kyoto LOFT","shopping","文具、生活雜貨與旅行小物集中，適合補買實用品。",{fullDesc:"LOFT 適合尋找日系文具、美妝與季節限定商品；把它當成雨天或晚上備案即可，先列購物清單，避免在紅葉日花掉太多時間。"}),
+    S("KIDDY LAND","shopping","角色商品與可愛雜貨的輕鬆停靠點。",{fullDesc:"適合在河原町逛街時順路進入，不需專程跨區。熱門角色新品可能排隊，若店內過於擁擠，直接保留體力回飯店。"})
+  );
+
+  // 交通與景點分類
+  const jr=find("JR 嵯峨嵐山");
+  if(jr){ const d=days[4]; d.spots=d.spots.filter(s=>s!==jr); }
+  const hozu=find("保津川漂流");
+  if(hozu){
+    hozu.tags=["天候機動"];
+    hozu.desc="晴朗、風小且正常營運時搭船；雨風不適合則改由龜岡搭 JR 前往嵐山。";
+    hozu.fullDesc="保津川下り從龜岡沿峽谷順流抵達嵐山，約兩小時，船夫會依水勢操舟，沿途可看溪谷、岩壁與山林。先把車和行李留在 Route Inn 龜岡，再輕裝前往乘船處。雨天、強風、水位或停航時，不另設一張交通卡，直接採雨備方案：從龜岡搭 JR 至嵯峨嵐山，把時間留給天龍寺與一座紅葉寺院。";
+    hozu.tip="前一晚與當日早晨再次確認營運；船上體感溫度低，準備防風外套、圍巾與手套。";
+  }
+  moveToMore(0,"HARUKA 關西機場特急");
+  const market=find("舞鶴港とれとれセンター"); if(market) market.cat="attraction";
+
+  // 飯店與航班
+  const nara=find("奈良大和魯內飯店"); if(nara)nara.name="Daiwa Roynet Hotel 奈良";
+  const ret=find("KIX → TPE 航班"); if(ret){ret.desc="19:00 關西機場起飛，21:19 抵達桃園。";ret.fullDesc="建議 15:00 前由京都站出發，預留取行李、搭乘機場交通、報到與安檢時間。";}
+  const out=find("TPE → KIX 航班"); if(out){out.desc="08:05 桃園起飛，11:35 抵達關西機場。";out.fullDesc="早班機抵達後先完成入境與領取行李，再依票券搭乘 HARUKA 前往京都。抵達日不追趕遠距景點，東福寺只在流程非常順暢、仍有充足參觀時間時加入。";}
+
+  // 每日提示移入詳細介紹
+  const naraWalk=find("奈良公園・浮見堂・飛火野");
+  if(naraWalk){naraWalk.desc="清晨在奈良公園東側選一至兩處散步。";naraWalk.fullDesc="浮見堂適合看鷺池晨光，飛火野則有開闊草地與鹿群；兩者不必都完整走完。退房與取車前只選一至兩處，利用清晨較安靜的時段散步，避開稍晚抵達的團體人潮，也不要再延伸到太多寺院。";}
+
+  // 景點介紹加深
+  const details={
+    "東福寺":"東福寺以通天橋俯瞰洗玉澗的楓林聞名，深秋時紅、橙、黃葉交疊，落葉期也有層次。抵達日只有在入境、HARUKA 與寄放行李都非常順利時才前往；若剩餘時間不足一個半小時，直接留在京都站較從容。",
+    "三千院＋大原散步":"三千院位於大原山里，聚碧園與有清園以苔地、杉木、石佛和柔和楓色構成安靜景觀。比市中心紅葉名所更適合慢走；可沿村落小徑、溪流與土產店散步，不必把周邊寺院全部收集。落葉期的苔庭與紅葉地毯仍很漂亮。",
+    "高雄：神護寺＋西明寺":"高雄山區氣溫通常低於市區，紅葉進度也較早。神護寺需走較多階梯，寺域開闊、山谷景觀強烈；西明寺規模較小，朱橋與溪谷更有幽靜感。高山寺只有在時間與體力充足時再加，避免三寺全走變成趕路。",
+    "鞍馬寺（貴船視體力）":"鞍馬寺沿山勢而建，從仁王門到本殿金堂一路穿過杉林與石階，秋季氣氛清冽。是否翻山到貴船應依路況、天色與膝力決定；濕滑、接近日落或體力不足時原路折返，仍能完整感受鞍馬山林。",
+    "真如堂":"真如堂的三重塔、本堂與楓林相互映襯，是東山北側很有層次的紅葉寺院。清晨先抵達，可先看本堂前與塔周邊，再往永觀堂方向移動；不要為等待完全無人的畫面停留過久。",
+    "永觀堂":"永觀堂依山勢形成多層伽藍，放生池、多寶塔與長廊串起京都最具代表性的紅葉景觀。旺季人潮難以避免，仍值得保留為當日核心；若入口排隊過長，就縮減額外庭園，而不是犧牲後續休息。",
+    "南禪寺":"南禪寺腹地寬廣，三門、法堂與磚造水路閣展現不同時代的建築語彙。從永觀堂步行而來很順，適合放慢速度散步；若時間有限，集中在三門與水路閣，不必逐一進入所有塔頭。",
+    "平等院":"平等院鳳凰堂臨阿字池而建，水面倒影與朱紅建築是宇治代表景觀；鳳翔館則可近看雲中供養菩薩與文物。午後至少留一至一個半小時，若館內排隊明顯，先完成庭園環線，再依剩餘時間決定。",
+    "宇治上神社":"宇治上神社藏在宇治川東岸林蔭間，規模不大，氣氛比平等院安靜。本殿與拜殿具有古老而克制的美感，適合與朝霧橋、河岸步道串成一段，不必為了打卡來回穿越河川。",
+    "興聖寺":"興聖寺以通往山門的琴坂聞名，兩側楓樹在深秋形成狹長色帶。它位於宇治川上游，步行會增加時間；若修學院行程延誤，優先刪除此站，以確保宇治至少三小時及傍晚順利到奈良。",
+    "天龍寺":"天龍寺曹源池庭園以嵐山與龜山為借景，秋末仍能看到山色、池水與庭石的平衡。無論搭船或 JR 都優先保留，抵達後先確認最後入場時間；參觀後從北門銜接嵯峨野，比在商店街來回更順。",
+    "玉寶山 龍穩寺":"龍穩寺藏在南丹山間，參道石階、山門與楓樹形成沉靜的晚秋景致。12 月初可能是枝頭晚楓，也可能轉為落葉紅毯；兩種狀態都適合拍攝。山路較窄，放慢車速並依現場指示停車。",
+    "大本本部 梅松苑":"梅松苑是大本在綾部的重要聖地，園區包含神苑、長生殿、みろく殿與歷史建築，尺度比一般寺院更大。建築內部可能需預約或受參觀規範限制，現場保持安靜、依指示行走；此站後安排簡單午餐，再直接往丹後。",
+    "金剛院":"金剛院位於舞鶴山間，三重塔、山門與楓樹共同形成古樸景觀。12 月初可能已進入落葉期，石階與苔地反而更有深秋氣氛；上午光線與遊客量通常較舒服，參觀後直接前往天橋立。",
+    "五老天空塔":"五老岳位於舞鶴灣中央制高點，天氣清楚時可俯瞰曲折海岸、港區與島嶼。展望台風勢常比市區強，排在上午有利於能見度；若低雲籠罩，不必久候，可把時間留給紅磚公園。",
+    "舞鶴紅磚公園":"舞鶴紅磚公園保存近代海軍倉庫群，紅磚外牆、港灣與鐵道遺構呈現獨特港町風貌。可挑一至兩棟展館參觀，再沿外圍散步拍照；這是回京都前的最後一站，務必預留還車時間。",
+    "舞鶴港とれとれセンター":"舞鶴港とれとれセンター兼具海鮮市場、用餐與地方物產功能，可以先看當日魚貨，再向店家詢問適合現吃的生魚片、烤物或海鮮丼。把它當作舞鶴港的生活型景點，而不只是早餐店；週末熱門時段停車與座位較忙，早到較從容。",
+    "西本願寺":"西本願寺靠近京都站，境內寬敞，唐門、御影堂與阿彌陀堂展現桃山至江戶時代的寺院建築。12 月初可留意大銀杏與地面落葉；離境日只走核心區域，不因拍照延誤後續。",
+    "京都御苑":"京都御苑腹地廣大，銀杏、楓樹與松林分散在苑內，是紅葉尾聲時的保險景點。選擇一段靠近入口的路線即可，不必環繞整座御苑；留意腳程與回京都站所需時間。",
+    "下鴨神社＋糺之森":"糺之森的紅葉通常比京都市區多數寺院晚，12 月初仍可能保有黃紅色林蔭。從森林步道走向下鴨神社本殿，氣氛由自然轉為莊重；若前段延誤，就縮短森林散步，確保 14:00 左右回京都站。"
+  };
+  Object.entries(details).forEach(([n,v])=>{const s=find(n);if(s)s.fullDesc=v;});
+
+  // D6 午餐與 D8 天橋立餐飲
+  days[5].moreSpots.unshift(
+    S("綾部站周邊簡餐／外帶","food","以停車方便、出餐穩定為主，避免拖延 15:00 入住。",{tags:["12/2 午餐首選"],fullDesc:"建議在梅松苑參觀後移動到綾部站周邊，用市營停車場停車，再選蕎麥、定食或麵包外帶。這天車程長，餐廳不必追名店；若龍穩寺停留較久，就在綾部買飯糰、麵包或便當上車，途中找安全休息點用餐。"}),
+    S("道之驛 京丹波 味夢之里","food","高速道路順路、停車與外帶選擇多的穩健備案。",{tags:["12/2 外帶備案"],fullDesc:"若想提早完成午餐，可在京都縱貫道沿線的道之驛停靠，選丹波食材定食、黑豆或熟食便當。優點是停車容易、時間可控；缺點是會較早吃，後段前往綾部與京丹後仍需一段車程。"})
+  );
+  days[7].moreSpots.unshift(
+    S("つるや食堂","food","府中側午餐首選，可嘗試宮津在地魚介丼。",{tags:["府中側","午餐"],fullDesc:"店在元伊勢籠神社一帶，適合走府中側與傘松公園時安排。可留意金樽鰯等宮津在地魚料理；漁獲與菜單會隨季節變動，12 月出發前再次確認營業與候位狀況。"}),
+    S("AmaTerrace","food","傘松公園展望餐廳，適合不想下山再找餐廳的景觀型選擇。",{tags:["府中側","午餐"],fullDesc:"位於傘松公園，能一邊看天橋立一邊吃海鮮丼或輕食。餐點不是精緻會席路線，但動線最省力，適合把時間留給展望台與籠神社。"}),
+    S("Cafe du Pin","food","文珠側運河景觀咖啡，供應日替午餐與輕食。",{tags:["文珠側","輕午餐"],fullDesc:"位於廻旋橋附近，大窗可看松並木與運河。若不想吃太重，可選日替餐、三明治或宮津沙丁魚類輕食，再接智恩寺與 View Land。"}),
+    S("海鮮工房 はしだて物産・かにめし","food","天橋立站旁可外帶的蟹飯／海鮮便當選擇。",{tags:["外帶","蟹肉便當"],fullDesc:"你想到的『蟹肉便當』多半就是天橋立站附近販售的かにめし類商品：以蟹高湯炊飯再鋪蟹肉，適合時間緊或想帶到車上／飯店吃。數量可能有限，建議當天早些確認並預留購買時間。"}),
+    S("HAMAKAZE Café","food","前往西舞鶴途中可在宮津吃晚餐或早晚餐。",{tags:["晚餐備案"],fullDesc:"位於道之驛海の京都宮津，停車方便，提供以當地魚介延伸的咖啡餐與洋風料理。若天橋立結束較晚，可先在宮津吃完再往西舞鶴；若已接近關店時間，改在西舞鶴車站周邊用餐。"}),
+    S("天橋立酒店・冬季蟹料理","food","想正式吃蟹，可預約冬季限定午餐或會席。",{tags:["需預約","冬季"],fullDesc:"11 月至 3 月常有蟹御膳、蟹會席或蟹與寒鰤組合，通常需事前預約且用餐約兩小時。若選正式蟹餐，天橋立景點就只排一岸，避免午餐和觀景都趕。"})
+  );
+
+  // 圖片套用
+  all().forEach(s=>{ if(imageMap[s.name]) s.img=imageMap[s.name]; });
+  // 合併名稱的圖片別名
+  const alias={"鞍馬寺（貴船視體力）":"鞍馬寺","保津川漂流":"保津川漂流"};
+  Object.entries(alias).forEach(([n,k])=>{const s=find(n);if(s&&imageMap[k])s.img=imageMap[k];});
+})();
+
 
 /* ============ 筆記/照片/自訂景點系統 (LocalStorage 永久保存) ============ */
 
@@ -1487,9 +1615,16 @@ function addRuleItem() {
 const defaultDocsData = [
   {ic:'✈️',t:'去程航班 TPE → KIX',s:'11/27 08:05 → 11:35',chip:'待上傳',link:'',img:null},
   {ic:'🚆',t:'HARUKA／機場交通',s:'KIX → 京都站',chip:'確認票券',link:'',img:null},
+  {ic:'🏨',t:'京都站 Richmond',s:'11/27、12/5',chip:'住宿',link:'',img:null},
+  {ic:'🏨',t:'Daiwa Roynet Hotel 京都四條烏丸',s:'11/28–11/29',chip:'住宿',link:'',img:null},
+  {ic:'🏨',t:'Daiwa Roynet Hotel 奈良',s:'11/30',chip:'住宿',link:'',img:null},
+  {ic:'🏨',t:'Route Inn 龜岡',s:'12/1',chip:'住宿',link:'',img:null},
+  {ic:'🏨',t:'シーサイド佐竹',s:'12/2',chip:'住宿',link:'',img:null},
+  {ic:'🏨',t:'HOTEL＆湖邸 艸花',s:'12/3',chip:'住宿',link:'',img:null},
+  {ic:'🏨',t:'Route Inn 西舞鶴',s:'12/4',chip:'住宿',link:'',img:null},
   {ic:'🚗',t:'奈良租車／京都還車',s:'12/1–12/5・確認冬季胎',chip:'待確認',link:'',img:null},
   {ic:'🚣',t:'保津川漂流',s:'12/1・依天候與營運確認',chip:'機動',link:'',img:null},
-  {ic:'✈️',t:'回程航班 KIX → TPE',s:'12/6 19:00 → 21:15',chip:'待上傳',link:'',img:null}
+  {ic:'✈️',t:'回程航班 KIX → TPE',s:'12/6 19:00 → 21:19',chip:'待上傳',link:'',img:null}
 ];
 let docsData = normalizeStructuredList('kyoto_docs', JSON.parse(localStorage.getItem('kyoto_docs')) || defaultDocsData);
 function persistDocs(){ safeSetItem('kyoto_docs', docsData); }
