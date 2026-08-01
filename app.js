@@ -366,7 +366,7 @@ const days = [
     S("高雄：神護寺＋西明寺","attraction","紅葉密度高，但階梯與移動強度較高。",{tags:["方案B","紅葉密度"],dur:"約5–7小時",fullDesc:"以神護寺與西明寺為主，高山寺只在時間與體力充足時加入。若紅葉仍在見頃，這條路線最有季節感。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
     S("鞍馬寺（貴船視體力）","activity","晴朗時適合山林散步；是否翻山至貴船現場決定。",{tags:["方案C","山林"],dur:"約4–7小時",fullDesc:"不預設一定完成鞍馬到貴船的完整健行。路況濕滑、天色轉暗或體力不足時，原路折返即可。",img:"https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&w=1200&q=82"})
   ],moreSpots:[
-    S("大和魯內飯店 京都四條烏丸","hotel","連住兩晚，方便回飯店休息與逛烏丸、河原町。",{img:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=82"}),
+    S("Daiwa Roynet Hotel 烏丸四條","hotel","連住兩晚，方便回飯店休息與逛烏丸、河原町。",{img:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=82"}),
     S("新風館＋LE LABO","shopping","晚間回市區後的輕鬆逛街組合。",{img:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=82"}),
     S("京都天ぷら天天天","food","正式晚餐候選，建議事先訂位。",{tags:["預約"],img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
     S("京の焼肉処 弘","food","京都燒肉晚餐候選。",{tags:["預約"],img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
@@ -451,7 +451,7 @@ const days = [
 
 /* ============ 京都內容精修（2026-08） ============ */
 (function refineKyotoContent(){
-  const imageMap = {"08:05 TPE → 11:35 KIX": "https://preview.redd.it/during-my-flight-to-kyoto-v0-hlohiahw1rse1.jpeg?auto=webp&s=2a56c05f02ca2827b16ac9ff3dd224bfe0155136", "京都站周邊": "https://www.agoda.com/wp-content/uploads/2020/02/Shijo-dori-street-Takashimaya-MARUI-Kyoto-shopping-Japan.jpg", "東福寺": "https://caede-kyoto-asia.com/wp/wp-content/uploads/2020/10/01-81.jpg", "Richmond Hotel 京都站": "https://richmondhotel.jp/datas/cache/images/2023/03/16/1920x800_ea1e9d427fb5664c32c517a73e421e58_6b6a3d25465b474f3daed67958cbbf3e53054f50.jpg", "京豆富不二乃": "https://www.kyotofu.co.jp/wordpress/wp-content/uploads/2016/11/742eca49c8febf7bb8071f2fab2d03f8_up.jpg", "名代とんかつ かつくら": "https://www.katsukura.jp/wp/wp-content/uploads/2020/08/%E2%96%B3%E7%89%B9%E4%B8%8A%E3%83%AD%E3%83%BC%E3%82%B9200%EF%BD%9C20180314_6913.jpg", "京都鶏白湯そば 純": "https://www.leafkyoto.net/leaf/wp-content/uploads/2023/02/230225-jun-1-1024x682.jpg", "三千院＋大原散步": "https://www.tabirai.net/tabirai-uploader/img/0040920/s1_0040920.png", "高雄：神護寺＋西明寺": "https://farm66.static.flickr.com/65535/54736539956_fa37fb8581_b.jpg", "鞍馬寺": "https://caede-kyoto-asia.com/wp/wp-content/uploads/2020/10/02-14.jpg", "真如堂": "https://lh4.googleusercontent.com/proxy/LqrQznuDfV3n5sfPn5of1ZChxBeGBieQDVv_P4DtZEtJMoxk6TV6kT2brT1-XHz5raANlle8PKSwmn2PsCW0pNr2HMKi6IR_8jXQ1PG2T-obA7aRaA", "永觀堂": "https://cdn.zekkei-japan.jp/images/articles/2a49a79e5bae0f2b3ae829133ddf8254.jpg", "南禪寺": "https://tw.wamazing.com/media/wp-content/uploads/sites/4/2021/09/pixta_13874853_M-1.jpg.webp", "天授庵": "https://immay.tw/wp-content/uploads/pixnet/1480130872-2300882830.jpg", "無鄰菴": "https://image.walkerplus.com/wpimg/walkertouch/wtd/event/75/n/321275_1.jpg?x=1920&notupsize=1", "大和魯內飯店 京都四條烏丸": "https://www.daiwaroynet.jp/datas/cache/images/2026/05/01/1760x790_ea1e9d427fb5664c32c517a73e421e58_9be1fcf273f3f8b55bfd470c73bf86754c6cdb69.jpg", "新風館＋LE LABO": "https://static.gltjp.com/glt/data/directory/14000/13502/20220821_072100_cddb5e78_w1920.webp", "京都天ぷら天天天": "https://tblg.k-img.com/restaurant/images/Rvw/350587/640x640_rect_f8d6b6be333bd5851317c1ac254c8085.jpg", "京の焼肉処 弘": "https://rimage.hitosara.com/gg/image/0006078791/0006078791F2_740x555y.jpg?t=1779683033", "空蟬亭": "https://live.staticflickr.com/65535/55284753095_a0c5cd61eb_c.jpg", "DRAGON BURGER": "https://media.vogue.com.tw/photos/63b56fd292e09ec5550899a4/2:3/w_2560%2Cc_limit/IMG_1406.jpg", "祇園辻利": "https://tw.tabiiro.travel/lpimg/gourmet/316016/main/img1.jpg", "BAL": "https://www.bal-bldg.com/app/uploads/sites/2/2024/10/kyoto-pop-up.jpg", "Kyoto LOFT": "https://marukoblog.tw/wp-content/uploads/2023/07/loft-_4.jpg", "SOU・SOU 一条街": "https://file001.shop-pro.jp/PA01018/434/shop_img/info/tabi01_sp.jpg", "詩仙堂": "https://caede-kyoto-asia.com/wp/wp-content/uploads/2020/06/04-2.jpg", "圓光寺": "https://farm66.static.flickr.com/65535/54199970608_6cbb5f5f23_b.jpg", "曼殊院": "https://kavana.tw/wp-content/uploads/thumb_20200828122401_50.jpg", "平等院": "https://img.japanyokoso.com/pac_dir/spot/2021/L00781_A_01_fan.jpg", "宇治上神社": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8QWfgazaHjXjfET6R2Q5_WoJkJD0ejcM2zYONj487kQVi946hpswXs0ji&s=10", "興聖寺": "https://static.gltjp.com/glt/data/directory/15000/14548/20230721_205450_930c1f08_w640.webp", "辻利兵衛本店": "https://www.tsujirihei.co.jp/shop/images/img13.jpg", "クウネルノツヅキ": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEkXIPQW3BlTbBoxf_OBURJ7wYFl-zSMMcov8MfsQXEpwvH2IAP8bucV4&s=10", "Daiwa Roynet Hotel 奈良": "https://www.daiwaroynet.jp/datas/cache/images/2022/01/31/1760x790_ea1e9d427fb5664c32c517a73e421e58_1e3ed9f95d00c160b50aeeed0f36998c4d499d33.jpg", "奈良公園・浮見堂・飛火野": "https://ak-d.tripcdn.com/images/1mi3712000p672el42D70.jpg?proc=source/trip", "保津川漂流": "https://cdn.jeepe.jp/uploads/public_image/image/221/normal_545cb563-d31e-4929-99de-680651f197e6.jpg", "天龍寺": "https://static.japan-food.guide/uploads/ckeditor_asset/data/000/012/365/1562a0d6b690843513e57450a5b0879766183e64dc2b714bfb9be66d7b399b16/image.jpeg", "常寂光寺": "https://farm66.static.flickr.com/65535/54258308911_40eb264834_b.jpg", "寶筐院": "https://lh3.googleusercontent.com/proxy/Dv1UuAW4MxO4yobYsqIyWtbdcMVMI0S-ZDzk05A_Jfr_rCK1PYeAAH4IA26ZpfvAZChfyMl7Uix8adys8D9cyx-N9xkfdHT0yNzL9qziFYdEge_g", "玉寶山 龍穩寺": "https://img.vocus.cc/5oZfPImpIJY-lnsyppvZN0siZt1Cg0DgTpXkqZ61O20/w:740/f:webp/plain/https://images.vocus.cc/498f3673-00c3-474c-ae65-262413c0ed39.jpg", "大本本部 梅松苑": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStUHt0pAA-sVoB4xkrOdJVvV3uPDt-kdExpZnWKlMvAVBQfk9ZGzFuJ94&s=10", "シーサイド佐竹": "https://www.kyotango.gr.jp/wp-content/uploads/2019/03/3ee03f2a84c5f48ee7287dbf1648e62d.jpg", "後ヶ濱海岸": "https://www.kyotango.gr.jp/wp-content/uploads/2023/01/fe7fbedcc24d6c1aef81e6e21480e05d.jpg", "道之驛 てんきてんき丹後": "https://www.kyotango.gr.jp/wp-content/uploads/2019/03/b0760acfdbc23c07950bd21d5b2436c3-1.jpg", "HOTEL＆湖邸 艸花": "https://www.kyotango.gr.jp/wp-content/uploads/2022/06/912aa273f1b2884cd4959f013e2177e9.jpg", "金剛院": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQY33QTqQOPwtY8a2jDECPvbZnvnv1OE3X457MM1ysBfI8qrVzfnkdavg&s=10", "府中側：籠神社＋傘松公園": "https://farm66.static.flickr.com/65535/55341985802_5d219dc002_b.jpg", "文珠側：View Land＋智恩寺": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS6wcfUt3Zl6gR1o-yC-g312RI2CObFOIiL5_nqe7EE2UAlryBKJhnuCI&s=10", "Route Inn 西舞鶴": "https://trvis.r10s.com/d/strg/ctrl/26/184983e9172cb121da6459bedf69d5cb9deb447d.47.9.26.3.jpg", "五老天空塔": "https://www.kyototourism.org/wp/wp-content/uploads/2021/01/Sea_Goro-Sky-Tower-01.jpg", "舞鶴紅磚公園": "https://www.e-japannavi.com/syuyu/kyoto/tango_images/akarenga_park_img700465_01.jpg", "舞鶴港とれとれセンター": "https://toretore.org/wp/wp-content/uploads/2015/10/de2b208e096e93812571d01a60225507-1024x681.jpg", "西本願寺": "https://tripper.tw/wp-content/uploads/%E8%A5%BF%E6%9C%AC%E9%A1%98%E5%AF%BA%E9%8A%80%E6%9D%8F01.jpg", "京都御苑": "https://kyoto-tabiya.com/wp-content/uploads/62a0bd2937ef4acb8fbc6caae2e6f7f2.jpg", "下鴨神社＋糺之森": "https://www.tw-kyoto.yumeyakata.com/wp-content/uploads/2024/11/autumn-leaves1-2-757x1024.jpg", "19:00 KIX → 21:19 TPE": "https://media.cntraveller.com/photos/692844606d000544b56e4083/master/w_1600%2Cc_limit/Japan_271125_GettyImages-1656936311.jpg", "イノダコーヒ本店": "https://ja.kyoto.travel/resource/tourism/2527-1.jpg", "まるき製パン所／fiveran": "https://img.hanako.tokyo/2023/09/02234344/DMA-DSCF5666-768x512.jpg", "Point Pour Point": "https://www.leafkyoto.net/leaf/wp-content/uploads/2025/04/250408-pointpourpoint-1-1024x682.jpg", "ごちそう焼むすび おにまる": "https://www.onimaru-net.com/build/images/index/teaser/menu_hati.78cf1ee9.png"};
+  const imageMap = {"08:05 TPE → 11:35 KIX": "https://preview.redd.it/during-my-flight-to-kyoto-v0-hlohiahw1rse1.jpeg?auto=webp&s=2a56c05f02ca2827b16ac9ff3dd224bfe0155136", "京都站周邊": "https://www.agoda.com/wp-content/uploads/2020/02/Shijo-dori-street-Takashimaya-MARUI-Kyoto-shopping-Japan.jpg", "東福寺": "https://caede-kyoto-asia.com/wp/wp-content/uploads/2020/10/01-81.jpg", "Richmond Hotel 京都站": "https://richmondhotel.jp/datas/cache/images/2023/03/16/1920x800_ea1e9d427fb5664c32c517a73e421e58_6b6a3d25465b474f3daed67958cbbf3e53054f50.jpg", "京豆富不二乃": "https://www.kyotofu.co.jp/wordpress/wp-content/uploads/2016/11/742eca49c8febf7bb8071f2fab2d03f8_up.jpg", "名代とんかつ かつくら": "https://www.katsukura.jp/wp/wp-content/uploads/2020/08/%E2%96%B3%E7%89%B9%E4%B8%8A%E3%83%AD%E3%83%BC%E3%82%B9200%EF%BD%9C20180314_6913.jpg", "京都鶏白湯そば 純": "https://www.leafkyoto.net/leaf/wp-content/uploads/2023/02/230225-jun-1-1024x682.jpg", "三千院＋大原散步": "https://www.tabirai.net/tabirai-uploader/img/0040920/s1_0040920.png", "高雄：神護寺＋西明寺": "https://farm66.static.flickr.com/65535/54736539956_fa37fb8581_b.jpg", "鞍馬寺": "https://caede-kyoto-asia.com/wp/wp-content/uploads/2020/10/02-14.jpg", "真如堂": "https://lh4.googleusercontent.com/proxy/LqrQznuDfV3n5sfPn5of1ZChxBeGBieQDVv_P4DtZEtJMoxk6TV6kT2brT1-XHz5raANlle8PKSwmn2PsCW0pNr2HMKi6IR_8jXQ1PG2T-obA7aRaA", "永觀堂": "https://cdn.zekkei-japan.jp/images/articles/2a49a79e5bae0f2b3ae829133ddf8254.jpg", "南禪寺": "https://tw.wamazing.com/media/wp-content/uploads/sites/4/2021/09/pixta_13874853_M-1.jpg.webp", "天授庵": "https://immay.tw/wp-content/uploads/pixnet/1480130872-2300882830.jpg", "無鄰菴": "https://image.walkerplus.com/wpimg/walkertouch/wtd/event/75/n/321275_1.jpg?x=1920&notupsize=1", "Daiwa Roynet Hotel 烏丸四條": "https://www.daiwaroynet.jp/datas/cache/images/2026/05/01/1760x790_ea1e9d427fb5664c32c517a73e421e58_9be1fcf273f3f8b55bfd470c73bf86754c6cdb69.jpg", "新風館＋LE LABO": "https://static.gltjp.com/glt/data/directory/14000/13502/20220821_072100_cddb5e78_w1920.webp", "京都天ぷら天天天": "https://tblg.k-img.com/restaurant/images/Rvw/350587/640x640_rect_f8d6b6be333bd5851317c1ac254c8085.jpg", "京の焼肉処 弘": "https://rimage.hitosara.com/gg/image/0006078791/0006078791F2_740x555y.jpg?t=1779683033", "空蟬亭": "https://live.staticflickr.com/65535/55284753095_a0c5cd61eb_c.jpg", "DRAGON BURGER": "https://media.vogue.com.tw/photos/63b56fd292e09ec5550899a4/2:3/w_2560%2Cc_limit/IMG_1406.jpg", "祇園辻利": "https://tw.tabiiro.travel/lpimg/gourmet/316016/main/img1.jpg", "BAL": "https://www.bal-bldg.com/app/uploads/sites/2/2024/10/kyoto-pop-up.jpg", "Kyoto LOFT": "https://marukoblog.tw/wp-content/uploads/2023/07/loft-_4.jpg", "SOU・SOU 一条街": "https://file001.shop-pro.jp/PA01018/434/shop_img/info/tabi01_sp.jpg", "詩仙堂": "https://caede-kyoto-asia.com/wp/wp-content/uploads/2020/06/04-2.jpg", "圓光寺": "https://farm66.static.flickr.com/65535/54199970608_6cbb5f5f23_b.jpg", "曼殊院": "https://kavana.tw/wp-content/uploads/thumb_20200828122401_50.jpg", "平等院": "https://img.japanyokoso.com/pac_dir/spot/2021/L00781_A_01_fan.jpg", "宇治上神社": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8QWfgazaHjXjfET6R2Q5_WoJkJD0ejcM2zYONj487kQVi946hpswXs0ji&s=10", "興聖寺": "https://static.gltjp.com/glt/data/directory/15000/14548/20230721_205450_930c1f08_w640.webp", "辻利兵衛本店": "https://www.tsujirihei.co.jp/shop/images/img13.jpg", "クウネルノツヅキ": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEkXIPQW3BlTbBoxf_OBURJ7wYFl-zSMMcov8MfsQXEpwvH2IAP8bucV4&s=10", "Daiwa Roynet Hotel 奈良": "https://www.daiwaroynet.jp/datas/cache/images/2022/01/31/1760x790_ea1e9d427fb5664c32c517a73e421e58_1e3ed9f95d00c160b50aeeed0f36998c4d499d33.jpg", "奈良公園・浮見堂・飛火野": "https://ak-d.tripcdn.com/images/1mi3712000p672el42D70.jpg?proc=source/trip", "保津川漂流": "https://cdn.jeepe.jp/uploads/public_image/image/221/normal_545cb563-d31e-4929-99de-680651f197e6.jpg", "天龍寺": "https://static.japan-food.guide/uploads/ckeditor_asset/data/000/012/365/1562a0d6b690843513e57450a5b0879766183e64dc2b714bfb9be66d7b399b16/image.jpeg", "常寂光寺": "https://farm66.static.flickr.com/65535/54258308911_40eb264834_b.jpg", "寶筐院": "https://lh3.googleusercontent.com/proxy/Dv1UuAW4MxO4yobYsqIyWtbdcMVMI0S-ZDzk05A_Jfr_rCK1PYeAAH4IA26ZpfvAZChfyMl7Uix8adys8D9cyx-N9xkfdHT0yNzL9qziFYdEge_g", "玉寶山 龍穩寺": "https://img.vocus.cc/5oZfPImpIJY-lnsyppvZN0siZt1Cg0DgTpXkqZ61O20/w:740/f:webp/plain/https://images.vocus.cc/498f3673-00c3-474c-ae65-262413c0ed39.jpg", "大本本部 梅松苑": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStUHt0pAA-sVoB4xkrOdJVvV3uPDt-kdExpZnWKlMvAVBQfk9ZGzFuJ94&s=10", "シーサイド佐竹": "https://www.kyotango.gr.jp/wp-content/uploads/2019/03/3ee03f2a84c5f48ee7287dbf1648e62d.jpg", "後ヶ濱海岸": "https://www.kyotango.gr.jp/wp-content/uploads/2023/01/fe7fbedcc24d6c1aef81e6e21480e05d.jpg", "道之驛 てんきてんき丹後": "https://www.kyotango.gr.jp/wp-content/uploads/2019/03/b0760acfdbc23c07950bd21d5b2436c3-1.jpg", "HOTEL＆湖邸 艸花": "https://www.kyotango.gr.jp/wp-content/uploads/2022/06/912aa273f1b2884cd4959f013e2177e9.jpg", "金剛院": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQY33QTqQOPwtY8a2jDECPvbZnvnv1OE3X457MM1ysBfI8qrVzfnkdavg&s=10", "府中側：籠神社＋傘松公園": "https://farm66.static.flickr.com/65535/55341985802_5d219dc002_b.jpg", "文珠側：View Land＋智恩寺": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS6wcfUt3Zl6gR1o-yC-g312RI2CObFOIiL5_nqe7EE2UAlryBKJhnuCI&s=10", "Route Inn 西舞鶴": "https://trvis.r10s.com/d/strg/ctrl/26/184983e9172cb121da6459bedf69d5cb9deb447d.47.9.26.3.jpg", "五老天空塔": "https://www.kyototourism.org/wp/wp-content/uploads/2021/01/Sea_Goro-Sky-Tower-01.jpg", "舞鶴紅磚公園": "https://www.e-japannavi.com/syuyu/kyoto/tango_images/akarenga_park_img700465_01.jpg", "舞鶴港とれとれセンター": "https://toretore.org/wp/wp-content/uploads/2015/10/de2b208e096e93812571d01a60225507-1024x681.jpg", "西本願寺": "https://tripper.tw/wp-content/uploads/%E8%A5%BF%E6%9C%AC%E9%A1%98%E5%AF%BA%E9%8A%80%E6%9D%8F01.jpg", "京都御苑": "https://kyoto-tabiya.com/wp-content/uploads/62a0bd2937ef4acb8fbc6caae2e6f7f2.jpg", "下鴨神社＋糺之森": "https://www.tw-kyoto.yumeyakata.com/wp-content/uploads/2024/11/autumn-leaves1-2-757x1024.jpg", "19:00 KIX → 21:19 TPE": "https://media.cntraveller.com/photos/692844606d000544b56e4083/master/w_1600%2Cc_limit/Japan_271125_GettyImages-1656936311.jpg", "イノダコーヒ本店": "https://ja.kyoto.travel/resource/tourism/2527-1.jpg", "まるき製パン所／fiveran": "https://img.hanako.tokyo/2023/09/02234344/DMA-DSCF5666-768x512.jpg", "Point Pour Point": "https://www.leafkyoto.net/leaf/wp-content/uploads/2025/04/250408-pointpourpoint-1-1024x682.jpg", "ごちそう焼むすび おにまる": "https://www.onimaru-net.com/build/images/index/teaser/menu_hati.78cf1ee9.png"};
   const dayTitles = [
     "楓都初章・京都駅前的暖色序曲",
     "山里錦秋・三境擇一的紅葉物語",
@@ -709,7 +709,7 @@ const days = [
     'KIDDY LAND':['通常約 11:00–20:00','不定休，以分店公告為準'],
     'SOU・SOU 一条街':['多數店舖通常約 12:00–20:00','各店公休日不同'],
     'Richmond Hotel 京都站':['入住與退房依訂房方案，常見為 14:00／11:00','櫃檯全年服務'],
-    'Daiwa Roynet Hotel 京都四條烏丸':['入住與退房依訂房方案，常見為 14:00／11:00','櫃檯全年服務'],
+    'Daiwa Roynet Hotel 烏丸四條':['入住與退房依訂房方案，常見為 14:00／11:00','櫃檯全年服務'],
     'Daiwa Roynet Hotel 奈良':['入住與退房依訂房方案，常見為 14:00／11:00','櫃檯全年服務'],
     'Route Inn 龜岡':['入住與退房依訂房方案，常見為 15:00／10:00','櫃檯全年服務'],
     'シーサイド佐竹':['入住與退房依方案，晚餐入住時間須特別確認','休館日依旅館公告'],
@@ -718,6 +718,45 @@ const days = [
   };
   Object.entries(lifeInfo).forEach(([n,v])=>{const x=find(n);if(x){x.hours=x.hours||v[0];x.note=x.note||v[1]+'；請以預約確認信或官方公告為準。';}});
   days.forEach((d,i)=>d.wear=wears[i]);
+})();
+
+
+/* ============ 最終內容整理：每日標題、簡介與住宿名稱 ============ */
+(function finalizeKyotoCopy(){
+  const titles=[
+    ['入洛日和','楓都初章・京都駅前的暖色序曲'],
+    ['楓信未定','山里錦秋・三境擇一的紅葉物語'],
+    ['東山有秋','東山錦繡・古寺與庭園的秋日長卷'],
+    ['茶里鹿影','洛北茶旅・由修學院走向宇治奈良'],
+    ['一川嵐色','川舟嵐影・保津川與嵯峨野的一日'],
+    ['山盡見海','丹波晚楓・穿越山寺奔向日本海'],
+    ['海辺無事','潮騷慢泊・丹後海岸的靜謐休日'],
+    ['橋立暮景','海之京都・金剛院與天橋立遠景'],
+    ['港町別章','港町餘韻・舞鶴紅磚與灣景之晨'],
+    ['餘白京都','京洛惜別・銀杏晚楓與歸途']
+  ];
+  days.forEach((d,i)=>{d.title=titles[i][0];d.dayDesc=titles[i][1];});
+  const all=days.flatMap(d=>[...(d.spots||[]),...(d.moreSpots||[])]);
+  all.forEach(s=>{ if(s.name==='Daiwa Roynet Hotel 京都四條烏丸'||s.name==='大和魯內飯店 京都四條烏丸')s.name='Daiwa Roynet Hotel 烏丸四條'; });
+
+  const advice=/建議|避免|若|如果|只有|不必|優先|確認|視當|依當|人潮|排隊|預留|出發前|當日|現場|可刪|機動|體力|時間不足|不要|適合.*時|再決定/;
+  const factualTail={
+    attraction:['空間由建築、庭園與周邊景觀共同構成，步行過程能看到不同角度與層次。','秋末的光線、葉色與落葉狀態會讓同一處景觀呈現不同表情。'],
+    activity:['體驗的重點在沿途地形、自然環境與移動過程，而不只在抵達終點。','路線會隨季節呈現不同景觀，秋末尤其能感受到山林或水岸的色彩變化。'],
+    food:['餐點以店家代表料理與當地食材為主，適合作為認識區域飲食風格的一站。','店內氛圍與菜單會隨季節調整，秋冬通常能見到較溫暖厚實的料理。'],
+    shopping:['店內集合生活雜貨、設計選品或地方特色商品，能補充旅行中的實用品與伴手禮。','不同樓層或品牌各有主題，整體比單一專賣店更容易一次比較。'],
+    hotel:['住宿提供旅途中休息、整理行李與銜接翌日行程的基地。','客房與公共空間的設備依房型而異，訂房內容以確認信所列方案為準。'],
+    transport:['這段交通串接機場、城市或景點，是當日移動的重要環節。','車廂、座位與行李空間依班次與車型而異，實際運行以營運單位公告為準。']
+  };
+  all.forEach(s=>{
+    const sentences=String(s.fullDesc||'').split(/(?<=[。！？])/).map(x=>x.trim()).filter(Boolean);
+    const facts=[],tips=[];
+    sentences.forEach(x=>(advice.test(x)?tips:facts).push(x));
+    if(tips.length){ const moved=tips.join(''); if(!String(s.customInfo||'').includes(moved)) s.customInfo=[s.customInfo,moved].filter(Boolean).join('<br>'); }
+    const tails=factualTail[s.cat]||factualTail.attraction;
+    while(facts.length<3) facts.push(tails[(facts.length)%tails.length]);
+    s.fullDesc=facts.slice(0,4).join('');
+  });
 })();
 
 /* ============ 筆記/照片/自訂景點系統 (LocalStorage 永久保存) ============ */
@@ -775,6 +814,17 @@ function deleteNote(key, noteIdx) {
   setTimeout(()=>{
     const card = document.getElementById('spot-card-'+key); if(card) card.classList.add('open');
   }, 50);
+}
+function editNote(key, noteIdx) {
+  if(!notesStore[key] || typeof notesStore[key][noteIdx] === 'undefined') return;
+  const next = prompt('編輯評論與資訊', notesStore[key][noteIdx]);
+  if(next === null) return;
+  const text = next.trim();
+  if(!text) return;
+  notesStore[key][noteIdx] = text;
+  persistNotes();
+  renderDayContent();
+  setTimeout(()=>{ const card=document.getElementById('spot-card-'+key); if(card) card.classList.add('open'); },50);
 }
 function toggleEditNote(event, key) {
   event.stopPropagation();
@@ -1115,7 +1165,7 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
 
   /* 使用者新增的資訊：可新增多筆，各自獨立刪除，不會互相覆蓋 */
   let userNotes = notesStore[idx] || [];
-  let notesListHTML = userNotes.length ? userNotes.map((n,ni)=>`<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-top:6px; padding-top:6px; border-top:1px dashed rgba(0,0,0,0.12);"><span style="flex:1; white-space:pre-line;">${n}</span><button onclick="event.stopPropagation(); deleteNote('${idx}', ${ni})" style="background:none; border:none; color:#c1502f; cursor:pointer; font-size:11px; flex:none; padding:0 0 0 4px;">✕</button></div>`).join('') : '';
+  let notesListHTML = userNotes.length ? userNotes.map((n,ni)=>`<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-top:6px; padding-top:6px; border-top:1px dashed rgba(0,0,0,0.12);"><span style="flex:1; white-space:pre-line;">${n}</span><span class="note-actions"><button onclick="event.stopPropagation(); editNote('${idx}', ${ni})" title="編輯">✎</button><button onclick="event.stopPropagation(); deleteNote('${idx}', ${ni})" title="刪除">✕</button></span></div>`).join('') : '';
   let displayInfo = '';
   if (spot.customInfo) displayInfo += spot.customInfo;
   if (notesListHTML) displayInfo += `<div style="margin-top:${spot.customInfo ? '8px' : '0'};"><span style="color:#7A5A42; font-weight:700; font-size:11px;">✏️ 您新增的資訊：</span>${notesListHTML}</div>`;
@@ -1332,8 +1382,8 @@ function renderDayContent(){
     </div>
     <div id="day-card-${activeDay}">
       <div class="spot-subtabs"><button class="spot-subtab${curSubTab==='main'?' active':''}" data-type="main" onclick="switchSubTab(${activeDay}, 'main')">📌 主要亮點 (${mainList.length})</button><button class="spot-subtab${curSubTab==='more'?' active':''}" data-type="more" onclick="switchSubTab(${activeDay}, 'more')">🍴 食衣住 (${lifeList.length})</button><button class="spot-subtab${curSubTab==='routemap'?' active':''}" data-type="routemap" onclick="switchSubTab(${activeDay}, 'routemap')">🗺️ 路線圖${routeMaps.length ? ` (${routeMaps.length})` : ''}</button></div>
-      <div class="subtab-content${curSubTab==='main'?' active':''}" data-type="main">${mainSpotsHTML}<button onclick="switchSubTab(${activeDay}, 'more'); setTimeout(()=>document.getElementById('newSpotName-${activeDay}')?.focus(),80)" class="restore-default-btn">＋ 新增景點／食衣住項目</button><button onclick="restoreFixedSpots(${activeDay})" class="restore-default-btn">↩ 還原本日預設項目</button></div>
-      <div class="subtab-content${curSubTab==='more'?' active':''}" data-type="more" style="background:#f4f6f0; border-radius:0 0 var(--r-lg) var(--r-lg); padding:16px 12px 16px; margin-bottom:16px;">${secondaryCardsHTML}${addSpotFormHTML}<button onclick="restoreFixedSpots(${activeDay})" class="restore-default-btn">↩ 還原本日預設項目</button></div>
+      <div class="subtab-content${curSubTab==='main'?' active':''}" data-type="main">${mainSpotsHTML}<button onclick="switchSubTab(${activeDay}, 'more'); setTimeout(()=>document.getElementById('newSpotName-${activeDay}')?.focus(),80)" class="restore-default-btn">＋ 新增景點／食衣住項目</button></div>
+      <div class="subtab-content${curSubTab==='more'?' active':''}" data-type="more" style="background:#f4f6f0; border-radius:0 0 var(--r-lg) var(--r-lg); padding:16px 12px 16px; margin-bottom:16px;">${secondaryCardsHTML}${addSpotFormHTML}</div>
       <div class="subtab-content${curSubTab==='routemap'?' active':''}" data-type="routemap" style="background:#f4f6f0; border-radius:0 0 var(--r-lg) var(--r-lg); padding:16px 12px 16px; margin-bottom:16px;">${routeMapHTML}</div>
     </div>
   `;
@@ -1767,18 +1817,18 @@ function addRuleItem() {
 
 /* ============ DYNAMIC DOCS/VOUCHERS ============ */
 const defaultDocsData = [
-  {ic:'✈️',t:'去程航班 TPE → KIX',s:'11/27 08:05 → 11:35',chip:'待上傳',link:'',img:null},
-  {ic:'🚆',t:'HARUKA／機場交通',s:'KIX → 京都站',chip:'確認票券',link:'',img:null},
-  {ic:'🏨',t:'京都站 Richmond',s:'11/27、12/5',chip:'住宿',link:'',img:null},
-  {ic:'🏨',t:'Daiwa Roynet Hotel 京都四條烏丸',s:'11/28–11/29',chip:'住宿',link:'',img:null},
-  {ic:'🏨',t:'Daiwa Roynet Hotel 奈良',s:'11/30',chip:'住宿',link:'',img:null},
-  {ic:'🏨',t:'Route Inn 龜岡',s:'12/1',chip:'住宿',link:'',img:null},
-  {ic:'🏨',t:'シーサイド佐竹',s:'12/2',chip:'住宿',link:'',img:null},
-  {ic:'🏨',t:'HOTEL＆湖邸 艸花',s:'12/3',chip:'住宿',link:'',img:null},
-  {ic:'🏨',t:'Route Inn 西舞鶴',s:'12/4',chip:'住宿',link:'',img:null},
-  {ic:'🚗',t:'奈良租車／京都還車',s:'12/1–12/5・確認冬季胎',chip:'待確認',link:'',img:null},
-  {ic:'🚣',t:'保津川漂流',s:'12/1・依天候與營運確認',chip:'機動',link:'',img:null},
-  {ic:'✈️',t:'回程航班 KIX → TPE',s:'12/6 19:00 → 21:19',chip:'待上傳',link:'',img:null}
+  {ic:'✈️',t:'去程航班 TPE → KIX',s:'11/27 08:05 → 11:35',chip:'待確認',link:'',img:null,confirmed:false},
+  {ic:'🚆',t:'HARUKA特急',s:'11/27 KIX → 京都站',chip:'待確認',link:'',img:null,confirmed:false},
+  {ic:'🏨',t:'京都站 Richmond',s:'11/27、12/5',chip:'住宿',link:'',img:null,confirmed:false},
+  {ic:'🏨',t:'Daiwa Roynet Hotel 烏丸四條',s:'11/28–11/29',chip:'住宿',link:'',img:null,confirmed:false},
+  {ic:'🏨',t:'Daiwa Roynet Hotel 奈良',s:'11/30',chip:'住宿',link:'',img:null,confirmed:false},
+  {ic:'🏨',t:'Route Inn 龜岡',s:'12/1',chip:'住宿',link:'',img:null,confirmed:false},
+  {ic:'🏨',t:'シーサイド佐竹',s:'12/2',chip:'住宿',link:'',img:null,confirmed:false},
+  {ic:'🏨',t:'HOTEL＆湖邸 艸花',s:'12/3',chip:'住宿',link:'',img:null,confirmed:false},
+  {ic:'🏨',t:'Route Inn 西舞鶴',s:'12/4',chip:'住宿',link:'',img:null,confirmed:false},
+  {ic:'🚗',t:'奈良租車／京都還車',s:'12/1–12/5・確認冬季胎',chip:'待確認',link:'',img:null,confirmed:false},
+  {ic:'🚣',t:'保津川漂流',s:'12/1・依天候與營運確認',chip:'機動',link:'',img:null,confirmed:false},
+  {ic:'✈️',t:'回程航班 KIX → TPE',s:'12/6 19:00 → 21:19',chip:'待確認',link:'',img:null,confirmed:false}
 ];
 let docsData = normalizeStructuredList('kyoto_docs', JSON.parse(localStorage.getItem('kyoto_docs')) || defaultDocsData);
 function persistDocs(){ safeSetItem('kyoto_docs', docsData); }
@@ -1787,24 +1837,25 @@ function renderDocsList() {
   const wrap = document.getElementById('docsListWrap');
   if(!wrap) return;
   wrap.innerHTML = docsData.map((d, i) => `
-    <div class="doc-item">
-      <div class="l" style="flex:1; cursor:pointer;" onclick="handleDocClick(${i})">
-        <div class="ic">${d.ic}</div>
-        <div>
-          <div class="t" style="${d.link && !d.img ? 'color:var(--blue); text-decoration:underline;' : ''}">${d.t}</div>
-          <div class="s">${d.s}</div>
+    <article class="voucher-card ${d.confirmed?'is-confirmed':''}">
+      <div class="voucher-main" onclick="handleDocClick(${i})">
+        <div class="voucher-icon">${d.ic}</div>
+        <div class="voucher-copy">
+          <div class="voucher-title">${d.t}</div>
+          <div class="voucher-sub">${d.s}</div>
         </div>
       </div>
-      <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-end;">
-        <div class="chip" style="${d.img ? 'background:var(--blue); color:#fff;' : ''}">${d.img ? '憑證就緒' : d.chip}</div>
-        ${d.img ? `<button onclick="openAttachModal('${d.img}')" style="background:var(--blue); color:#fff; border:none; padding:6px 10px; border-radius:6px; font-size:11px; font-weight:900; cursor:pointer; white-space:nowrap; box-shadow:var(--shadow-sm);">📱 出示截圖</button>
-                   <button onclick="removeDocImg(${i})" style="background:transparent; color:#c1502f; border:none; padding:0; font-size:10px; font-weight:700; cursor:pointer; text-decoration:underline;">✕ 移除</button>`
-                : `<button onclick="document.getElementById('docFile-${i}').click()" style="background:#fff; border:1px dashed #ccc; color:var(--ink-soft); padding:5px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">📎 上傳截圖</button>`}
+      <div class="voucher-actions">
+        <button class="voucher-status" onclick="toggleDocConfirmed(${i})">${d.confirmed?'已確認':(d.chip||'待確認')}</button>
+        ${d.img ? `<button class="voucher-upload has-file" onclick="openAttachModal('${d.img}')">📱 顯示截圖</button>
+                   <button class="voucher-remove" onclick="removeDocImg(${i})">移除截圖</button>`
+                : `<button class="voucher-upload" onclick="document.getElementById('docFile-${i}').click()">📎 上傳截圖</button>`}
         <input type="file" id="docFile-${i}" accept="image/*" style="display:none" onchange="handleDocPhoto(event, ${i})">
       </div>
-    </div>
+    </article>
   `).join('');
 }
+function toggleDocConfirmed(i){ docsData[i].confirmed=!docsData[i].confirmed; persistDocs(); renderDocsList(); }
 function handleDocClick(i) { const d = docsData[i]; if(d.img) openAttachModal(d.img); else if(d.link) window.open(d.link, '_blank'); }
 async function handleDocPhoto(e,i){const f=e.target.files[0];e.target.value='';if(!f)return;try{docsData[i].img=await uploadMediaFile(f,'documents');persistDocs();renderDocsList();}catch(err){alert('⚠️ '+friendlySyncError(err)+'\n'+String(err.message||err));updateSyncStatus(err);}}
 function removeDocImg(i) { docsData[i].img = null; persistDocs(); renderDocsList(); }
@@ -1911,17 +1962,26 @@ initRainRadar();
 startFamilyCloud();
 
 
-/* 紅葉前線地圖：使用者自行上傳，保存在本機瀏覽器。 */
+/* 紅葉前線地圖：可新增、改名、替換與刪除。 */
 let foliageMapStore = JSON.parse(localStorage.getItem('kyoto_foliage_maps')) || [];
+foliageMapStore = foliageMapStore.map((item,i)=> typeof item==='string' ? {url:item,title:`紅葉地圖 ${i+1}`} : item);
+function persistFoliageMaps(){ localStorage.setItem('kyoto_foliage_maps',JSON.stringify(foliageMapStore)); }
 function renderFoliageMaps(){
   const el=document.getElementById('foliageMapGallery'); if(!el)return;
-  el.innerHTML=foliageMapStore.length?foliageMapStore.map((u,i)=>`<div class="foliage-map-item"><img src="${u}" onclick="openAttachModal('${u}')"><button onclick="removeFoliageMap(${i})">✕</button></div>`).join(''):'<div class="empty">尚未上傳紅葉前線地圖。</div>';
+  el.innerHTML=foliageMapStore.length?foliageMapStore.map((item,i)=>`<div class="foliage-map-item">
+    <img src="${item.url}" onclick="openAttachModal('${item.url}')" alt="${item.title||'紅葉前線地圖'}">
+    <div class="foliage-map-caption">${item.title||`紅葉地圖 ${i+1}`}</div>
+    <div class="foliage-map-actions"><button onclick="editFoliageMap(${i})">✎</button><button onclick="document.getElementById('foliageReplace-${i}').click()">↻</button><button onclick="removeFoliageMap(${i})">✕</button></div>
+    <input type="file" id="foliageReplace-${i}" accept="image/*" style="display:none" onchange="replaceFoliageMap(event,${i})">
+  </div>`).join(''):'<div class="empty">尚未上傳紅葉前線地圖。</div>';
 }
 async function handleFoliageMapUpload(e){
   const files=[...(e.target.files||[])];
-  for(const f of files){ try{foliageMapStore.push(await fileToDataURL(f));}catch(err){console.error(err);} }
-  try{localStorage.setItem('kyoto_foliage_maps',JSON.stringify(foliageMapStore));}catch(err){alert('圖片容量過大，請先刪除舊地圖或改用較小截圖。');}
+  for(const f of files){ try{foliageMapStore.push({url:await fileToDataURL(f),title:f.name.replace(/\.[^.]+$/,'')});}catch(err){console.error(err);} }
+  try{persistFoliageMaps();}catch(err){alert('圖片容量過大，請先刪除舊地圖或改用較小截圖。');}
   e.target.value=''; renderFoliageMaps();
 }
-function removeFoliageMap(i){foliageMapStore.splice(i,1);localStorage.setItem('kyoto_foliage_maps',JSON.stringify(foliageMapStore));renderFoliageMaps();}
+function editFoliageMap(i){ const next=prompt('修改地圖名稱',foliageMapStore[i].title||''); if(next===null)return; foliageMapStore[i].title=next.trim()||`紅葉地圖 ${i+1}`; persistFoliageMaps(); renderFoliageMaps(); }
+async function replaceFoliageMap(e,i){ const f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f)return; foliageMapStore[i].url=await fileToDataURL(f); persistFoliageMaps(); renderFoliageMaps(); }
+function removeFoliageMap(i){ if(!confirm('刪除這張紅葉地圖？'))return; foliageMapStore.splice(i,1);persistFoliageMaps();renderFoliageMaps();}
 document.addEventListener('DOMContentLoaded',renderFoliageMaps);

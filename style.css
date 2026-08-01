@@ -407,3 +407,22 @@ body.family-locked{overflow:hidden;}
 .transport-link-row a,.foliage-links a{display:inline-flex;text-decoration:none;border:1px solid #F3AF11;background:#fffaf0;color:#7A3201;border-radius:999px;padding:7px 11px;font-size:11px;font-weight:700}
 .accommodation-inline{margin:12px 0 14px;padding:12px;background:#fff8e7;border:1px solid #F9DD90;border-radius:14px}.accommodation-inline h4{margin:0 0 8px;color:#AD1E17}
 .foliage-map-gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:10px 0}.foliage-map-item{position:relative}.foliage-map-item img{width:100%;height:130px;object-fit:cover;border-radius:12px;cursor:zoom-in}.foliage-map-item button{position:absolute;right:5px;top:5px;border:0;border-radius:50%;width:24px;height:24px;background:rgba(122,50,1,.8);color:white}.foliage-upload-btn{width:100%;border:0;border-radius:999px;padding:10px;background:linear-gradient(135deg,#AD1E17,#FC7D2E);color:white;font-family:inherit;font-weight:800;cursor:pointer}
+
+
+/* ===== 票券住宿總匯 ===== */
+.voucher-list{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.voucher-card{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff5e8;border:1px solid rgba(252,125,46,.22);border-radius:20px;padding:16px;box-shadow:0 6px 18px rgba(122,50,1,.06)}
+.voucher-card.is-confirmed{background:#fff9ef}
+.voucher-main{display:flex;align-items:center;gap:12px;min-width:0;flex:1;cursor:pointer}
+.voucher-icon{font-size:29px;flex:none}.voucher-copy{min-width:0}.voucher-title{font-size:15px;font-weight:900;color:#3e4655;line-height:1.35}.voucher-sub{font-size:11.5px;color:#7b8493;margin-top:4px;line-height:1.45}
+.voucher-actions{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex:none}.voucher-status{border:0;border-radius:999px;padding:7px 12px;background:#f4c776;color:#69320c;font-family:inherit;font-size:11px;font-weight:900;cursor:pointer}.voucher-card.is-confirmed .voucher-status{background:#8fd6c3;color:#175b50}.voucher-upload{border:1.5px dashed #d9b78f;background:#fffaf4;color:#795d48;border-radius:10px;padding:7px 10px;font-family:inherit;font-size:10.5px;font-weight:800;cursor:pointer}.voucher-upload.has-file{border-style:solid;background:#ad1e17;color:#fff}.voucher-remove{border:0;background:none;color:#ad1e17;font-size:9.5px;text-decoration:underline;cursor:pointer}
+@media(max-width:390px){.voucher-card{align-items:flex-start}.voucher-actions{max-width:105px}.voucher-title{font-size:14px}}
+
+/* ===== 交通提醒 ===== */
+.transport-section .sub{margin-bottom:14px}.transport-grid{display:flex;flex-direction:column;gap:10px}.transport-card{display:grid;grid-template-columns:46px 1fr;gap:11px;background:#fffaf3;border:1px solid rgba(243,175,17,.25);border-radius:16px;padding:13px}.transport-day{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#ad1e17,#fc7d2e);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900}.transport-card h4{margin:0 0 5px;color:#563018;font-size:13px}.transport-card p{margin:0;color:#6b625d;font-size:11.5px;line-height:1.65}.transport-card .transport-link-row{margin:8px 0 0}
+
+/* ===== 評論編輯 ===== */
+.note-actions{display:inline-flex;gap:3px;flex:none}.note-actions button{width:24px;height:24px;border:0;border-radius:50%;background:#fff8f2;color:#a54f28;cursor:pointer;font-weight:900}
+
+/* ===== 紅葉地圖管理 ===== */
+.foliage-map-item{background:#fffaf2;border:1px solid rgba(243,175,17,.25);border-radius:14px;padding:6px}.foliage-map-caption{font-size:10.5px;font-weight:800;color:#7a3201;padding:6px 3px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.foliage-map-actions{position:absolute;right:10px;top:10px;display:flex;gap:4px}.foliage-map-actions button{position:static;width:25px;height:25px;background:rgba(122,50,1,.86)}
