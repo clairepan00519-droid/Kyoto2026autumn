@@ -1372,11 +1372,11 @@ function renderDayContent(){
 
   dayContent.innerHTML = `
     <div class="day-card-head">
-      <div class="region">【Day ${d.dayNum}｜${d.date}】<br>${d.region}</div>
+      <div class="region">【Day ${d.dayNum}｜${d.date}】<br>${d.title}</div>
       ${d.drive ? `<div class="drive-info">${d.drive}</div>` : ''}
       ${d.gas ? `<div class="gas-info">${d.gas}</div>` : ''}
-      <h2>${d.title}</h2>
-      ${d.dayDesc ? `<div class="day-desc-box">${d.dayDesc}</div>` : ''}
+      ${d.dayDesc ? `<h2>${d.dayDesc}</h2>` : ''}
+      ${d.region ? `<div class="day-desc-box">${d.region}</div>` : ''}
       <div class="weather-strip"><div class="ico">${d.weatherIco}</div><div class="txt"><b style="font-family:'Zen Kaku Gothic New', sans-serif; font-size:14px;">${d.enRegion}</b><br><span style="font-size:11.5px; opacity:0.85;">${d.wear}</span></div></div>
       <div class="stay-line">🏡 ${[...(d.spots||[]),...(d.moreSpots||[])].filter(s=>s.cat==='hotel').map(s=>s.name).join('、') || '返家／無住宿'}</div>
     </div>
