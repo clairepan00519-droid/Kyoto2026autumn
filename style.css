@@ -465,3 +465,268 @@ body.family-locked{overflow:hidden;}
   .voucher-status{grid-column:auto}
   .note-actions button{width:22px;height:22px}
 }
+
+/* ===== 2026-08 手機閱讀與字型縮放穩定化 ===== */
+html{
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+  font-size:16px;
+}
+body{
+  line-height:1.6;
+  overflow-x:hidden;
+}
+.app,
+.view,
+.section-card,
+.guide-card,
+.sub-spot-card,
+.route-summary-card,
+.voucher-card,
+.weather-card{
+  min-width:0;
+  max-width:100%;
+}
+h1,h2,h3,h4,p,a,button,span,div{
+  overflow-wrap:anywhere;
+}
+button,a{
+  max-width:100%;
+}
+
+/* 內容區留足底部空間，避免固定導覽列遮住卡片。 */
+body{padding-bottom:calc(124px + env(safe-area-inset-bottom));}
+.bottom-nav{
+  bottom:calc(10px + env(safe-area-inset-bottom));
+  width:min(calc(100% - 24px),440px);
+  padding:6px;
+}
+.bottom-nav button{min-width:0;padding:8px 4px;}
+.bottom-nav button .ic{font-size:clamp(17px,5vw,21px);line-height:1;}
+.bottom-nav button .lb{font-size:clamp(10px,3vw,12px);line-height:1.25;white-space:nowrap;}
+
+/* 景點資訊：標題清楚、內文寬鬆，所有長字串都能自然換行。 */
+.guide-header-content,.sub-spot-header-content{width:100%;}
+.guide-header-content h3,.sub-spot-header-content h3{
+  font-size:clamp(1.15rem,5vw,1.55rem);
+  line-height:1.25;
+  text-wrap:balance;
+}
+.guide-header-content p,.sub-spot-header-content p{
+  font-size:clamp(.9rem,3.8vw,1.05rem);
+  line-height:1.55;
+}
+.guide-details p.full-desc,.sub-spot-details p.full-desc{
+  font-size:clamp(.94rem,3.8vw,1.08rem);
+  line-height:1.85;
+}
+.info-grid{gap:9px;}
+.info-item{padding:11px 12px;}
+.info-item .k{font-size:.78rem;line-height:1.35;}
+.info-item .v{font-size:.94rem;line-height:1.6;}
+.important-info .v{font-size:.93rem;line-height:1.7;}
+
+/* 評論區：操作按鈕不再擠壓文字，避免出現直排或逐字斷行。 */
+.custom-info-box{
+  background:#fff8f3;
+  border-left:4px solid #FC7D2E;
+  border-radius:14px;
+  padding:13px 14px;
+}
+.custom-info-heading{margin-bottom:10px;}
+.custom-info-heading b{font-size:1rem;line-height:1.35;}
+.custom-info-add{font-size:.82rem;padding:7px 12px;}
+.built-in-info-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:9px;
+}
+.built-in-info-text{
+  width:100%;
+  font-size:.96rem;
+  line-height:1.85;
+  white-space:pre-line;
+  word-break:normal;
+  overflow-wrap:break-word;
+}
+.built-in-actions{
+  justify-self:end;
+  display:flex;
+  gap:7px;
+  padding:0;
+}
+.note-actions{display:flex;flex-direction:row;gap:7px;}
+.note-actions button{
+  width:32px;
+  height:32px;
+  font-size:.9rem;
+  border:1px solid rgba(165,100,40,.14);
+}
+.user-info-list>div{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:8px!important;
+}
+.user-info-list .note-actions{justify-self:end;}
+.note-edit-area textarea{font-size:1rem!important;line-height:1.6;}
+
+/* 票券與住宿總匯：改成接近紐西蘭版的緊湊橫向資訊卡。 */
+.voucher-list{display:flex;flex-direction:column;gap:10px;}
+.voucher-card,
+.voucher-card.is-confirmed{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:12px;
+  background:#f8f9f4;
+  border:0;
+  border-radius:17px;
+  padding:13px 14px;
+  box-shadow:none;
+}
+.voucher-main{gap:11px;align-items:center;}
+.voucher-icon{font-size:1.7rem;line-height:1;flex:none;}
+.voucher-copy{min-width:0;}
+.voucher-title{
+  font-size:clamp(.98rem,4vw,1.13rem);
+  line-height:1.35;
+  color:#344054;
+  font-weight:900;
+  word-break:normal;
+}
+.voucher-sub{
+  margin-top:3px;
+  font-size:clamp(.78rem,3.2vw,.92rem);
+  line-height:1.45;
+  color:#7a8494;
+  word-break:normal;
+}
+.voucher-actions{
+  display:grid;
+  grid-template-columns:auto;
+  justify-items:end;
+  gap:7px;
+  min-width:7.5rem;
+  max-width:9rem;
+}
+.voucher-status{
+  font-size:.82rem;
+  line-height:1.2;
+  padding:8px 12px;
+  white-space:normal;
+}
+.voucher-upload{
+  width:100%;
+  font-size:.8rem;
+  line-height:1.3;
+  padding:8px 9px;
+  white-space:normal;
+}
+.voucher-remove{font-size:.75rem;}
+
+/* 行程摘要及交通卡降低視覺噪音。 */
+.route-summary-grid{gap:8px;}
+.route-summary-item{min-width:0;}
+.transport-card{
+  background:#fffdf8;
+  border-color:rgba(165,100,40,.16);
+  box-shadow:none;
+}
+.transport-card h4{font-size:.96rem;line-height:1.4;}
+.transport-card p{font-size:.88rem;line-height:1.75;}
+.transport-link-row{display:flex;flex-wrap:wrap;gap:7px;}
+.transport-link-row a{flex:1 1 9rem;min-width:0;}
+
+/* 天氣卡縮短垂直高度，資訊層級更清楚。 */
+.weather-card{padding:15px;}
+.weather-card .wear-box,.weather-card .weather-wear{
+  font-size:.9rem;
+  line-height:1.7;
+}
+
+@media(max-width:480px){
+  .view{padding-left:12px;padding-right:12px;}
+  .section-card{padding:15px 13px;}
+  .guide-details,.sub-spot-details{padding-left:14px;padding-right:14px;}
+  .info-grid{grid-template-columns:1fr;}
+  .voucher-card,
+  .voucher-card.is-confirmed{
+    grid-template-columns:minmax(0,1fr) minmax(6.8rem,8rem);
+    padding:12px;
+    gap:9px;
+  }
+  .voucher-actions{
+    width:100%;
+    min-width:0;
+    max-width:none;
+    display:grid;
+    grid-template-columns:1fr;
+  }
+  .voucher-status,.voucher-upload{width:100%;}
+  .custom-info-heading{align-items:center;}
+}
+
+/* 極窄螢幕或大字型時，自動改成上下排列，不犧牲可讀性。 */
+@media(max-width:350px){
+  .voucher-card,
+  .voucher-card.is-confirmed{grid-template-columns:1fr;}
+  .voucher-actions{grid-template-columns:1fr 1fr;justify-items:stretch;}
+  .voucher-status,.voucher-upload{text-align:center;}
+  .bottom-nav button .lb{font-size:10px;}
+}
+
+
+/* ===== 路線摘要：每日索引卡 ===== */
+.route-summary-card{padding:16px 14px;background:linear-gradient(145deg,rgba(249,221,144,.5),rgba(208,244,252,.32));}
+.route-summary-heading h4{margin:0;color:var(--maple-red);font-size:1rem;line-height:1.35;}
+.route-summary-heading p{margin:4px 0 12px;color:var(--ink-soft);font-size:.8rem;line-height:1.5;}
+.route-summary-grid{gap:9px;}
+.route-summary-grid>.route-summary-item{
+  display:grid;grid-template-columns:4.4rem minmax(0,1fr);gap:10px;align-items:center;
+  padding:10px 11px;border-radius:14px;background:rgba(255,255,255,.82);
+  border:1px solid rgba(165,100,40,.12);border-left:5px solid var(--orange);
+}
+.route-day{display:flex;flex-direction:column;align-items:flex-start;line-height:1.1;}
+.route-day b{font-size:.95rem;color:var(--wood);white-space:nowrap;}
+.route-day span{margin-top:4px;font-size:.72rem;color:var(--ink-soft);white-space:nowrap;}
+.route-copy{min-width:0;display:flex;flex-direction:column;gap:3px;}
+.route-copy strong{font-size:.92rem;color:#4c3322;line-height:1.35;overflow-wrap:anywhere;}
+.route-copy span{font-size:.79rem;color:var(--ink-soft);line-height:1.5;overflow-wrap:anywhere;}
+
+/* ===== 天氣：旅遊閱讀版 ===== */
+#liveWeatherWrap{display:grid;gap:14px;}
+.weather-day{padding:0;border:0;background:transparent;box-shadow:none;margin:0;}
+.weather-city-card{background:#fff;border:1px solid rgba(165,100,40,.18);border-radius:20px;padding:15px;box-shadow:0 7px 20px rgba(122,50,1,.06);}
+.weather-primary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;}
+.weather-place{min-width:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.weather-place>strong{font-size:1rem;color:#3f332b;line-height:1.35;overflow-wrap:anywhere;}
+.weather-main{display:flex;align-items:center;gap:9px;flex:none;}
+.weather-icon{font-size:2rem;line-height:1;}
+.weather-main>div{display:flex;flex-direction:column;align-items:flex-end;line-height:1.05;}
+.weather-main b{font-size:.95rem;color:#47362b;white-space:nowrap;}
+.weather-main strong{font-size:1.25rem;color:#2f3a4a;margin-top:5px;white-space:nowrap;}
+.weather-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:13px;padding-top:12px;border-top:1px dashed rgba(165,100,40,.18);}
+.weather-metrics span{display:flex;align-items:center;justify-content:center;min-width:0;padding:7px 5px;border-radius:10px;background:#f8f6f0;color:#6b625d;font-size:.75rem;line-height:1.35;text-align:center;overflow-wrap:anywhere;}
+.weather-sun-row{display:flex;gap:8px;margin-top:9px;}
+.weather-sun-row span{flex:1;min-width:0;padding:8px 9px;border-radius:11px;background:linear-gradient(135deg,rgba(249,221,144,.55),rgba(252,125,46,.08));font-size:.78rem;font-weight:700;color:#6d4427;text-align:center;}
+.weather-travel-note,.weather-wear-note{display:grid;grid-template-columns:5.2rem minmax(0,1fr);gap:8px;align-items:start;margin-top:9px;padding:10px 11px;border-radius:12px;}
+.weather-travel-note{background:#fff5e7;border-left:4px solid var(--orange);}
+.weather-wear-note{background:#f7f8ee;border-left:4px solid var(--teal);}
+.weather-travel-note b,.weather-wear-note b{font-size:.78rem;line-height:1.45;color:#70431f;}
+.weather-travel-note span,.weather-wear-note span{font-size:.8rem;line-height:1.65;color:#625a55;overflow-wrap:anywhere;}
+.weather-error{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;padding:14px;border-radius:16px;border:1px solid rgba(165,100,40,.18);font-size:.82rem;color:var(--ink-soft);}
+.weather-error button{border:0;border-radius:999px;background:#f2f3ec;color:var(--ink-soft);padding:7px 11px;font-family:inherit;font-weight:700;white-space:nowrap;}
+
+@media(max-width:420px){
+  .route-summary-grid>.route-summary-item{grid-template-columns:3.9rem minmax(0,1fr);padding:9px 10px;}
+  .weather-primary{grid-template-columns:minmax(0,1fr) auto;}
+  .weather-metrics{grid-template-columns:1fr 1fr 1fr;}
+  .weather-travel-note,.weather-wear-note{grid-template-columns:1fr;gap:4px;}
+}
+@media(max-width:350px){
+  .weather-primary{grid-template-columns:1fr;}
+  .weather-main{justify-content:flex-start;}
+  .weather-main>div{align-items:flex-start;}
+  .weather-metrics{grid-template-columns:1fr;}
+  .weather-sun-row{flex-direction:column;}
+}

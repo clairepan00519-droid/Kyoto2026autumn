@@ -17,7 +17,7 @@
    連結使用，此檔案就會正常運作並提供離線瀏覽能力。
    =========================================================== */
 
-const CACHE_VERSION = 'kyoto-trip-v25-attraction-summaries';
+const CACHE_VERSION = 'kyoto-trip-v31-remove-region-row';
 const SHELL_CACHE = `nz-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `nz-runtime-${CACHE_VERSION}`;
 

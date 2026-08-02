@@ -1399,7 +1399,6 @@ function renderDayContent(){
       ${d.drive ? `<div class="drive-info">${d.drive}</div>` : ''}
       ${d.gas ? `<div class="gas-info">${d.gas}</div>` : ''}
       ${d.dayDesc ? `<h2>${d.dayDesc}</h2>` : ''}
-      ${d.region ? `<div class="day-desc-box">${d.region}</div>` : ''}
       <div class="weather-strip"><div class="ico">${d.weatherIco}</div><div class="txt"><b style="font-family:'Zen Kaku Gothic New', sans-serif; font-size:14px;">${d.enRegion}</b><br><span style="font-size:11.5px; opacity:0.85;">${d.wear}</span></div></div>
       <div class="stay-line">🏡 ${[...(d.spots||[]),...(d.moreSpots||[])].filter(s=>s.cat==='hotel').map(s=>s.name).join('、') || '返家／無住宿'}</div>
     </div>
@@ -1562,10 +1561,10 @@ function renderOneLiveCity(k){
   const data = entry && entry.data;
   if(!data || !data.current){
     const reason = (entry && entry.error) ? entry.error : '暫時無法取得氣象資料';
-    el.innerHTML = `<div class="mid" style="display:flex; align-items:center; justify-content:space-between; width:100%;"><div class="out">${CITIES[k].label}：${reason}</div><button onclick="fetchWeatherFor('${k}', 0)" style="background:#f2f3ec; border:none; color:var(--ink-soft); padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">🔄 重試</button></div>`;
+    el.innerHTML = `<div class="weather-error"><span>${CITIES[k].label}：${reason}</span><button onclick="fetchWeatherFor('${k}', 0)">🔄 重試</button></div>`;
     return;
   }
-  
+
   const cw = data.current;
   const [ico, desc] = wmoInfo(cw.weather_code);
   const temp = Math.round(cw.temperature_2m);
@@ -1573,32 +1572,38 @@ function renderOneLiveCity(k){
   const precip = cw.precipitation;
   const sr = data.daily && data.daily.sunrise ? data.daily.sunrise[0].substring(11, 16) : '--:--';
   const ss = data.daily && data.daily.sunset ? data.daily.sunset[0].substring(11, 16) : '--:--';
-  const uv = data.daily && data.daily.uv_index_max ? getUVStars(data.daily.uv_index_max[0]) : '未知';
+  const uvRaw = data.daily && data.daily.uv_index_max ? Number(data.daily.uv_index_max[0]) : null;
+  const uvText = uvRaw==null ? '未知' : uvRaw < 3 ? '低' : uvRaw < 6 ? '中' : uvRaw < 8 ? '高' : '很高';
   const tip = getDynamicTip(temp, cw.weather_code);
   const badgeHtml = entry.stale
     ? `<span class="live-badge stale"><span class="dot"></span>快取${entry.fetchedAt ? '・' + new Date(entry.fetchedAt).toLocaleString('zh-TW',{hour12:false, month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit'}) : ''}</span>`
     : `<span class="live-badge"><span class="dot"></span>即時</span>`;
-  
-  const MW_TIMES = { Kyoto:'市區紅葉進度依寺院而異', Ohara:'山區通常較早轉色', Nara:'奈良公園晚秋色調較柔和', Kameoka:'保津峽約11月中下旬', Kyotango:'海岸紅葉少、以海景為主', Amanohashidate:'成相寺一帶可留意晚楓', Maizuru:'金剛院可能有晚楓或落葉毯' };
-  
+
+  const MW_TIMES = { Kyoto:'市區各寺院轉色速度不同，東山與洛北請分開判斷。', Ohara:'山區通常比京都市區更早轉色，也更早落葉。', Nara:'奈良公園多為銀杏、櫸木與楓葉交錯，晚秋色調較柔和。', Kameoka:'保津峽約在 11 月中下旬進入觀賞期，風雨後落葉速度會加快。', Kyotango:'海岸以海景為主，紅葉集中在山寺與內陸路段。', Amanohashidate:'可留意成相寺與府中側山區的晚楓。', Maizuru:'金剛院可能保有晚楓或落葉紅毯，紅磚區則以港景為主。' };
+
   el.innerHTML = `
-    <div style="display:flex; flex-direction:column; width:100%;">
-      <div style="display:flex; align-items:center; gap:12px; width:100%; border-bottom:1px dashed #eee; padding-bottom:10px; margin-bottom:10px;">
-        <div class="date" style="width:auto; text-align:left;"><b style="font-size:12.5px;">${CITIES[k].label}</b>${badgeHtml}</div>
-        <div class="ico">${ico}</div>
-        <div class="mid"><div class="place" style="font-size:14px; font-weight:900; white-space:nowrap;">${desc}</div><div class="out" style="font-size:11px; font-weight:700;">${temp}°C</div></div>
-        <div class="w-bot" style="text-align:right;">
-          <span style="display:block; font-size:10px;">風速 ${wind} km/h</span>
-          <span style="display:block; font-size:10px; color:#c1502f;">降雨 ${precip} mm</span>
-          <span style="display:block; font-size:10px; color:var(--teal);">UV ${uv}</span>
+    <div class="weather-city-card">
+      <div class="weather-primary">
+        <div class="weather-place">
+          <strong>${CITIES[k].label}</strong>
+          ${badgeHtml}
+        </div>
+        <div class="weather-main">
+          <span class="weather-icon">${ico}</span>
+          <div><b>${desc}</b><strong>${temp}°C</strong></div>
         </div>
       </div>
-      <div class="astro-box" style="margin-top:0;">
+      <div class="weather-metrics" aria-label="氣象數據">
+        <span>💨 ${wind} km/h</span>
+        <span>🌧️ ${precip} mm</span>
+        <span>☀️ UV ${uvText}</span>
+      </div>
+      <div class="weather-sun-row">
         <span>🌅 日出 ${sr}</span>
         <span>🌇 日落 ${ss}</span>
-        <span class="mw">🍁 紅葉提醒 ${MW_TIMES[k]}</span>
       </div>
-      <div class="live-tip-box"><b>🧥 穿搭與裝備建議：</b><br>${tip}</div>
+      <div class="weather-travel-note"><b>🍁 紅葉提醒</b><span>${MW_TIMES[k]}</span></div>
+      <div class="weather-wear-note"><b>🧥 穿搭</b><span>${tip}</span></div>
     </div>
   `;
 }
