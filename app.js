@@ -276,6 +276,7 @@ function isAnyComposerOpen(){
   if(isUserEditingForm()) return true;
   if(document.querySelector('.note-edit-area[style*="display: block"], .note-edit-area[style*="display:block"]')) return true;
   if(document.querySelector('[id^="spot-edit-short-"], [id^="spot-edit-full-"]')) return true;
+  if(document.getElementById('spotEditModal')?.classList.contains('active')) return true;
   if(typeof isPackComposerEditing==='function' && isPackComposerEditing()) return true;
   return false;
 }
@@ -834,9 +835,13 @@ function currentFieldValue(idx, field, fallback){
   const k = fieldOverrideKey(idx, field);
   return Object.prototype.hasOwnProperty.call(fieldOverrideStore, k) ? fieldOverrideStore[k] : (fallback || null);
 }
-function editSpotField(event, idx, field, label, fallback){
+/* 原始預設文字改存在記憶體登記表，不再塞進 onclick 的 HTML 屬性字串裡——
+   如果原文含有雙引號，直接內嵌會把 onclick="..." 屬性截斷，導致按鈕失效。 */
+window._spotFieldOriginals = window._spotFieldOriginals || {};
+function editSpotField(event, idx, field, label){
   event.stopPropagation();
   const k = fieldOverrideKey(idx, field);
+  const fallback = (window._spotFieldOriginals[idx] || {})[field] || null;
   const current = currentFieldValue(idx, field, fallback);
   const next = prompt('編輯' + label, current == null ? '' : current);
   if(next === null) return;
@@ -855,7 +860,64 @@ function clearSpotField(event, idx, field){
   setTimeout(() => document.getElementById('spot-card-' + idx)?.classList.add('open'), 50);
 }
 
-function editBuiltInInfo(key, fallback){
+/* ============ 統一編輯視窗：名稱／簡介／營業時間／提點／評論／導航地點 ============ */
+let _spotEditModalIdx = null;
+function openSpotEditModal(event, idx){
+  if(event) event.stopPropagation();
+  _spotEditModalIdx = idx;
+  const orig = window._spotFieldOriginals[idx] || {};
+  const infoOrig = window._spotCustomInfoOriginals[idx] || null;
+  document.getElementById('editSpotName').value = currentFieldValue(idx, 'name', orig.name) || '';
+  document.getElementById('editSpotDesc').value = currentFieldValue(idx, 'desc', orig.desc) || '';
+  document.getElementById('editSpotHours').value = currentFieldValue(idx, 'hours', orig.hours) || '';
+  document.getElementById('editSpotNote').value = currentFieldValue(idx, 'note', orig.note) || '';
+  document.getElementById('editSpotInfo').value = currentBuiltInInfo(idx, infoOrig) || '';
+  document.getElementById('editSpotMapQuery').value = currentFieldValue(idx, 'mapQuery', null) || '';
+  document.getElementById('spotEditModal').classList.add('active');
+}
+function closeSpotEditModal(){
+  document.getElementById('spotEditModal').classList.remove('active');
+  _spotEditModalIdx = null;
+  flushPendingDayRender();
+}
+function saveSpotEditModal(){
+  const idx = _spotEditModalIdx;
+  if(!idx) return;
+  const setField = (field, val) => {
+    const v = (val || '').trim();
+    fieldOverrideStore[fieldOverrideKey(idx, field)] = v || null;
+  };
+  setField('name', document.getElementById('editSpotName').value);
+  setField('desc', document.getElementById('editSpotDesc').value);
+  setField('hours', document.getElementById('editSpotHours').value);
+  setField('note', document.getElementById('editSpotNote').value);
+  setField('mapQuery', document.getElementById('editSpotMapQuery').value);
+  persistFieldOverrides();
+  const infoVal = document.getElementById('editSpotInfo').value.trim();
+  infoOverrideStore[idx] = infoVal || null;
+  persistInfoOverrides();
+  document.getElementById('spotEditModal').classList.remove('active');
+  _spotEditModalIdx = null;
+  renderDayContent();
+  setTimeout(() => document.getElementById('spot-card-' + idx)?.classList.add('open'), 50);
+}
+function resetSpotEditModal(){
+  const idx = _spotEditModalIdx;
+  if(!idx) return;
+  if(!confirm('確定要把這個景點的名稱、簡介、營業時間、提點、評論、導航地點全部還原成預設嗎？')) return;
+  ['name','desc','hours','note','mapQuery'].forEach(f => delete fieldOverrideStore[fieldOverrideKey(idx, f)]);
+  persistFieldOverrides();
+  delete infoOverrideStore[idx];
+  persistInfoOverrides();
+  document.getElementById('spotEditModal').classList.remove('active');
+  _spotEditModalIdx = null;
+  renderDayContent();
+  setTimeout(() => document.getElementById('spot-card-' + idx)?.classList.add('open'), 50);
+}
+
+window._spotCustomInfoOriginals = window._spotCustomInfoOriginals || {};
+function editBuiltInInfo(key){
+  const fallback = window._spotCustomInfoOriginals[key] || null;
   const current=currentBuiltInInfo(key,fallback);
   const next=prompt('編輯這筆評論與資訊', current==null?'':current);
   if(next===null)return;
@@ -1227,13 +1289,17 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
   }
   
   const infoBits = [];
+  window._spotFieldOriginals[idx] = { hours: spot.hours || null, note: spot.note || null, name: spot.name || null, desc: spot.desc || null };
+  const displayName = currentFieldValue(idx, 'name', spot.name) || spot.name;
+  const displayDesc = currentFieldValue(idx, 'desc', spot.desc) || spot.desc;
+  const navQuery = currentFieldValue(idx, 'mapQuery', null) || displayName;
   if(spot.dur) infoBits.push(`<div class="info-item"><div class="k">建議停留</div><div class="v">${spot.dur}</div></div>`);
   const hoursVal = currentFieldValue(idx, 'hours', spot.hours);
-  if(hoursVal) infoBits.push(`<div class="info-item"><div class="k field-k-row">營業／開放時間<span class="field-edit-actions"><button onclick="event.stopPropagation(); editSpotField(event,'${idx}','hours','營業／開放時間',${JSON.stringify(spot.hours||'')})" title="編輯">✎</button><button onclick="event.stopPropagation(); clearSpotField(event,'${idx}','hours')" title="清空">✕</button></span></div><div class="v info-hours">${hoursVal}</div></div>`);
-  else infoBits.push(`<div class="info-item"><div class="k">營業／開放時間</div><div class="v"><button class="field-add-btn" onclick="event.stopPropagation(); editSpotField(event,'${idx}','hours','營業／開放時間',${JSON.stringify(spot.hours||'')})">＋ 新增</button></div></div>`);
+  if(hoursVal) infoBits.push(`<div class="info-item"><div class="k field-k-row">營業／開放時間<span class="field-edit-actions"><button onclick="event.stopPropagation(); editSpotField(event,'${idx}','hours','營業／開放時間')" title="編輯">✎</button><button onclick="event.stopPropagation(); clearSpotField(event,'${idx}','hours')" title="清空">✕</button></span></div><div class="v info-hours">${hoursVal}</div></div>`);
+  else infoBits.push(`<div class="info-item"><div class="k">營業／開放時間</div><div class="v"><button class="field-add-btn" onclick="event.stopPropagation(); editSpotField(event,'${idx}','hours','營業／開放時間')">＋ 新增</button></div></div>`);
   const noteVal = currentFieldValue(idx, 'note', spot.note);
-  if(noteVal) infoBits.push(`<div class="info-item full-w important-info"><div class="k field-k-row">重要提點／門票<span class="field-edit-actions"><button onclick="event.stopPropagation(); editSpotField(event,'${idx}','note','重要提點／門票',${JSON.stringify(spot.note||'')})" title="編輯">✎</button><button onclick="event.stopPropagation(); clearSpotField(event,'${idx}','note')" title="清空">✕</button></span></div><div class="v">${noteVal}</div></div>`);
-  else infoBits.push(`<div class="info-item full-w"><div class="k">重要提點／門票</div><div class="v"><button class="field-add-btn" onclick="event.stopPropagation(); editSpotField(event,'${idx}','note','重要提點／門票',${JSON.stringify(spot.note||'')})">＋ 新增</button></div></div>`);
+  if(noteVal) infoBits.push(`<div class="info-item full-w important-info"><div class="k field-k-row">重要提點／門票<span class="field-edit-actions"><button onclick="event.stopPropagation(); editSpotField(event,'${idx}','note','重要提點／門票')" title="編輯">✎</button><button onclick="event.stopPropagation(); clearSpotField(event,'${idx}','note')" title="清空">✕</button></span></div><div class="v">${noteVal}</div></div>`);
+  else infoBits.push(`<div class="info-item full-w"><div class="k">重要提點／門票</div><div class="v"><button class="field-add-btn" onclick="event.stopPropagation(); editSpotField(event,'${idx}','note','重要提點／門票')">＋ 新增</button></div></div>`);
   
   const userPhotos = photoStore[idx] || [];
   let thumbImgs = userPhotos.length > 0 ? userPhotos : (spot.img ? [spot.img] : []);
@@ -1251,8 +1317,9 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
   let userNotes = notesStore[idx] || [];
   let notesListHTML = userNotes.length ? userNotes.map((n,ni)=>`<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-top:6px; padding-top:6px; border-top:1px dashed rgba(0,0,0,0.12);"><span style="flex:1; white-space:pre-line;">${n}</span><span class="note-actions"><button onclick="event.stopPropagation(); editNote('${idx}', ${ni})" title="編輯">✎</button><button onclick="event.stopPropagation(); deleteNote('${idx}', ${ni})" title="刪除">✕</button></span></div>`).join('') : '';
   const builtInInfo = currentBuiltInInfo(idx, spot.customInfo || null);
+  window._spotCustomInfoOriginals[idx] = spot.customInfo || null;
   let displayInfo = '';
-  if (builtInInfo) displayInfo += `<div class="built-in-info-row"><span class="built-in-info-text">${builtInInfo}</span><span class="note-actions built-in-actions"><button onclick="event.stopPropagation(); editBuiltInInfo('${idx}', ${JSON.stringify(spot.customInfo||'')})" title="編輯這筆">✎</button><button onclick="event.stopPropagation(); deleteBuiltInInfo('${idx}')" title="刪除這筆">✕</button></span></div>`;
+  if (builtInInfo) displayInfo += `<div class="built-in-info-row"><span class="built-in-info-text">${builtInInfo}</span><span class="note-actions built-in-actions"><button onclick="event.stopPropagation(); editBuiltInInfo('${idx}')" title="編輯這筆">✎</button><button onclick="event.stopPropagation(); deleteBuiltInInfo('${idx}')" title="刪除這筆">✕</button></span></div>`;
   if (notesListHTML) displayInfo += `<div class="user-info-list" style="margin-top:${builtInInfo ? '8px' : '0'};"><span class="user-info-label">✏️ 您新增的資訊：</span>${notesListHTML}</div>`;
 
   let customInfoBox = '';
@@ -1285,7 +1352,11 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
       }).join('') + `</div>`;
     }
   } else {
-    pStrip = (userPhotos.length) ? `<div class="photo-strip" onclick="event.stopPropagation()">` + userPhotos.map((u, i)=>`<div class="photo-item-wrap"><img src="${u}" onclick="openAttachModal('${u}')"><button onclick="removePhoto(event, '${idx}', ${i})" style="position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:50%; width:20px; height:20px; font-size:10px; cursor:pointer;">✕</button></div>`).join('') + `</div>` : '';
+    pStrip = (userPhotos.length) ? `<div class="photo-strip" onclick="event.stopPropagation()">` + userPhotos.map((u, i)=>{
+      const moveLeft = i > 0 ? `<button class="photo-move photo-move-l" onclick="movePhoto(event,'${idx}',${i},-1)" title="往前移">‹</button>` : '';
+      const moveRight = i < userPhotos.length - 1 ? `<button class="photo-move photo-move-r" onclick="movePhoto(event,'${idx}',${i},1)" title="往後移">›</button>` : '';
+      return `<div class="photo-item-wrap"><img src="${u}" onclick="openAttachModal('${u}')"><button class="photo-remove" onclick="removePhoto(event, '${idx}', ${i})" title="刪除">✕</button>${moveLeft}${moveRight}</div>`;
+    }).join('') + `</div>` : '';
   }
 
   const badgesHTML = badges.length ? `<div class="badges" style="margin-bottom:6px;">${badges.join('')}</div>` : '';
@@ -1318,7 +1389,8 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
   const fixedDelBtn = fixedMeta ? `<button onclick="event.stopPropagation(); hideFixedSpot(${fixedMeta.dayIdx}, '${idx}')" style="background:#fff0ec; color:#AD1E17; border:none; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">➖ 刪減此項</button>` : '';
   const delBtn = customMeta ? `<button onclick="event.stopPropagation(); delCustomSpot(${customMeta.dayIdx}, ${customMeta.i})" style="background:#fff0ec; color:#c1502f; border:none; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">🗑️ 刪除此景點</button>` : '';
   const editBtn = customMeta ? `<button onclick="event.stopPropagation(); toggleEditSpot('${idx}')" style="background:#eef3fb; color:var(--blue); border:none; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">✏️ 編輯簡介</button>` : '';
-  const customBar = (customMeta || orderInfo || fixedMeta) ? `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px; flex-wrap:wrap;"><span style="display:flex; gap:6px; flex-wrap:wrap;">${customMeta ? `<span class="badge" style="background:#eef3fb; color:var(--blue);">${genLabel}</span>` : ''}</span><span style="display:flex; gap:6px; flex-wrap:wrap;">${orderBtns}${editBtn}${delBtn}${fixedDelBtn}</span></div>` : '';
+  const editInfoBtn = `<button onclick="event.stopPropagation(); openSpotEditModal(event,'${idx}')" style="background:#fff0f5; color:#c1502f; border:none; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">✎ 編輯景點資訊</button>`;
+  const customBar = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px; flex-wrap:wrap;"><span style="display:flex; gap:6px; flex-wrap:wrap;">${customMeta ? `<span class="badge" style="background:#eef3fb; color:var(--blue);">${genLabel}</span>` : ''}</span><span style="display:flex; gap:6px; flex-wrap:wrap;">${orderBtns}${editInfoBtn}${editBtn}${delBtn}${fixedDelBtn}</span></div>`;
   const editSpotAreaHTML = customMeta ? `<div id="spot-edit-${idx}" style="display:none; margin-bottom:10px; background:#f7f9fc; border:1px dashed #c7d6ea; border-radius:8px; padding:10px;" onclick="event.stopPropagation()">
       <div style="font-size:11px; font-weight:700; color:var(--ink-soft); margin-bottom:4px;">簡短介紹（列表中顯示）</div>
       <textarea id="spot-edit-short-${idx}" style="width:100%; border:1px solid var(--line); border-radius:6px; padding:6px; font-size:12px; font-family:inherit; resize:vertical; min-height:40px; outline:none; margin-bottom:8px; box-sizing:border-box;">${(spot.desc||'').replace(/</g,'&lt;')}</textarea>
@@ -1331,10 +1403,10 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
     </div>` : '';
 
   if (!isMainSpot) {
-    return `<div class="sub-spot-card sub-spot-${spot.cat || 'other'}" id="spot-card-${idx}"><div class="sub-spot-header" onclick="toggleSpotDetails('${idx}')"><div class="sub-spot-header-content"><h4>${spot.name}</h4><p class="short-desc">${spot.desc}</p>${miniStripHTML}</div><div class="chevron">▼</div></div><div class="sub-spot-details-wrap"><div class="sub-spot-details" onclick="event.stopPropagation()">${customBar}${editSpotAreaHTML}<p class="full-desc">${spot.fullDesc || spot.desc}</p>${spot.recDishes ? `<div class="dish-tag">🍲 必點推薦：${spot.recDishes}</div>` : ''}${reorderableBlocksHTML}<div class="action-row" style="margin-top:10px;"><a class="btn btn-map" href="${mapsLink(spot.name)}" target="_blank" rel="noopener">🗺️ 導航</a>${spot.link ? `<a class="btn btn-photo" href="${spot.link}" target="_blank" rel="noopener">🔗 ${spot.linkLabel}</a>` : ''}<button class="btn btn-photo" onclick="document.getElementById('file-${idx}').click()">📷 上傳照片</button></div><input type="file" accept="image/*" id="file-${idx}" style="display:none" multiple onchange="handlePhoto(event, '${idx}')">${pStrip}</div></div></div>`;
+    return `<div class="sub-spot-card sub-spot-${spot.cat || 'other'}" id="spot-card-${idx}"><div class="sub-spot-header" onclick="toggleSpotDetails('${idx}')"><div class="sub-spot-header-content"><h4>${displayName}</h4><p class="short-desc">${displayDesc}</p>${miniStripHTML}</div><div class="chevron">▼</div></div><div class="sub-spot-details-wrap"><div class="sub-spot-details" onclick="event.stopPropagation()">${customBar}${editSpotAreaHTML}<p class="full-desc">${spot.fullDesc || displayDesc}</p>${spot.recDishes ? `<div class="dish-tag">🍲 必點推薦：${spot.recDishes}</div>` : ''}${reorderableBlocksHTML}<div class="action-row" style="margin-top:10px;"><a class="btn btn-map" href="${mapsLink(navQuery)}" target="_blank" rel="noopener">🗺️ 導航</a>${spot.link ? `<a class="btn btn-photo" href="${spot.link}" target="_blank" rel="noopener">🔗 ${spot.linkLabel}</a>` : ''}<button class="btn btn-photo" onclick="document.getElementById('file-${idx}').click()">📷 上傳照片</button></div><input type="file" accept="image/*" id="file-${idx}" style="display:none" multiple onchange="handlePhoto(event, '${idx}')">${pStrip}</div></div></div>`;
   }
 
-  return `<div class="guide-card" id="spot-card-${idx}"><div class="guide-header" style="background-image:url('${bg}');" onclick="toggleSpotDetails('${idx}')">${photoStore[idx] && photoStore[idx].length > 0 ? `<span class="own-badge" onclick="event.stopPropagation(); document.getElementById('file-${idx}').click()">✅ 已有你的實拍照片</span>` : `<button class="own-badge" style="border:none; cursor:pointer;" onclick="event.stopPropagation(); document.getElementById('file-${idx}').click()">📷 新增我的照片</button>`}<div class="guide-header-content"><span class="cat-label ${c.cls}">${c.emoji} ${c.label}</span><h3>${spot.name}</h3><p class="short-desc">${spot.desc}</p></div><div class="chevron">▼</div></div><div class="guide-details-wrap"><div class="guide-details" onclick="event.stopPropagation()">${customBar}${editSpotAreaHTML}<p class="full-desc">${spot.fullDesc || spot.desc}</p>${reorderableBlocksHTML}${spot.tip?`<div class="tip-box"><b>📸 拍照與自駕小解密：</b>${spot.tip}</div>`:''}${spot.docMap?`<div class="tip-box" style="background: linear-gradient(120deg,#e8f8ee,#fff); border-color:#D0F4FC; color:#22513f;"><b>🗺️ DOC 官方步道地圖與狀態：</b><a href="${spot.docMap}" target="_blank" rel="noopener" style="color:var(--blue); font-weight:700; text-decoration:underline;">點此開啟</a></div>`:''}${spot.park?`<div class="park-box"><b>🅿️ 停車＆自駕補給：</b>${spot.park}</div>`:''}<div class="action-row" style="margin-top:10px;"><a class="btn btn-map" href="${mapsLink(spot.name)}" target="_blank" rel="noopener">🗺️ 導航導出</a>${spot.link ? `<a class="btn btn-photo" href="${spot.link}" target="_blank" rel="noopener">🔗 ${spot.linkLabel}</a>` : ''}<button class="btn btn-photo" onclick="document.getElementById('file-${idx}').click()">📷 上傳照片</button></div><input type="file" accept="image/*" id="file-${idx}" style="display:none" multiple onchange="handlePhoto(event, '${idx}')">${pStrip}</div></div></div>`;
+  return `<div class="guide-card" id="spot-card-${idx}"><div class="guide-header" style="background-image:url('${bg}');" onclick="toggleSpotDetails('${idx}')">${photoStore[idx] && photoStore[idx].length > 0 ? `<span class="own-badge" onclick="event.stopPropagation(); document.getElementById('file-${idx}').click()">✅ 已有你的實拍照片</span>` : `<button class="own-badge" style="border:none; cursor:pointer;" onclick="event.stopPropagation(); document.getElementById('file-${idx}').click()">📷 新增我的照片</button>`}<div class="guide-header-content"><span class="cat-label ${c.cls}">${c.emoji} ${c.label}</span><h3>${displayName}</h3><p class="short-desc">${displayDesc}</p></div><div class="chevron">▼</div></div><div class="guide-details-wrap"><div class="guide-details" onclick="event.stopPropagation()">${customBar}${editSpotAreaHTML}<p class="full-desc">${spot.fullDesc || displayDesc}</p>${reorderableBlocksHTML}${spot.tip?`<div class="tip-box"><b>📸 拍照與自駕小解密：</b>${spot.tip}</div>`:''}${spot.docMap?`<div class="tip-box" style="background: linear-gradient(120deg,#e8f8ee,#fff); border-color:#D0F4FC; color:#22513f;"><b>🗺️ DOC 官方步道地圖與狀態：</b><a href="${spot.docMap}" target="_blank" rel="noopener" style="color:var(--blue); font-weight:700; text-decoration:underline;">點此開啟</a></div>`:''}${spot.park?`<div class="park-box"><b>🅿️ 停車＆自駕補給：</b>${spot.park}</div>`:''}<div class="action-row" style="margin-top:10px;"><a class="btn btn-map" href="${mapsLink(navQuery)}" target="_blank" rel="noopener">🗺️ 導航導出</a>${spot.link ? `<a class="btn btn-photo" href="${spot.link}" target="_blank" rel="noopener">🔗 ${spot.linkLabel}</a>` : ''}<button class="btn btn-photo" onclick="document.getElementById('file-${idx}').click()">📷 上傳照片</button></div><input type="file" accept="image/*" id="file-${idx}" style="display:none" multiple onchange="handlePhoto(event, '${idx}')">${pStrip}</div></div></div>`;
 }
 
 /* 讀取檔案並自動壓縮：長邊限制在 1600px、轉存為 JPEG(品質0.82)，
@@ -1380,6 +1452,22 @@ async function handlePhoto(e, idx){
     setTimeout(()=>{ const card=document.getElementById('spot-card-'+idx); if(card) card.classList.add('open'); },50);
   }catch(err){ alert('⚠️ '+friendlySyncError(err)+'\n'+String(err.message||err)); updateSyncStatus(err); }
 }
+function movePhoto(e, idx, photoIdx, dir) {
+  e.stopPropagation();
+  const arr = photoStore[idx];
+  if (!arr) return;
+  const target = photoIdx + dir;
+  if (target < 0 || target >= arr.length) return;
+  [arr[photoIdx], arr[target]] = [arr[target], arr[photoIdx]];
+  const sel = coverStore[idx];
+  if (sel === photoIdx) coverStore[idx] = target;
+  else if (sel === target) coverStore[idx] = photoIdx;
+  persistCover();
+  persistPhotos();
+  renderDayContent();
+  setTimeout(()=>{ const card = document.getElementById('spot-card-'+idx); if(card) card.classList.add('open'); }, 50);
+}
+
 function removePhoto(e, idx, photoIdx) {
   e.stopPropagation();
   photoStore[idx].splice(photoIdx, 1);

@@ -204,6 +204,46 @@
   <img id="attachModalImg" src="" onclick="event.stopPropagation()">
 </div>
 
+<!-- Modal for editing a spot's info all at once -->
+<div class="spot-edit-modal" id="spotEditModal" onclick="if(event.target===this)closeSpotEditModal()">
+  <div class="spot-edit-modal-card" onclick="event.stopPropagation()">
+    <div class="spot-edit-modal-head">
+      <h3>✎ 編輯景點資訊</h3>
+      <button class="spot-edit-modal-close" onclick="closeSpotEditModal()">✕</button>
+    </div>
+    <div class="spot-edit-modal-body">
+      <label class="spot-edit-field">
+        <span>景點名稱</span>
+        <input type="text" id="editSpotName" placeholder="景點名稱">
+      </label>
+      <label class="spot-edit-field">
+        <span>簡介（標題下方一行）</span>
+        <input type="text" id="editSpotDesc" placeholder="一句話簡介">
+      </label>
+      <label class="spot-edit-field">
+        <span>營業／開放時間</span>
+        <input type="text" id="editSpotHours" placeholder="例：09:00–17:00，週一公休">
+      </label>
+      <label class="spot-edit-field">
+        <span>重要提點／門票</span>
+        <textarea id="editSpotNote" rows="2" placeholder="門票資訊、注意事項..."></textarea>
+      </label>
+      <label class="spot-edit-field">
+        <span>評論與資訊</span>
+        <textarea id="editSpotInfo" rows="2" placeholder="這個景點的一句話心得或攻略"></textarea>
+      </label>
+      <label class="spot-edit-field">
+        <span>導航搜尋文字（用來開啟 Google 地圖；名稱容易搜不到時可填更精確的地址或關鍵字）</span>
+        <input type="text" id="editSpotMapQuery" placeholder="預設使用景點名稱">
+      </label>
+    </div>
+    <div class="spot-edit-modal-actions">
+      <button class="spot-edit-reset" onclick="resetSpotEditModal()">還原全部為預設</button>
+      <button class="spot-edit-save" onclick="saveSpotEditModal()">💾 儲存</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="app.js"></script>
 
