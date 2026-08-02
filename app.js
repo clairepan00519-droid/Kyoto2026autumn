@@ -57,6 +57,12 @@ async function initAuthGate(){
   setTimeout(()=>document.getElementById('familyGateEmail')?.focus(),80);
 }
 document.addEventListener('DOMContentLoaded',initAuthGate);
+/* 清除 v40 曾放在標頭中央的提示列；即使舊 HTML 被瀏覽器短暫還原也不會再顯示。 */
+function removeLegacyHeaderStatus(){
+  document.querySelectorAll('.header-action-row,#offlineReadyStatus,#todayModeButton').forEach(el=>el.remove());
+}
+removeLegacyHeaderStatus();
+document.addEventListener('DOMContentLoaded',removeLegacyHeaderStatus);
 
 
 /* ============ 家人共用同步（Supabase REST） ============
@@ -1289,7 +1295,7 @@ function tripTodayIndex(now=new Date()){
   if(y!==2026)return -1;
   return days.findIndex(x=>{const [mm,dd]=x.date.split('/').map(Number);return mm===m&&dd===d;});
 }
-function goToToday(){const i=tripTodayIndex();setActiveDay(i>=0?i:0);const btn=document.getElementById('todayModeButton');if(btn&&i<0)btn.textContent='📍 目前非旅行日期，已開啟 Day 1';}
+function goToToday(){const i=tripTodayIndex();setActiveDay(i>=0?i:0);}
 
 function renderDayChips(){
   const today=tripTodayIndex();
@@ -2173,11 +2179,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    const status=document.getElementById('offlineReadyStatus');
-    navigator.serviceWorker.register('./sw.js').then(()=>navigator.serviceWorker.ready).then(async()=>{
-      const ready=await caches.match('./index.html')||await caches.match('./');
-      if(status){status.textContent=ready?'✓ 已可離線觀看':'需重新整理以完成離線下載';status.className='offline-ready-status '+(ready?'ready':'warning');}
-    }).catch(()=>{if(status){status.textContent='瀏覽器未啟用離線功能';status.className='offline-ready-status warning';}});
+    navigator.serviceWorker.register('./sw.js?v=41').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);

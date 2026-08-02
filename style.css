@@ -392,6 +392,7 @@ button, .tab-btn, .day-chip, .btn, .guide-header, .sub-spot-header, .spot-subtab
 
 /* 家人共用密碼入口 */
 body.family-locked{overflow:hidden;}
+.header-action-row,#offlineReadyStatus,#todayModeButton{display:none!important;}
 .family-gate{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(145deg,rgba(227,238,247,.96),rgba(244,239,225,.97));backdrop-filter:blur(12px);}
 .family-gate[hidden]{display:none;}
 .family-gate-card{width:min(420px,100%);background:rgba(255,255,255,.96);border:1px solid rgba(255,255,255,.8);border-radius:24px;padding:28px 24px;box-shadow:0 24px 70px rgba(44,63,83,.18);text-align:center;}
@@ -404,7 +405,6 @@ body.family-locked{overflow:hidden;}
 .family-gate-card button{width:100%;margin-top:10px;border:0;border-radius:14px;padding:13px 16px;background:linear-gradient(135deg,var(--blue),#7d9cf0);color:#fff;font:inherit;font-weight:900;cursor:pointer;box-shadow:0 10px 24px rgba(83,129,236,.22);}
 .family-gate-error{min-height:20px;margin-top:8px;font-size:12px;font-weight:800;color:#c1502f;}
 .family-gate-card .family-offline-button{background:#fff;color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
-.header-action-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px}.header-action-button{border:1px solid rgba(255,255,255,.55);border-radius:999px;padding:8px 13px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);color:#fff;font:inherit;font-size:11.5px;font-weight:900;cursor:pointer}.offline-ready-status{border-radius:999px;padding:7px 11px;background:rgba(20,35,26,.25);color:#fff;font-size:10.5px;font-weight:800}.offline-ready-status.ready{background:rgba(48,126,76,.7)}.offline-ready-status.warning{background:rgba(173,30,23,.68)}
 .map-date-correction{margin:9px 0 0;padding:10px 12px;border-radius:12px;background:#fff8e8;border:1px solid #efd7a6;color:#74512f;font-size:11px;font-weight:700;line-height:1.6}
 .undo-toast{position:fixed;z-index:100000;left:50%;bottom:max(82px,calc(env(safe-area-inset-bottom) + 72px));transform:translateX(-50%);width:min(360px,calc(100% - 28px));box-sizing:border-box;padding:11px 12px 11px 15px;border-radius:15px;background:rgba(42,48,44,.96);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 14px 34px rgba(0,0,0,.24);font-size:12.5px;font-weight:800}.undo-toast[hidden]{display:none}.undo-toast button{border:0;border-radius:999px;padding:7px 13px;background:#fff;color:#9b402d;font:inherit;font-size:11.5px;font-weight:900;cursor:pointer}
 .today-chip{flex:none;border:1.5px solid #d89877;border-radius:13px;padding:8px 12px;background:#fff8f1;color:#9b402d;font:inherit;font-size:11px;font-weight:900;cursor:pointer}.day-chip.is-today{box-shadow:0 0 0 3px rgba(252,125,46,.2);border-color:#fc7d2e}

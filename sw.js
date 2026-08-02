@@ -1,5 +1,5 @@
 /* 京都・奈良・丹後行程：App Shell、圖片與已瀏覽內容離線快取 */
-const CACHE_VERSION='kyoto-trip-v40-auth-offline';
+const CACHE_VERSION='kyoto-trip-v41-header-cache-fix';
 const SHELL_CACHE=`kyoto-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE=`kyoto-runtime-${CACHE_VERSION}`;
 const IMAGE_CACHE=`kyoto-images-${CACHE_VERSION}`;
@@ -15,7 +15,13 @@ self.addEventListener('install',event=>{
 });
 
 self.addEventListener('activate',event=>{
-  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==SHELL_CACHE&&k!==RUNTIME_CACHE&&k!==IMAGE_CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
+  event.waitUntil(caches.keys()
+    .then(keys=>Promise.all(keys.filter(k=>k!==SHELL_CACHE&&k!==RUNTIME_CACHE&&k!==IMAGE_CACHE).map(k=>caches.delete(k))))
+    .then(async()=>{
+      await self.clients.claim();
+      const windows=await self.clients.matchAll({type:'window'});
+      await Promise.all(windows.map(client=>client.navigate(client.url).catch(()=>null)));
+    }));
 });
 
 function isWeather(url){return url.hostname.includes('api.open-meteo.com')||url.hostname.includes('api.rainviewer.com');}
