@@ -64,6 +64,31 @@ function removeLegacyHeaderStatus(){
 removeLegacyHeaderStatus();
 document.addEventListener('DOMContentLoaded',removeLegacyHeaderStatus);
 
+/* ============ 桌機編輯／手機旅行雙模式 ============ */
+const UI_MODE_KEY='kyoto_ui_mode_v1';
+const PREVIEW_WIDTH_KEY='kyoto_preview_width_v1';
+function defaultUiMode(){return window.innerWidth>=1050?'edit':'travel';}
+function setUiMode(mode,{persist=true}={}){
+  const next=mode==='edit'?'edit':'travel';
+  document.body.classList.toggle('mode-edit',next==='edit');
+  document.body.classList.toggle('mode-travel',next==='travel');
+  document.querySelectorAll('[data-ui-mode]').forEach(btn=>btn.classList.toggle('active',btn.dataset.uiMode===next));
+  if(persist)try{localStorage.setItem(UI_MODE_KEY,next);}catch(e){}
+}
+function setPreviewWidth(width,{persist=true}={}){
+  const next=Number(width)===390?390:430;
+  document.documentElement.style.setProperty('--phone-preview-width',next+'px');
+  document.querySelectorAll('[data-preview-width]').forEach(btn=>btn.classList.toggle('active',Number(btn.dataset.previewWidth)===next));
+  if(persist)try{localStorage.setItem(PREVIEW_WIDTH_KEY,String(next));}catch(e){}
+}
+const savedUiMode=localStorage.getItem(UI_MODE_KEY);
+setUiMode(savedUiMode||defaultUiMode(),{persist:false});
+setPreviewWidth(localStorage.getItem(PREVIEW_WIDTH_KEY)||430,{persist:false});
+document.addEventListener('DOMContentLoaded',()=>{
+  setUiMode(localStorage.getItem(UI_MODE_KEY)||defaultUiMode(),{persist:false});
+  setPreviewWidth(localStorage.getItem(PREVIEW_WIDTH_KEY)||430,{persist:false});
+});
+
 
 /* ============ 家人共用同步（Supabase REST） ============
    不依賴外部 Supabase SDK 或 Realtime WebSocket，避免 CDN／WebSocket
@@ -1315,6 +1340,63 @@ function setActiveDay(i) {
   document.getElementById('view-itinerary').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
+/* 全站搜尋：包含 10 天內建景點、自訂景點、餐廳、購物與住宿。 */
+function allSearchableSpots(){
+  const out=[];
+  days.forEach((day,dayIdx)=>{
+    const hidden=new Set(hiddenFixedSpotsStore[dayIdx]||[]);
+    const add=(spot,key)=>{
+      if(hidden.has(key))return;
+      const name=currentFieldValue(key,'name',spot.name)||spot.name;
+      const desc=currentFieldValue(key,'desc',spot.desc)||spot.desc||'';
+      const full=currentFieldValue(key,'fullDesc',spot.fullDesc)||spot.fullDesc||'';
+      const info=currentBuiltInInfo(key,spot.customInfo||'')||'';
+      const listType=MAIN_CATS.includes(spot.cat)?'main':'more';
+      out.push({dayIdx,key,listType,name,desc,cat:spot.cat,text:[name,desc,full,info,(spot.tags||[]).join(' '),day.region,day.title].join(' ').toLocaleLowerCase('zh-Hant')});
+    };
+    (day.spots||[]).forEach((spot,i)=>add(spot,`d${dayIdx}-m${i}`));
+    (day.moreSpots||[]).forEach((spot,i)=>add(spot,`d${dayIdx}-s${i}`));
+    (customSpotsStore[dayIdx]||[]).forEach((spot,i)=>add(spot,`d${dayIdx}-c${i}`));
+  });
+  return out;
+}
+function runGlobalSearch(raw){
+  const query=String(raw||'').trim().toLocaleLowerCase('zh-Hant');
+  document.querySelectorAll('#globalSearchDesktop,#globalSearchMobile').forEach(input=>{if(input.value!==raw)input.value=raw;});
+  const targets=[document.getElementById('globalSearchResultsDesktop'),document.getElementById('globalSearchResultsMobile')].filter(Boolean);
+  if(!query){targets.forEach(el=>{el.classList.remove('open');el.innerHTML='';});return;}
+  const terms=query.split(/\s+/).filter(Boolean);
+  const results=allSearchableSpots().filter(item=>terms.every(term=>item.text.includes(term))).slice(0,16);
+  const html=results.length?results.map(item=>{
+    const day=days[item.dayIdx],cat=CAT[item.cat]||CAT.attraction;
+    return `<button class="search-result-item" type="button" onclick="jumpToSearchResult(${item.dayIdx},'${item.key}','${item.listType}')"><span class="search-result-day">D${day.dayNum}<br>${day.date}</span><span class="search-result-copy"><strong>${cat.emoji} ${escHtml(item.name)}</strong><small>${escHtml(item.desc||day.region)}</small></span></button>`;
+  }).join(''):`<div class="search-empty">找不到符合「${escHtml(raw)}」的行程</div>`;
+  targets.forEach(el=>{el.innerHTML=html;el.classList.add('open');});
+}
+function jumpToSearchResult(dayIdx,key,listType){
+  setTab('itinerary');
+  activeDay=dayIdx;activeSubTabStore[dayIdx]=listType;
+  renderDayChips();renderDayContent();
+  document.querySelectorAll('#globalSearchDesktop,#globalSearchMobile').forEach(input=>input.value='');
+  document.querySelectorAll('.global-search-results').forEach(el=>{el.classList.remove('open');el.innerHTML='';});
+  setTimeout(()=>{
+    const card=document.getElementById('spot-card-'+key);
+    if(card){card.classList.add('open');openSpotCardKeys.add(String(key));card.scrollIntoView({behavior:'smooth',block:'center'});}
+  },80);
+}
+document.addEventListener('keydown',event=>{if(event.key==='Escape')runGlobalSearch('');});
+document.addEventListener('click',event=>{
+  if(!event.target.closest?.('.global-search-input-wrap,.global-search-results')){
+    document.querySelectorAll('.global-search-results').forEach(el=>el.classList.remove('open'));
+  }
+});
+document.addEventListener('keydown',event=>{
+  if(event.key==='Enter'&&event.target.matches?.('#globalSearchDesktop,#globalSearchMobile')){
+    const scope=event.target.id==='globalSearchDesktop'?'#globalSearchResultsDesktop':'#globalSearchResultsMobile';
+    document.querySelector(scope+' .search-result-item')?.click();
+  }
+});
+
 /* 保留景點卡片展開狀態，避免背景同步重繪後自動收合。 */
 const openSpotCardKeys = new Set();
 function rememberOpenSpotCards(){
@@ -1394,7 +1476,7 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
   const noteEditorOpen=openNoteEditors.has(String(idx))||!!noteDraft;
   let noteEditArea = `<div class="note-edit-area" style="margin-top:10px; display:${noteEditorOpen?'block':'none'};" id="edit-note-${idx}" onclick="event.stopPropagation()"><textarea id="note-input-${idx}" placeholder="新增一筆攻略、必點菜單或提醒...（可重複新增多筆）" oninput="saveNoteDraft('${idx}',this.value);openNoteEditors.add('${idx}')" style="width:100%; border:1px solid var(--line); border-radius:8px; padding:8px; font-size:12px; font-family:inherit; resize:vertical; min-height:60px; outline:none; margin-bottom:6px;">${escHtml(noteDraft)}</textarea><div style="display:flex; gap:6px;"><button onclick="addNote('${idx}')" style="padding:6px 14px; font-size:11px; background:var(--blue); color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:700;">💾 新增這筆</button><button onclick="toggleEditNote(event, '${idx}')" style="padding:6px 14px; font-size:11px; background:#f2f3ec; color:var(--ink); border:none; border-radius:6px; cursor:pointer; font-weight:700;">收合</button></div></div>${!displayInfo ? `<button class="btn-note-toggle" onclick="toggleEditNote(event, '${idx}')" style="${noteEditorOpen?'display:none;':''}background:transparent; border:1px dashed #c1c8cf; border-radius:999px; padding:6px 12px; font-size:11.5px; color:#7A5A42; cursor:pointer; font-family:inherit; margin-top:6px; margin-bottom:10px;" id="btn-note-${idx}">➕ 新增評論與資訊</button>` : ''}`;
 
-  let miniStripHTML = thumbImgs.length > 0 ? `<div class="mini-photo-strip" onclick="event.stopPropagation();">` + thumbImgs.map((u, i) => `<div style="position:relative; display:inline-block;"><img src="${u}" onclick="openAttachModal('${u}')">${thumbImgsAreUserPhotos ? `<button onclick="removePhoto(event, '${idx}', ${i})" style="position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:50%; width:16px; height:16px; font-size:8px; cursor:pointer;">✕</button>` : ''}</div>`).join('') + `</div>` : '';
+  let miniStripHTML = thumbImgs.length > 0 ? `<div class="mini-photo-strip" onclick="event.stopPropagation();">` + thumbImgs.map((u, i) => `<div style="position:relative; display:inline-block;"><img src="${u}" onclick="openAttachModal('${u}')">${thumbImgsAreUserPhotos ? `<button class="photo-remove" onclick="removePhoto(event, '${idx}', ${i})" style="position:absolute; top:2px; right:2px; width:16px; height:16px; font-size:8px;">✕</button>` : ''}</div>`).join('') + `</div>` : '';
 
   /* 照片區：主要亮點卡片會列出「原始配圖 + 所有使用者上傳的照片」，並可個別指定作為封面；
      次要（食衣住）景點沒有封面概念，維持原本只顯示使用者照片的邏輯 */
@@ -1409,9 +1491,9 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
         const selArg = (typeof g.sel === 'string') ? `'${g.sel}'` : g.sel;
         const coverTag = isCover
           ? `<span style="position:absolute; bottom:3px; left:3px; right:3px; background:var(--blue); color:#fff; font-size:8.5px; font-weight:700; padding:2px 3px; border-radius:5px; text-align:center; line-height:1.3;">★ 封面</span>`
-          : `<button onclick="event.stopPropagation(); setCoverPhoto('${idx}', ${selArg})" style="position:absolute; bottom:3px; left:3px; right:3px; background:rgba(0,0,0,.6); color:#fff; border:none; font-size:8.5px; font-weight:700; padding:2px 3px; border-radius:5px; cursor:pointer; line-height:1.3;">設為封面</button>`;
+          : `<button class="cover-select-btn" onclick="event.stopPropagation(); setCoverPhoto('${idx}', ${selArg})" style="position:absolute; bottom:3px; left:3px; right:3px; background:rgba(0,0,0,.6); color:#fff; border:none; font-size:8.5px; font-weight:700; padding:2px 3px; border-radius:5px; cursor:pointer; line-height:1.3;">設為封面</button>`;
         const removeBtn = (g.sel !== 'original')
-          ? `<button onclick="removePhoto(event, '${idx}', ${g.sel})" style="position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:50%; width:20px; height:20px; font-size:10px; cursor:pointer;">✕</button>`
+          ? `<button class="photo-remove" onclick="removePhoto(event, '${idx}', ${g.sel})" style="position:absolute; top:2px; right:2px; width:20px; height:20px; font-size:10px;">✕</button>`
           : '';
         return `<div class="photo-item-wrap"><img src="${g.url}" onclick="openAttachModal('${g.url}')">${removeBtn}${coverTag}</div>`;
       }).join('') + `</div>`;
@@ -1446,7 +1528,7 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
   const reorderableBlocksHTML = orderedBlocks.map((b,pos)=>{
     const upBtn = pos > 0 ? `<button onclick="event.stopPropagation(); moveBlock('${idx}','${b.id}',-1,${hasBadgesFlag},${hasInfoFlag})" style="background:#eef1e6; border:none; cursor:pointer; font-size:10px; color:#9aa3ad; padding:2px 6px; border-radius:5px;">⬆</button>` : '';
     const downBtn = pos < orderedBlocks.length - 1 ? `<button onclick="event.stopPropagation(); moveBlock('${idx}','${b.id}',1,${hasBadgesFlag},${hasInfoFlag})" style="background:#eef1e6; border:none; cursor:pointer; font-size:10px; color:#9aa3ad; padding:2px 6px; border-radius:5px;">⬇</button>` : '';
-    return (orderedBlocks.length > 1 ? `<div style="display:flex; justify-content:flex-end; gap:4px; margin:2px 0;">${upBtn}${downBtn}</div>` : '') + b.html;
+    return (orderedBlocks.length > 1 ? `<div class="block-order-actions" style="display:flex; justify-content:flex-end; gap:4px; margin:2px 0;">${upBtn}${downBtn}</div>` : '') + b.html;
   }).join('');
 
   const genLabel = spot.genSource === 'edited' ? '✏️ 簡介已由您編輯' : (spot.genSource === 'online' ? '🔍 簡介已透過網路搜尋生成' : (spot.genSource === 'offline' ? '📝 簡介為簡易生成（未連上網路）' : '🆕 自訂景點'));
@@ -1455,7 +1537,7 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
   const delBtn = customMeta ? `<button onclick="event.stopPropagation(); delCustomSpot(${customMeta.dayIdx}, ${customMeta.i})" style="background:#fff0ec; color:#c1502f; border:none; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">🗑️ 刪除此景點</button>` : '';
   const editBtn = customMeta ? `<button onclick="event.stopPropagation(); toggleEditSpot('${idx}')" style="background:#eef3fb; color:var(--blue); border:none; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">✏️ 編輯簡介</button>` : '';
   const editInfoBtn = `<button onclick="event.stopPropagation(); openSpotEditModal(event,'${idx}')" style="background:#fff0f5; color:#c1502f; border:none; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">✎ 編輯景點資訊</button>`;
-  const customBar = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px; flex-wrap:wrap;"><span style="display:flex; gap:6px; flex-wrap:wrap;">${customMeta ? `<span class="badge" style="background:#eef3fb; color:var(--blue);">${genLabel}</span>` : ''}</span><span style="display:flex; gap:6px; flex-wrap:wrap;">${orderBtns}${editInfoBtn}${editBtn}${delBtn}${fixedDelBtn}</span></div>`;
+  const customBar = `<div class="spot-management-bar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px; flex-wrap:wrap;"><span style="display:flex; gap:6px; flex-wrap:wrap;">${customMeta ? `<span class="badge" style="background:#eef3fb; color:var(--blue);">${genLabel}</span>` : ''}</span><span style="display:flex; gap:6px; flex-wrap:wrap;">${orderBtns}${editInfoBtn}${editBtn}${delBtn}${fixedDelBtn}</span></div>`;
   const editSpotAreaHTML = customMeta ? `<div id="spot-edit-${idx}" style="display:none; margin-bottom:10px; background:#f7f9fc; border:1px dashed #c7d6ea; border-radius:8px; padding:10px;" onclick="event.stopPropagation()">
       <div style="font-size:11px; font-weight:700; color:var(--ink-soft); margin-bottom:4px;">簡短介紹（列表中顯示）</div>
       <textarea id="spot-edit-short-${idx}" style="width:100%; border:1px solid var(--line); border-radius:6px; padding:6px; font-size:12px; font-family:inherit; resize:vertical; min-height:40px; outline:none; margin-bottom:8px; box-sizing:border-box;">${(spot.desc||'').replace(/</g,'&lt;')}</textarea>
@@ -1587,7 +1669,7 @@ function renderDayContent(){
   if(!secondaryCardsHTML) secondaryCardsHTML = '<div class="empty">此區域今天暫無排定食衣住項目，歡迎在下方新增您的私房景點。</div>';
 
   const addSpotFormHTML = `
-    <div class="section-card" style="margin-top:4px;">
+    <div class="section-card edit-only" style="margin-top:4px;">
       <h3 style="margin:0 0 10px;">✨ 新增景點／食衣住項目</h3>
       <div style="display:flex; flex-direction:column; gap:8px;">
         <input type="text" id="newSpotName-${activeDay}" placeholder="景點名稱（必填）" style="padding:10px 12px; border:1px solid var(--line); border-radius:8px; font-family:inherit; font-size:13px;">
@@ -1607,9 +1689,9 @@ function renderDayContent(){
     <div class="section-card" style="margin-top:4px;">
       <h3 style="margin:0 0 10px;">🗺️ 我的當日行動路線圖</h3>
       ${routeMapGalleryHTML}
-      <button onclick="document.getElementById('routeMapFile-${activeDay}').click()" style="background:linear-gradient(135deg, var(--blue), #FC7D2E); color:#fff; border:none; padding:11px 16px; border-radius:999px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;">📷 上傳路線圖</button>
+      <div class="edit-only"><button onclick="document.getElementById('routeMapFile-${activeDay}').click()" style="background:linear-gradient(135deg, var(--blue), #FC7D2E); color:#fff; border:none; padding:11px 16px; border-radius:999px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;">📷 上傳路線圖</button>
       <input type="file" accept="image/*" id="routeMapFile-${activeDay}" style="display:none" multiple onchange="handleRouteMapUpload(event, ${activeDay})">
-      <div style="font-size:11px; color:var(--ink-soft); margin-top:8px; line-height:1.5;">可上傳您自己規劃或手繪的當日路線圖／導航截圖，會保存在此裝置的瀏覽器中，重新整理或關閉頁面都不會消失。</div>
+      <div style="font-size:11px; color:var(--ink-soft); margin-top:8px; line-height:1.5;">可上傳自己規劃或手繪的當日路線圖／導航截圖，並同步給家人。</div></div>
     </div>`;
 
   dayContent.innerHTML = `
@@ -2041,7 +2123,7 @@ function renderRulesList() {
     </div>
   `;
   }).join('') + `
-    <div class="add-row" style="flex-direction:column; align-items:stretch; gap:8px;">
+    <div class="add-row rule-add-row" style="flex-direction:column; align-items:stretch; gap:8px;">
       <input type="text" id="newRuleTitle" placeholder="標題（例如：行李限重）...">
       <div style="display:flex; gap:8px;">
         <input type="text" id="newRuleItem" placeholder="內文說明...">
@@ -2179,7 +2261,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=41').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=42').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);

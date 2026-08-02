@@ -11,7 +11,7 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=41">
+<link rel="stylesheet" href="style.css?v=42">
 </head>
 <body class="family-locked">
 <div id="familyGate" class="family-gate" aria-hidden="false">
@@ -26,6 +26,26 @@
     <div id="familyGateError" class="family-gate-error" role="alert"></div>
   </div>
 </div>
+
+<aside id="desktopWorkbench" class="desktop-workbench" aria-label="桌機預覽與編輯工具">
+  <div class="workbench-title">桌機手機預覽</div>
+  <div class="workbench-sub">畫面與手機使用時保持相同寬度與操作邏輯。</div>
+  <div class="workbench-label">顯示模式</div>
+  <div class="workbench-segment">
+    <button type="button" data-ui-mode="edit" onclick="setUiMode('edit')">✎ 編輯</button>
+    <button type="button" data-ui-mode="travel" onclick="setUiMode('travel')">旅行</button>
+  </div>
+  <div class="workbench-label">預覽寬度</div>
+  <div class="workbench-segment preview-size-segment">
+    <button type="button" data-preview-width="390" onclick="setPreviewWidth(390)">390</button>
+    <button type="button" data-preview-width="430" onclick="setPreviewWidth(430)">430</button>
+  </div>
+  <label class="desktop-search-label" for="globalSearchDesktop">搜尋全部行程</label>
+  <div class="global-search-input-wrap">
+    <span>⌕</span><input id="globalSearchDesktop" type="search" placeholder="景點、餐廳、住宿…" oninput="runGlobalSearch(this.value)">
+  </div>
+  <div id="globalSearchResultsDesktop" class="global-search-results"></div>
+</aside>
 
 <div class="app">
 
@@ -53,6 +73,10 @@
 
   <!-- ================= ITINERARY VIEW ================= -->
   <div class="view active" id="view-itinerary">
+    <div class="mobile-global-search">
+      <div class="global-search-input-wrap"><span>⌕</span><input id="globalSearchMobile" type="search" placeholder="搜尋全部 10 天行程…" oninput="runGlobalSearch(this.value)"></div>
+      <div id="globalSearchResultsMobile" class="global-search-results"></div>
+    </div>
     <div class="day-scroll" id="dayScroll"></div>
     <div id="dayContent"></div>
   </div>
@@ -149,6 +173,15 @@
       <h3>📋 旅遊規範與提醒</h3>
       <div class="sub">您可以自行新增行前準備規範或攜帶物品注意事項，並附上截圖（如海關申報單範例）。</div>
       <div id="rulesListWrap"></div>
+    </div>
+
+    <div class="section-card mobile-mode-settings">
+      <h3>⚙️ 顯示模式</h3>
+      <div class="sub">旅行模式會收起排序、刪除與進階編輯按鈕，降低手機誤觸；需要修改時可隨時切回編輯模式。</div>
+      <div class="mobile-mode-buttons">
+        <button type="button" data-ui-mode="travel" onclick="setUiMode('travel')">旅行模式</button>
+        <button type="button" data-ui-mode="edit" onclick="setUiMode('edit')">編輯模式</button>
+      </div>
     </div>
 
   </div>
@@ -256,7 +289,7 @@
   </div>
 </div>
 
-<script src="app.js?v=41"></script>
+<script src="app.js?v=42"></script>
 
 </body>
 </html>
