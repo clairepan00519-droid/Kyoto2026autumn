@@ -69,13 +69,15 @@
         </div>
       </div>
       <div class="map-zoom-hint">🔍 點擊手繪地圖可全螢幕放大</div>
-      <div class="route-summary-card">
-        <div class="route-summary-heading">
+      <div class="route-summary-card" id="routeSummaryCard">
+        <div class="route-summary-heading" id="routeSummaryHeading" role="button" tabindex="0" aria-expanded="true" aria-controls="routeSummaryBody" onclick="toggleRouteSummary()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleRouteSummary();}">
           <div>
             <h4>🍁 D1–D10 路線摘要</h4>
             <p>先看每日主題，再看移動與重點地區。</p>
           </div>
+          <span class="route-summary-chevron" id="routeSummaryChevron" aria-hidden="true">▾</span>
         </div>
+        <div class="route-summary-body" id="routeSummaryBody">
         <div class="route-summary-grid">
           <div class="route-summary-item"><div class="route-day"><b>D1</b><span>11/27</span></div><div class="route-copy"><strong>入洛日和</strong><span>KIX → 京都站｜抵達散策</span></div></div>
           <div class="route-summary-item"><div class="route-day"><b>D2</b><span>11/28</span></div><div class="route-copy"><strong>楓信未定</strong><span>大原／高雄／鞍馬＋貴船</span></div></div>
@@ -87,6 +89,7 @@
           <div class="route-summary-item"><div class="route-day"><b>D8</b><span>12/4</span></div><div class="route-copy"><strong>橋立暮景</strong><span>金剛院・天橋立・西舞鶴</span></div></div>
           <div class="route-summary-item"><div class="route-day"><b>D9</b><span>12/5</span></div><div class="route-copy"><strong>港町別章</strong><span>舞鶴市場・五老塔・紅磚公園 → 京都</span></div></div>
           <div class="route-summary-item"><div class="route-day"><b>D10</b><span>12/6</span></div><div class="route-copy"><strong>餘白京都</strong><span>西本願寺・京都御苑・下鴨神社 → KIX</span></div></div>
+        </div>
         </div>
       </div>
       <a href="https://www.google.com/maps/dir/Kyoto/Nara/Kameoka/Kyotango/Amanohashidate/Maizuru/Kyoto" target="_blank" rel="noopener" class="btn btn-map" style="display:flex; margin-top:12px; text-decoration:none;">🗺️ 在 Google 地圖開啟主要路線</a>

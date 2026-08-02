@@ -269,6 +269,16 @@ function isUserEditingForm(){
   if(a.matches && a.matches('input:not([type=checkbox]):not([type=radio]):not([type=file]), textarea, select, [contenteditable="true"]')) return true;
   return false;
 }
+/* 除了「目前正聚焦」的欄位外，任何還開著、尚未送出的表單（例如「評論與資訊」新增框、
+   景點編輯框、打包清單新增框）也算「使用者正在編輯」，即使手機鍵盤造成短暫失焦，
+   也不能被背景同步強制重繪清空。 */
+function isAnyComposerOpen(){
+  if(isUserEditingForm()) return true;
+  if(document.querySelector('.note-edit-area[style*="display: block"], .note-edit-area[style*="display:block"]')) return true;
+  if(document.querySelector('[id^="spot-edit-short-"], [id^="spot-edit-full-"]')) return true;
+  if(typeof isPackComposerEditing==='function' && isPackComposerEditing()) return true;
+  return false;
+}
 function queueRemoteRow(row){
   if(!row||!row.key)return;
   const prev=deferredRemoteRows.get(row.key);
@@ -277,7 +287,7 @@ function queueRemoteRow(row){
 function flushDeferredRemoteRows(){
   clearTimeout(deferredRemoteTimer);
   deferredRemoteTimer=setTimeout(()=>{
-    if(isUserEditingForm()||!deferredRemoteRows.size)return;
+    if(isAnyComposerOpen()||!deferredRemoteRows.size)return;
     const rows=[...deferredRemoteRows.values()];
     deferredRemoteRows.clear();
     rows.forEach(r=>applyRemoteRow(r,true));
@@ -288,15 +298,32 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')flushDeferredRemoteR
 
 function applyRemoteRow(row, forceApply=false){
   if(!row||typeof row.value==='undefined')return;
-  if(!forceApply && isUserEditingForm()){ queueRemoteRow(row); return; }
-  const rt=row.updated_at||new Date().toISOString(), lt=getSyncMeta()[row.key]; if(lt&&Date.parse(lt)>Date.parse(rt))return;
+  if(!forceApply && isAnyComposerOpen()){ queueRemoteRow(row); return; }
+  const rt=row.updated_at||new Date().toISOString(), lt=getSyncMeta()[row.key];
+  /* 用 >= 而非 >：自己剛推送出去、又被下一次輪詢讀回來的「回聲」時間戳會完全相同，
+     不需要（也不應該）再觸發一次整區重繪。 */
+  if(lt&&Date.parse(lt)>=Date.parse(rt))return;
   cloudSync.applyingRemote=true;
   try{let remote;try{remote=JSON.parse(row.value);}catch(e){remote=null;}remote=normalizeSyncValue(row.key,remote);let value=remote;if(MEDIA_SYNC_KEYS.has(row.key)){const local=localValueForKey(row.key);value=mergePreservingLocal(local,remote);}const valueStr=JSON.stringify(value);replaceLocalJson(row.key,value);setSyncMeta(row.key,rt);applyStoreUpdate(row.key,valueStr);}catch(e){console.error('套用家人資料失敗',e);}finally{cloudSync.applyingRemote=false;}
 }
+/* 若目前有任何未送出的編輯表單開著，先記下「稍後要重繪」，
+   等表單關閉／送出後再統一補畫一次，避免蓋掉使用者還沒儲存的內容。 */
+window._dayRemoteRenderPending = false;
+function safeRenderDayContent(){
+  if(isAnyComposerOpen()){ window._dayRemoteRenderPending=true; return; }
+  window._dayRemoteRenderPending=false;
+  if(typeof renderDayContent==='function') renderDayContent();
+}
+function flushPendingDayRender(){
+  if(window._dayRemoteRenderPending && !isAnyComposerOpen()){
+    window._dayRemoteRenderPending=false;
+    if(typeof renderDayContent==='function') renderDayContent();
+  }
+}
 function applyStoreUpdate(key,jsonStr){
   let parsed;try{parsed=JSON.parse(jsonStr);}catch(e){return;}
-  switch(key){case'kyoto_notes':notesStore=parsed;break;case'kyoto_photos':photoStore=parsed;break;case'kyoto_covers':coverStore=parsed;break;case'kyoto_custom_spots':customSpotsStore=parsed;break;case'kyoto_order':orderStore=parsed;break;case'kyoto_block_order':blockOrderStore=parsed;break;case'kyoto_route_maps':routeMapStore=parsed;break;case'kyoto_pack':packData=migratePackCategoryNames(parsed);if(isPackComposerEditing()){window._packRemoteRenderPending=true;}else{renderPackList();}return;case'kyoto_shop':shopData=normalizeStructuredList('kyoto_shop',parsed);renderShopList();return;case'kyoto_rules':rulesData=normalizeStructuredList('kyoto_rules',parsed);renderRulesList();return;case'kyoto_docs':docsData=mergeDocsWithDefaults(parsed);persistDocs();renderDocsList();return;case'kyoto_hidden_fixed_spots':hiddenFixedSpotsStore=parsed||{};renderDayContent();return;default:return;}
-  if(typeof renderDayContent==='function')renderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();
+  switch(key){case'kyoto_notes':notesStore=parsed;break;case'kyoto_photos':photoStore=parsed;break;case'kyoto_covers':coverStore=parsed;break;case'kyoto_custom_spots':customSpotsStore=parsed;break;case'kyoto_order':orderStore=parsed;break;case'kyoto_block_order':blockOrderStore=parsed;break;case'kyoto_route_maps':routeMapStore=parsed;break;case'kyoto_pack':packData=migratePackCategoryNames(parsed);if(isPackComposerEditing()){window._packRemoteRenderPending=true;}else{renderPackList();}return;case'kyoto_shop':shopData=normalizeStructuredList('kyoto_shop',parsed);renderShopList();return;case'kyoto_rules':rulesData=normalizeStructuredList('kyoto_rules',parsed);renderRulesList();return;case'kyoto_docs':docsData=mergeDocsWithDefaults(parsed);persistDocs();renderDocsList();return;case'kyoto_hidden_fixed_spots':hiddenFixedSpotsStore=parsed||{};safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();return;default:return;}
+  safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();
 }
 function scheduleCloudPush(key,valueObj){
   if(!cloudSync.enabled||cloudSync.applyingRemote)return;const t=new Date().toISOString();setSyncMeta(key,t);cloudSync.pending[key]={valueObj,updatedAt:t};clearTimeout(cloudSync.timer);cloudSync.timer=setTimeout(flushCloudPush,700);updateSyncStatus(null,'saving');
@@ -858,6 +885,7 @@ function toggleEditNote(event, key) {
   } else {
     editArea.style.display = 'none';
     if(toggleBtn) toggleBtn.style.display = 'inline-block';
+    flushPendingDayRender();
   }
 }
 
@@ -1970,6 +1998,22 @@ function setTab(tab) {
   window.scrollTo({top:0, behavior:'smooth'});
   if(tab === 'weather'){ setTimeout(refreshRainRadar, 100); }
 }
+
+/* ============ 路線摘要：可收合 ============ */
+function toggleRouteSummary(force){
+  const card = document.getElementById('routeSummaryCard');
+  const heading = document.getElementById('routeSummaryHeading');
+  if(!card) return;
+  const collapsed = typeof force === 'boolean' ? force : !card.classList.contains('collapsed');
+  card.classList.toggle('collapsed', collapsed);
+  if(heading) heading.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+  try{ localStorage.setItem('kyoto_route_summary_collapsed', collapsed ? '1' : '0'); }catch(e){}
+}
+(function initRouteSummaryState(){
+  let collapsed = false;
+  try{ collapsed = localStorage.getItem('kyoto_route_summary_collapsed') === '1'; }catch(e){}
+  document.addEventListener('DOMContentLoaded', () => toggleRouteSummary(collapsed));
+})();
 
 function removeUnneededUtilityUI(){
   const patterns=[/跨裝置資料備份/,/匯出備份/,/匯入備份/,/輸出.*行程/,/儲存.*行程/];
