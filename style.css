@@ -122,6 +122,8 @@ button, .tab-btn, .day-chip, .btn, .guide-header, .sub-spot-header, .spot-subtab
 .weather-strip .txt{font-size:12px; color:var(--ink); line-height:1.5;}
 .weather-strip b{font-size:14px; font-family:'Zen Kaku Gothic New', sans-serif;}
 .stay-line{ margin-top:10px; font-size:12.5px; color:var(--ink-soft); display:flex; gap:6px; align-items:center; }
+.stay-quick-card{margin-top:10px;padding:12px 13px;border:1px solid rgba(185,95,63,.22);border-radius:14px;background:linear-gradient(135deg,rgba(255,250,242,.96),rgba(255,255,255,.94));display:flex;align-items:center;gap:10px;box-shadow:0 5px 16px rgba(68,54,43,.07)}
+.stay-quick-icon{font-size:23px;flex:none}.stay-quick-copy{min-width:0;flex:1}.stay-quick-copy small{display:block;color:var(--ink-soft);font-size:10.5px;font-weight:800}.stay-quick-copy strong{display:block;margin-top:2px;font-size:13px;line-height:1.35}.stay-quick-nav{flex:none;border:0;border-radius:999px;padding:8px 11px;background:var(--blue);color:#fff;text-decoration:none;font-size:11px;font-weight:900}
 
 /* ---------- Spot Sub-tabs ---------- */
 .spot-subtabs{ display:flex; background:#f4f6f0; border-bottom:1px solid var(--line); padding:4px 8px 0; gap:4px; border-radius:var(--r-lg) var(--r-lg) 0 0; }
@@ -134,6 +136,7 @@ button, .tab-btn, .day-chip, .btn, .guide-header, .sub-spot-header, .spot-subtab
 .guide-card{ background:var(--card); border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--shadow); margin-bottom:18px; border:1px solid #f0f0f0; transition: transform 0.2s ease, box-shadow 0.2s ease; }
 .guide-card:active{ transform:scale(0.98); }
 .guide-header{ height:240px; position:relative; display:flex; align-items:flex-end; background-size:cover; background-position:center; cursor:pointer; }
+.guide-cover-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;background:#e7dfd2}
 .guide-header::before{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.85) 100%); }
 .guide-header-content{ position:relative; z-index:2; padding:16px; width:100%; color:#fff; }
 .guide-header-content .cat-label{ display:inline-block; font-size:10px; font-weight:700; padding:4px 10px; border-radius:999px; margin-bottom:8px; backdrop-filter:blur(4px); }
@@ -396,9 +399,15 @@ body.family-locked{overflow:hidden;}
 .family-gate-card h2{margin:0 0 8px;font-size:24px;color:var(--ink);}
 .family-gate-card p{margin:0 0 18px;font-size:13px;line-height:1.7;color:var(--ink-soft);}
 .family-gate-card input{width:100%;box-sizing:border-box;border:1.5px solid var(--line);border-radius:14px;padding:13px 14px;font:inherit;font-size:15px;background:#fff;outline:none;}
+.family-gate-card input+input{margin-top:9px}
 .family-gate-card input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(83,129,236,.12);}
 .family-gate-card button{width:100%;margin-top:10px;border:0;border-radius:14px;padding:13px 16px;background:linear-gradient(135deg,var(--blue),#7d9cf0);color:#fff;font:inherit;font-weight:900;cursor:pointer;box-shadow:0 10px 24px rgba(83,129,236,.22);}
 .family-gate-error{min-height:20px;margin-top:8px;font-size:12px;font-weight:800;color:#c1502f;}
+.family-gate-card .family-offline-button{background:#fff;color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
+.header-action-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px}.header-action-button{border:1px solid rgba(255,255,255,.55);border-radius:999px;padding:8px 13px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);color:#fff;font:inherit;font-size:11.5px;font-weight:900;cursor:pointer}.offline-ready-status{border-radius:999px;padding:7px 11px;background:rgba(20,35,26,.25);color:#fff;font-size:10.5px;font-weight:800}.offline-ready-status.ready{background:rgba(48,126,76,.7)}.offline-ready-status.warning{background:rgba(173,30,23,.68)}
+.map-date-correction{margin:9px 0 0;padding:10px 12px;border-radius:12px;background:#fff8e8;border:1px solid #efd7a6;color:#74512f;font-size:11px;font-weight:700;line-height:1.6}
+.undo-toast{position:fixed;z-index:100000;left:50%;bottom:max(82px,calc(env(safe-area-inset-bottom) + 72px));transform:translateX(-50%);width:min(360px,calc(100% - 28px));box-sizing:border-box;padding:11px 12px 11px 15px;border-radius:15px;background:rgba(42,48,44,.96);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 14px 34px rgba(0,0,0,.24);font-size:12.5px;font-weight:800}.undo-toast[hidden]{display:none}.undo-toast button{border:0;border-radius:999px;padding:7px 13px;background:#fff;color:#9b402d;font:inherit;font-size:11.5px;font-weight:900;cursor:pointer}
+.today-chip{flex:none;border:1.5px solid #d89877;border-radius:13px;padding:8px 12px;background:#fff8f1;color:#9b402d;font:inherit;font-size:11px;font-weight:900;cursor:pointer}.day-chip.is-today{box-shadow:0 0 0 3px rgba(252,125,46,.2);border-color:#fc7d2e}
 
 
 /* ---------- Kyoto autumn route map ---------- */

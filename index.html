@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#b95f3f">
 <title>京丹雅行・紅葉海岸十日慢旅</title>
 <meta name="description" content="京都、奈良、京丹後與舞鶴 10 日慢旅行程，含紅葉機動方案、每日景點、天氣、行李與家人共享。">
 <meta property="og:title" content="京丹雅行・紅葉海岸十日慢旅">
@@ -11,16 +12,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 </head>
 <body class="family-locked">
 <div id="familyGate" class="family-gate" aria-hidden="false">
   <div class="family-gate-card">
     <div class="family-gate-icon">🍁</div>
     <h2>京都・奈良・丹後家庭旅行</h2>
-    <p>請輸入家人共用密碼後進入。所有裝置會共用同一份景點、照片、購物與餐點資料。</p>
-    <input id="familyGateInput" type="password" inputmode="text" autocomplete="current-password" placeholder="家人共用密碼">
-    <button id="familyGateButton" type="button">進入行程</button>
+    <p>請使用在 Supabase Authentication 建立的家人帳號登入。登入後，各裝置會安全共用同一份行程資料。</p>
+    <input id="familyGateEmail" type="email" inputmode="email" autocomplete="username" placeholder="家人 Email">
+    <input id="familyGateInput" type="password" autocomplete="current-password" placeholder="Password">
+    <button id="familyGateButton" type="button">登入行程</button>
+    <button id="offlineGateButton" class="family-offline-button" type="button" hidden>離線查看已下載行程</button>
     <div id="familyGateError" class="family-gate-error" role="alert"></div>
   </div>
 </div>
@@ -34,6 +36,10 @@
     <div class="eyebrow">KYOTO · NARA · TANGO, JAPAN</div>
     <h1>京丹雅行<br>紅葉、古都與海岸的十日慢旅</h1>
     <div class="dates">📅 2026.11.27 出發 – 12.06 抵台・10天9夜</div>
+    <div class="header-action-row">
+      <button id="todayModeButton" class="header-action-button" type="button" onclick="goToToday()">📍 今日行程</button>
+      <span id="offlineReadyStatus" class="offline-ready-status">離線資料檢查中</span>
+    </div>
     <div class="stat-row">
       <div class="stat"><b>10</b><span>旅行天數</span></div>
       <div class="stat"><b>6</b><span>住宿地</span></div>
@@ -69,6 +75,7 @@
         </div>
       </div>
       <div class="map-zoom-hint">🔍 點擊手繪地圖可全螢幕放大</div>
+      <div class="map-date-correction">📅 本次旅程為 2026 年：11/27（五）・11/28（六）・11/29（日）・11/30（一）・12/1（二）・12/2（三）・12/3（四）・12/4（五）・12/5（六）・12/6（日）。手繪圖為路線插畫，日期與星期請以此列及每日卡片為準。</div>
       <div class="route-summary-card" id="routeSummaryCard">
         <div class="route-summary-heading" id="routeSummaryHeading" role="button" tabindex="0" aria-expanded="true" aria-controls="routeSummaryBody" onclick="toggleRouteSummary()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleRouteSummary();}">
           <div>
@@ -120,7 +127,7 @@
         <article class="transport-card"><div class="transport-day">D3</div><div><h4>東山</h4><p>以地下鐵東西線加步行串接真如堂、永觀堂與南禪寺；紅葉旺季減少依賴容易塞車的市巴士。</p><div class="transport-link-row"><a href="https://www2.city.kyoto.lg.jp/kotsu/webguide/" target="_blank" rel="noopener">京都交通指南</a></div></div></article>
         <article class="transport-card"><div class="transport-day">D4</div><div><h4>修學院 → 宇治 → 奈良</h4><p>叡山電車銜接市區，再利用京阪或 JR 前往宇治與奈良。攜帶行李時以少轉乘路線為主。</p><div class="transport-link-row"><a href="https://www.keihan.co.jp/traffic/" target="_blank" rel="noopener">京阪電車</a><a href="https://www.westjr.co.jp/global/tc/timetable/" target="_blank" rel="noopener">JR 時刻表</a><a href="https://www.narakotsu.co.jp/" target="_blank" rel="noopener">奈良交通</a></div></div></article>
         <article class="transport-card"><div class="transport-day">D5</div><div><h4>龜岡／保津川／嵐山</h4><p>保津川下り以當日營運為準；停航時從龜岡搭 JR 至嵯峨嵐山，直接切換雨風備案。</p><div class="transport-link-row"><a href="https://www.hozugawakudari.jp/" target="_blank" rel="noopener">保津川下り</a><a href="https://www.westjr.co.jp/global/tc/timetable/" target="_blank" rel="noopener">JR 時刻表</a></div></div></article>
-        <article class="transport-card"><div class="transport-day">D6–D9</div><div><h4>丹波・丹後・舞鶴自駕</h4><p>12/1 奈良取車、12/5 京都還車。山路、海岸風與低溫路況需保留緩衝，並確認冬季胎與保險內容。</p><div class="transport-link-row"><a href="https://www.jartic.or.jp/" target="_blank" rel="noopener">日本道路交通情報</a><a href="https://www.tankai.jp/" target="_blank" rel="noopener">丹後海陸交通</a></div></div></article>
+        <article class="transport-card"><div class="transport-day">D5–D9</div><div><h4>龜岡・丹波・丹後・舞鶴自駕</h4><p>12/1 奈良取車、12/5 京都還車。山路、海岸風與低溫路況需保留緩衝，並確認冬季胎與保險內容。</p><div class="transport-link-row"><a href="https://www.jartic.or.jp/" target="_blank" rel="noopener">日本道路交通情報</a><a href="https://www.tankai.jp/" target="_blank" rel="noopener">丹後海陸交通</a></div></div></article>
         <article class="transport-card"><div class="transport-day">D8</div><div><h4>天橋立</h4><p>府中側與文珠側只選一岸；纜車、單軌與吊椅可能受強風影響。</p><div class="transport-link-row"><a href="https://www.amano-hashidate.com/" target="_blank" rel="noopener">傘松公園</a><a href="https://www.viewland.jp/" target="_blank" rel="noopener">View Land</a><a href="https://trains.willer.co.jp/" target="_blank" rel="noopener">京都丹後鐵道</a></div></div></article>
         <article class="transport-card"><div class="transport-day">D10</div><div><h4>京都站 → 關西機場</h4><p>取回行李後搭 HARUKA 前往 KIX，為報到、安檢與機場內移動保留充足時間。</p><div class="transport-link-row"><a href="https://www.westjr.co.jp/global/tc/travel/shopping/access/train.html" target="_blank" rel="noopener">HARUKA 官方資訊</a></div></div></article>
       </div>
@@ -198,6 +205,11 @@
   </div>
 </div>
 
+<div id="undoToast" class="undo-toast" role="status" aria-live="polite" hidden>
+  <span id="undoToastText">已刪除</span>
+  <button id="undoToastButton" type="button">復原</button>
+</div>
+
 <!-- Modal for Images -->
 <div class="attach-modal" id="attachModal" onclick="closeAttachModal()">
   <button class="attach-modal-close" onclick="event.stopPropagation(); closeAttachModal()">✕</button>
@@ -237,8 +249,8 @@
         <textarea id="editSpotInfo" rows="2" placeholder="這個景點的一句話心得或攻略"></textarea>
       </label>
       <label class="spot-edit-field">
-        <span>導航搜尋文字（用來開啟 Google 地圖；名稱容易搜不到時可填更精確的地址或關鍵字）</span>
-        <input type="text" id="editSpotMapQuery" placeholder="預設使用景點名稱">
+        <span>導航位置（可貼 Google Maps 分享網址、地址、經緯度或搜尋關鍵字）</span>
+        <input type="text" id="editSpotMapQuery" placeholder="未填時使用景點名稱">
       </label>
     </div>
     <div class="spot-edit-modal-actions">
@@ -248,7 +260,6 @@
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="app.js"></script>
 
 </body>
