@@ -825,6 +825,36 @@ function persistInfoOverrides(){ safeSetItem('kyoto_info_overrides', infoOverrid
 function currentBuiltInInfo(key, fallback){
   return Object.prototype.hasOwnProperty.call(infoOverrideStore,key) ? infoOverrideStore[key] : fallback;
 }
+/* 內建「營業／開放時間」與「重要提點／門票」也可由使用者編輯或清空。
+   undefined=沿用預設、null=清空（隱藏）、字串=自訂版本。 */
+let fieldOverrideStore = JSON.parse(localStorage.getItem('kyoto_field_overrides') || '{}');
+function persistFieldOverrides(){ safeSetItem('kyoto_field_overrides', fieldOverrideStore); }
+function fieldOverrideKey(idx, field){ return idx + '::' + field; }
+function currentFieldValue(idx, field, fallback){
+  const k = fieldOverrideKey(idx, field);
+  return Object.prototype.hasOwnProperty.call(fieldOverrideStore, k) ? fieldOverrideStore[k] : (fallback || null);
+}
+function editSpotField(event, idx, field, label, fallback){
+  event.stopPropagation();
+  const k = fieldOverrideKey(idx, field);
+  const current = currentFieldValue(idx, field, fallback);
+  const next = prompt('編輯' + label, current == null ? '' : current);
+  if(next === null) return;
+  const value = next.trim();
+  fieldOverrideStore[k] = value || null;
+  persistFieldOverrides();
+  safeRenderDayContent();
+  setTimeout(() => document.getElementById('spot-card-' + idx)?.classList.add('open'), 50);
+}
+function clearSpotField(event, idx, field){
+  event.stopPropagation();
+  if(!confirm('要清空這筆資訊嗎？')) return;
+  fieldOverrideStore[fieldOverrideKey(idx, field)] = null;
+  persistFieldOverrides();
+  safeRenderDayContent();
+  setTimeout(() => document.getElementById('spot-card-' + idx)?.classList.add('open'), 50);
+}
+
 function editBuiltInInfo(key, fallback){
   const current=currentBuiltInInfo(key,fallback);
   const next=prompt('編輯這筆評論與資訊', current==null?'':current);
@@ -1198,8 +1228,12 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
   
   const infoBits = [];
   if(spot.dur) infoBits.push(`<div class="info-item"><div class="k">建議停留</div><div class="v">${spot.dur}</div></div>`);
-  if(spot.hours) infoBits.push(`<div class="info-item"><div class="k">營業／開放時間</div><div class="v info-hours">${spot.hours}</div></div>`);
-  if(spot.note) infoBits.push(`<div class="info-item full-w important-info"><div class="k">重要提點／門票</div><div class="v">${spot.note}</div></div>`);
+  const hoursVal = currentFieldValue(idx, 'hours', spot.hours);
+  if(hoursVal) infoBits.push(`<div class="info-item"><div class="k field-k-row">營業／開放時間<span class="field-edit-actions"><button onclick="event.stopPropagation(); editSpotField(event,'${idx}','hours','營業／開放時間',${JSON.stringify(spot.hours||'')})" title="編輯">✎</button><button onclick="event.stopPropagation(); clearSpotField(event,'${idx}','hours')" title="清空">✕</button></span></div><div class="v info-hours">${hoursVal}</div></div>`);
+  else infoBits.push(`<div class="info-item"><div class="k">營業／開放時間</div><div class="v"><button class="field-add-btn" onclick="event.stopPropagation(); editSpotField(event,'${idx}','hours','營業／開放時間',${JSON.stringify(spot.hours||'')})">＋ 新增</button></div></div>`);
+  const noteVal = currentFieldValue(idx, 'note', spot.note);
+  if(noteVal) infoBits.push(`<div class="info-item full-w important-info"><div class="k field-k-row">重要提點／門票<span class="field-edit-actions"><button onclick="event.stopPropagation(); editSpotField(event,'${idx}','note','重要提點／門票',${JSON.stringify(spot.note||'')})" title="編輯">✎</button><button onclick="event.stopPropagation(); clearSpotField(event,'${idx}','note')" title="清空">✕</button></span></div><div class="v">${noteVal}</div></div>`);
+  else infoBits.push(`<div class="info-item full-w"><div class="k">重要提點／門票</div><div class="v"><button class="field-add-btn" onclick="event.stopPropagation(); editSpotField(event,'${idx}','note','重要提點／門票',${JSON.stringify(spot.note||'')})">＋ 新增</button></div></div>`);
   
   const userPhotos = photoStore[idx] || [];
   let thumbImgs = userPhotos.length > 0 ? userPhotos : (spot.img ? [spot.img] : []);
