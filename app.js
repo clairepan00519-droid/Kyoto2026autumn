@@ -869,6 +869,7 @@ function openSpotEditModal(event, idx){
   const infoOrig = window._spotCustomInfoOriginals[idx] || null;
   document.getElementById('editSpotName').value = currentFieldValue(idx, 'name', orig.name) || '';
   document.getElementById('editSpotDesc').value = currentFieldValue(idx, 'desc', orig.desc) || '';
+  document.getElementById('editSpotFullDesc').value = currentFieldValue(idx, 'fullDesc', orig.fullDesc) || '';
   document.getElementById('editSpotHours').value = currentFieldValue(idx, 'hours', orig.hours) || '';
   document.getElementById('editSpotNote').value = currentFieldValue(idx, 'note', orig.note) || '';
   document.getElementById('editSpotInfo').value = currentBuiltInInfo(idx, infoOrig) || '';
@@ -889,6 +890,7 @@ function saveSpotEditModal(){
   };
   setField('name', document.getElementById('editSpotName').value);
   setField('desc', document.getElementById('editSpotDesc').value);
+  setField('fullDesc', document.getElementById('editSpotFullDesc').value);
   setField('hours', document.getElementById('editSpotHours').value);
   setField('note', document.getElementById('editSpotNote').value);
   setField('mapQuery', document.getElementById('editSpotMapQuery').value);
@@ -905,7 +907,7 @@ function resetSpotEditModal(){
   const idx = _spotEditModalIdx;
   if(!idx) return;
   if(!confirm('確定要把這個景點的名稱、簡介、營業時間、提點、評論、導航地點全部還原成預設嗎？')) return;
-  ['name','desc','hours','note','mapQuery'].forEach(f => delete fieldOverrideStore[fieldOverrideKey(idx, f)]);
+  ['name','desc','fullDesc','hours','note','mapQuery'].forEach(f => delete fieldOverrideStore[fieldOverrideKey(idx, f)]);
   persistFieldOverrides();
   delete infoOverrideStore[idx];
   persistInfoOverrides();
@@ -1289,9 +1291,10 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
   }
   
   const infoBits = [];
-  window._spotFieldOriginals[idx] = { hours: spot.hours || null, note: spot.note || null, name: spot.name || null, desc: spot.desc || null };
+  window._spotFieldOriginals[idx] = { hours: spot.hours || null, note: spot.note || null, name: spot.name || null, desc: spot.desc || null, fullDesc: spot.fullDesc || null };
   const displayName = currentFieldValue(idx, 'name', spot.name) || spot.name;
   const displayDesc = currentFieldValue(idx, 'desc', spot.desc) || spot.desc;
+  const displayFullDesc = currentFieldValue(idx, 'fullDesc', spot.fullDesc) || displayDesc;
   const navQuery = currentFieldValue(idx, 'mapQuery', null) || displayName;
   if(spot.dur) infoBits.push(`<div class="info-item"><div class="k">建議停留</div><div class="v">${spot.dur}</div></div>`);
   const hoursVal = currentFieldValue(idx, 'hours', spot.hours);
@@ -1403,10 +1406,10 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
     </div>` : '';
 
   if (!isMainSpot) {
-    return `<div class="sub-spot-card sub-spot-${spot.cat || 'other'}" id="spot-card-${idx}"><div class="sub-spot-header" onclick="toggleSpotDetails('${idx}')"><div class="sub-spot-header-content"><h4>${displayName}</h4><p class="short-desc">${displayDesc}</p>${miniStripHTML}</div><div class="chevron">▼</div></div><div class="sub-spot-details-wrap"><div class="sub-spot-details" onclick="event.stopPropagation()">${customBar}${editSpotAreaHTML}<p class="full-desc">${spot.fullDesc || displayDesc}</p>${spot.recDishes ? `<div class="dish-tag">🍲 必點推薦：${spot.recDishes}</div>` : ''}${reorderableBlocksHTML}<div class="action-row" style="margin-top:10px;"><a class="btn btn-map" href="${mapsLink(navQuery)}" target="_blank" rel="noopener">🗺️ 導航</a>${spot.link ? `<a class="btn btn-photo" href="${spot.link}" target="_blank" rel="noopener">🔗 ${spot.linkLabel}</a>` : ''}<button class="btn btn-photo" onclick="document.getElementById('file-${idx}').click()">📷 上傳照片</button></div><input type="file" accept="image/*" id="file-${idx}" style="display:none" multiple onchange="handlePhoto(event, '${idx}')">${pStrip}</div></div></div>`;
+    return `<div class="sub-spot-card sub-spot-${spot.cat || 'other'}" id="spot-card-${idx}"><div class="sub-spot-header" onclick="toggleSpotDetails('${idx}')"><div class="sub-spot-header-content"><h4>${displayName}</h4><p class="short-desc">${displayDesc}</p>${miniStripHTML}</div><div class="chevron">▼</div></div><div class="sub-spot-details-wrap"><div class="sub-spot-details" onclick="event.stopPropagation()">${customBar}${editSpotAreaHTML}<p class="full-desc">${displayFullDesc}</p>${spot.recDishes ? `<div class="dish-tag">🍲 必點推薦：${spot.recDishes}</div>` : ''}${reorderableBlocksHTML}<div class="action-row" style="margin-top:10px;"><a class="btn btn-map" href="${mapsLink(navQuery)}" target="_blank" rel="noopener">🗺️ 導航</a>${spot.link ? `<a class="btn btn-photo" href="${spot.link}" target="_blank" rel="noopener">🔗 ${spot.linkLabel}</a>` : ''}<button class="btn btn-photo" onclick="document.getElementById('file-${idx}').click()">📷 上傳照片</button></div><input type="file" accept="image/*" id="file-${idx}" style="display:none" multiple onchange="handlePhoto(event, '${idx}')">${pStrip}</div></div></div>`;
   }
 
-  return `<div class="guide-card" id="spot-card-${idx}"><div class="guide-header" style="background-image:url('${bg}');" onclick="toggleSpotDetails('${idx}')">${photoStore[idx] && photoStore[idx].length > 0 ? `<span class="own-badge" onclick="event.stopPropagation(); document.getElementById('file-${idx}').click()">✅ 已有你的實拍照片</span>` : `<button class="own-badge" style="border:none; cursor:pointer;" onclick="event.stopPropagation(); document.getElementById('file-${idx}').click()">📷 新增我的照片</button>`}<div class="guide-header-content"><span class="cat-label ${c.cls}">${c.emoji} ${c.label}</span><h3>${displayName}</h3><p class="short-desc">${displayDesc}</p></div><div class="chevron">▼</div></div><div class="guide-details-wrap"><div class="guide-details" onclick="event.stopPropagation()">${customBar}${editSpotAreaHTML}<p class="full-desc">${spot.fullDesc || displayDesc}</p>${reorderableBlocksHTML}${spot.tip?`<div class="tip-box"><b>📸 拍照與自駕小解密：</b>${spot.tip}</div>`:''}${spot.docMap?`<div class="tip-box" style="background: linear-gradient(120deg,#e8f8ee,#fff); border-color:#D0F4FC; color:#22513f;"><b>🗺️ DOC 官方步道地圖與狀態：</b><a href="${spot.docMap}" target="_blank" rel="noopener" style="color:var(--blue); font-weight:700; text-decoration:underline;">點此開啟</a></div>`:''}${spot.park?`<div class="park-box"><b>🅿️ 停車＆自駕補給：</b>${spot.park}</div>`:''}<div class="action-row" style="margin-top:10px;"><a class="btn btn-map" href="${mapsLink(navQuery)}" target="_blank" rel="noopener">🗺️ 導航導出</a>${spot.link ? `<a class="btn btn-photo" href="${spot.link}" target="_blank" rel="noopener">🔗 ${spot.linkLabel}</a>` : ''}<button class="btn btn-photo" onclick="document.getElementById('file-${idx}').click()">📷 上傳照片</button></div><input type="file" accept="image/*" id="file-${idx}" style="display:none" multiple onchange="handlePhoto(event, '${idx}')">${pStrip}</div></div></div>`;
+  return `<div class="guide-card" id="spot-card-${idx}"><div class="guide-header" style="background-image:url('${bg}');" onclick="toggleSpotDetails('${idx}')">${photoStore[idx] && photoStore[idx].length > 0 ? `<span class="own-badge" onclick="event.stopPropagation(); document.getElementById('file-${idx}').click()">✅ 已有你的實拍照片</span>` : `<button class="own-badge" style="border:none; cursor:pointer;" onclick="event.stopPropagation(); document.getElementById('file-${idx}').click()">📷 新增我的照片</button>`}<div class="guide-header-content"><span class="cat-label ${c.cls}">${c.emoji} ${c.label}</span><h3>${displayName}</h3><p class="short-desc">${displayDesc}</p></div><div class="chevron">▼</div></div><div class="guide-details-wrap"><div class="guide-details" onclick="event.stopPropagation()">${customBar}${editSpotAreaHTML}<p class="full-desc">${displayFullDesc}</p>${reorderableBlocksHTML}${spot.tip?`<div class="tip-box"><b>📸 拍照與自駕小解密：</b>${spot.tip}</div>`:''}${spot.docMap?`<div class="tip-box" style="background: linear-gradient(120deg,#e8f8ee,#fff); border-color:#D0F4FC; color:#22513f;"><b>🗺️ DOC 官方步道地圖與狀態：</b><a href="${spot.docMap}" target="_blank" rel="noopener" style="color:var(--blue); font-weight:700; text-decoration:underline;">點此開啟</a></div>`:''}${spot.park?`<div class="park-box"><b>🅿️ 停車＆自駕補給：</b>${spot.park}</div>`:''}<div class="action-row" style="margin-top:10px;"><a class="btn btn-map" href="${mapsLink(navQuery)}" target="_blank" rel="noopener">🗺️ 導航導出</a>${spot.link ? `<a class="btn btn-photo" href="${spot.link}" target="_blank" rel="noopener">🔗 ${spot.linkLabel}</a>` : ''}<button class="btn btn-photo" onclick="document.getElementById('file-${idx}').click()">📷 上傳照片</button></div><input type="file" accept="image/*" id="file-${idx}" style="display:none" multiple onchange="handlePhoto(event, '${idx}')">${pStrip}</div></div></div>`;
 }
 
 /* 讀取檔案並自動壓縮：長邊限制在 1600px、轉存為 JPEG(品質0.82)，
