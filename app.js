@@ -97,8 +97,8 @@ const SUPABASE_URL = "https://xkahhddatpoxuembeiwl.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrYWhoZGRhdHBveHVlbWJlaXdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NDExNDksImV4cCI6MjEwMDAxNzE0OX0.Jdpxpz7rgyK_OikYkRrVQComDWZiaI4fgf5ZV_SdaII";
 
 const SYNC_META_KEY = 'kyoto_sync_meta_v3';
-const SYNC_KEYS = ['kyoto_notes','kyoto_info_overrides','kyoto_field_overrides','kyoto_photos','kyoto_covers','kyoto_custom_spots','kyoto_order','kyoto_block_order','kyoto_route_maps','kyoto_foliage_maps','kyoto_pack','kyoto_shop','kyoto_rules','kyoto_docs','kyoto_hidden_fixed_spots'];
-const MEDIA_SYNC_KEYS = new Set(['kyoto_photos','kyoto_covers','kyoto_route_maps','kyoto_foliage_maps']);
+const SYNC_KEYS = ['kyoto_notes','kyoto_info_overrides','kyoto_field_overrides','kyoto_photos','kyoto_covers','kyoto_custom_spots','kyoto_order','kyoto_block_order','kyoto_route_maps','kyoto_transport_extras','kyoto_foliage_maps','kyoto_pack','kyoto_shop','kyoto_rules','kyoto_docs','kyoto_hidden_fixed_spots'];
+const MEDIA_SYNC_KEYS = new Set(['kyoto_photos','kyoto_covers','kyoto_route_maps','kyoto_transport_extras','kyoto_foliage_maps']);
 const STRUCTURED_LIST_KEYS = new Set(['kyoto_shop','kyoto_rules','kyoto_docs']);
 const cloudSync = {enabled:false, starting:false, applyingRemote:false, pending:{}, timer:null, pollTimer:null, lastError:null, ready:false};
 const MEDIA_BUCKET = 'trip-media';
@@ -329,7 +329,7 @@ function isUserEditingForm(){
 function isAnyComposerOpen(){
   if(isUserEditingForm()) return true;
   if(document.querySelector('.note-edit-area[style*="display: block"], .note-edit-area[style*="display:block"]')) return true;
-  if(document.querySelector('[id^="spot-edit-short-"], [id^="spot-edit-full-"]')) return true;
+  if(document.querySelector('[id^="spot-edit-short-"], [id^="spot-edit-full-"], .transport-extra-form:focus-within')) return true;
   if(document.getElementById('spotEditModal')?.classList.contains('active')) return true;
   if(typeof isPackComposerEditing==='function' && isPackComposerEditing()) return true;
   return false;
@@ -377,7 +377,7 @@ function flushPendingDayRender(){
 }
 function applyStoreUpdate(key,jsonStr){
   let parsed;try{parsed=JSON.parse(jsonStr);}catch(e){return;}
-  switch(key){case'kyoto_notes':notesStore=parsed;break;case'kyoto_info_overrides':infoOverrideStore=parsed||{};break;case'kyoto_field_overrides':fieldOverrideStore=parsed||{};break;case'kyoto_photos':photoStore=parsed;break;case'kyoto_covers':coverStore=parsed;break;case'kyoto_custom_spots':customSpotsStore=parsed;break;case'kyoto_order':orderStore=parsed;break;case'kyoto_block_order':blockOrderStore=parsed;break;case'kyoto_route_maps':routeMapStore=parsed;break;case'kyoto_foliage_maps':foliageMapStore=Array.isArray(parsed)?parsed:[];renderFoliageMaps();return;case'kyoto_pack':packData=migratePackCategoryNames(parsed);if(isPackComposerEditing()){window._packRemoteRenderPending=true;}else{renderPackList();}return;case'kyoto_shop':shopData=normalizeStructuredList('kyoto_shop',parsed);renderShopList();return;case'kyoto_rules':rulesData=normalizeStructuredList('kyoto_rules',parsed);renderRulesList();return;case'kyoto_docs':docsData=mergeDocsWithDefaults(parsed);persistDocs();renderDocsList();return;case'kyoto_hidden_fixed_spots':hiddenFixedSpotsStore=parsed||{};safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();return;default:return;}
+  switch(key){case'kyoto_notes':notesStore=parsed;break;case'kyoto_info_overrides':infoOverrideStore=parsed||{};break;case'kyoto_field_overrides':fieldOverrideStore=parsed||{};break;case'kyoto_photos':photoStore=parsed;break;case'kyoto_covers':coverStore=parsed;break;case'kyoto_custom_spots':customSpotsStore=parsed;break;case'kyoto_order':orderStore=parsed;break;case'kyoto_block_order':blockOrderStore=parsed;break;case'kyoto_route_maps':routeMapStore=parsed;break;case'kyoto_transport_extras':transportExtrasStore=parsed||{};break;case'kyoto_foliage_maps':foliageMapStore=Array.isArray(parsed)?parsed:[];renderFoliageMaps();return;case'kyoto_pack':packData=migratePackCategoryNames(parsed);if(isPackComposerEditing()){window._packRemoteRenderPending=true;}else{renderPackList();}return;case'kyoto_shop':shopData=normalizeStructuredList('kyoto_shop',parsed);renderShopList();return;case'kyoto_rules':rulesData=normalizeStructuredList('kyoto_rules',parsed);renderRulesList();return;case'kyoto_docs':docsData=mergeDocsWithDefaults(parsed);persistDocs();renderDocsList();return;case'kyoto_hidden_fixed_spots':hiddenFixedSpotsStore=parsed||{};safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();return;default:return;}
   safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();
 }
 function scheduleCloudPush(key,valueObj){
@@ -1343,6 +1343,52 @@ function removeRouteMap(dayIdx, i){
   offerUndo('已刪除路線圖',()=>{if(!routeMapStore[dayIdx])routeMapStore[dayIdx]=[];routeMapStore[dayIdx].splice(i,0,removed);persistRouteMaps();renderDayContent();});
 }
 
+/* 每日交通補充：可自行新增集合地點、導航位置、文字提醒及上車點／時刻表圖片。 */
+let transportExtrasStore = JSON.parse(localStorage.getItem('kyoto_transport_extras')) || {};
+function transportExtrasFor(dayIdx){
+  if(!transportExtrasStore[dayIdx])transportExtrasStore[dayIdx]={notes:[],images:[]};
+  transportExtrasStore[dayIdx].notes=Array.isArray(transportExtrasStore[dayIdx].notes)?transportExtrasStore[dayIdx].notes:[];
+  transportExtrasStore[dayIdx].images=Array.isArray(transportExtrasStore[dayIdx].images)?transportExtrasStore[dayIdx].images:[];
+  return transportExtrasStore[dayIdx];
+}
+function persistTransportExtras(){safeSetItem('kyoto_transport_extras',transportExtrasStore);}
+function addTransportExtra(dayIdx){
+  const title=document.getElementById(`transportExtraTitle-${dayIdx}`)?.value.trim();
+  const detail=document.getElementById(`transportExtraDetail-${dayIdx}`)?.value.trim();
+  const location=document.getElementById(`transportExtraLocation-${dayIdx}`)?.value.trim();
+  if(!title){alert('請先輸入交通資訊標題');return;}
+  transportExtrasFor(dayIdx).notes.push({id:stableItemId('transport',[Date.now(),title]),title,detail,location});
+  persistTransportExtras();renderDayContent();
+}
+function removeTransportExtra(dayIdx,i){
+  const list=transportExtrasFor(dayIdx).notes,removed=list.splice(i,1)[0];persistTransportExtras();renderDayContent();
+  offerUndo('已刪除交通補充',()=>{list.splice(i,0,removed);persistTransportExtras();renderDayContent();});
+}
+async function handleTransportImageUpload(e,dayIdx){
+  const files=[...(e.target.files||[])];e.target.value='';if(!files.length)return;
+  updateSyncStatus(null,'saving');
+  try{
+    const target=transportExtrasFor(dayIdx).images;
+    for(const file of files)target.push({url:await uploadMediaFile(file,`transport/day-${dayIdx}`),title:file.name.replace(/\.[^.]+$/,'')||'交通圖片'});
+    persistTransportExtras();renderDayContent();
+  }catch(err){alert('⚠️ '+friendlySyncError(err)+'\n'+String(err.message||err));updateSyncStatus(err);}
+}
+function renameTransportImage(dayIdx,i){
+  const image=transportExtrasFor(dayIdx).images[i];if(!image)return;
+  const next=prompt('圖片名稱（例如：京都站 8 號月台、19 號巴士站牌）',image.title||'');
+  if(next===null)return;image.title=next.trim()||'交通圖片';persistTransportExtras();renderDayContent();
+}
+function removeTransportImage(dayIdx,i){
+  const list=transportExtrasFor(dayIdx).images,removed=list.splice(i,1)[0];persistTransportExtras();renderDayContent();
+  offerUndo('已移除交通圖片',()=>{list.splice(i,0,removed);persistTransportExtras();renderDayContent();});
+}
+function transportExtrasHTML(dayIdx){
+  const data=transportExtrasFor(dayIdx);
+  const notes=data.notes.length?`<div class="transport-extra-notes">${data.notes.map((n,i)=>`<article><div><strong>${escHtml(n.title)}</strong>${n.detail?`<p>${escHtml(n.detail)}</p>`:''}</div><div class="transport-extra-actions">${n.location?`<a href="${escAttr(mapsLink(n.location))}" target="_blank" rel="noopener">導航</a>`:''}<button class="edit-only" onclick="removeTransportExtra(${dayIdx},${i})">刪除</button></div></article>`).join('')}</div>`:'<div class="empty">尚未新增集合地點或交通備註。</div>';
+  const images=data.images.length?`<div class="transport-extra-gallery">${data.images.map((img,i)=>`<figure><img src="${escAttr(img.url)}" alt="${escAttr(img.title||'交通圖片')}" loading="lazy" onclick="openAttachModal('${escAttr(img.url)}')"><figcaption>${escHtml(img.title||'交通圖片')}</figcaption><div class="edit-only"><button onclick="renameTransportImage(${dayIdx},${i})">改名</button><button onclick="removeTransportImage(${dayIdx},${i})">刪除</button></div></figure>`).join('')}</div>`:'';
+  return `<section class="transport-extras"><div class="transport-extras-head"><div><small>家人共享・離線可看</small><strong>我的交通補充</strong></div><button class="edit-only" onclick="document.getElementById('transportExtraFile-${dayIdx}').click()">＋ 上傳圖片</button></div>${notes}${images}<div class="transport-extra-form edit-only"><input id="transportExtraTitle-${dayIdx}" placeholder="標題，例如：國際會館站集合"><textarea id="transportExtraDetail-${dayIdx}" rows="2" placeholder="班次、月台、出口、集合時間或備註"></textarea><input id="transportExtraLocation-${dayIdx}" placeholder="導航位置：地址、地點名稱、網址或經緯度"><button onclick="addTransportExtra(${dayIdx})">＋ 新增交通資訊</button></div><input id="transportExtraFile-${dayIdx}" type="file" accept="image/*" multiple hidden onchange="handleTransportImageUpload(event,${dayIdx})"><p class="transport-upload-hint edit-only">可上傳站牌、上車點、月台位置或時刻表截圖；上傳後請點「改名」寫清楚用途。</p></section>`;
+}
+
 /* ============ RENDER: ITINERARY ============ */
 const dayScroll = document.getElementById('dayScroll');
 const dayContent = document.getElementById('dayContent');
@@ -1380,7 +1426,7 @@ function transportPlanHTML(dayIdx){
   if(!plan)return '<div class="empty">今天尚無交通資料。</div>';
   const routes=rows=>`<div class="transport-steps">${(rows||[]).map((r,i)=>`<div class="transport-step"><span class="transport-step-no">${i+1}</span><div class="transport-step-main"><div class="transport-points"><strong>${escHtml(r.from)}</strong><span>→</span><strong>${escHtml(r.to)}</strong></div><div class="transport-meta"><b>${escHtml(r.mode)}</b><span>⏱ ${escHtml(r.time)}</span></div><small>${escHtml(r.note)}</small></div></div>`).join('')}</div>`;
   const body=plan.choices?`<div class="transport-choice-list">${plan.choices.map((choice,i)=>`<details class="transport-choice"${i===0?' open':''}><summary>${escHtml(choice.name)}<span>展開路線</span></summary>${routes(choice.routes)}</details>`).join('')}</div>`:plan.drive?`<div class="transport-drive-card"><span>🚗</span><div><strong>今天全程自駕</strong><small>按下方按鈕開啟當日主要地點導航；停車、休息站與道路狀況以當日為準。</small></div></div>`:routes(plan.routes);
-  return `<section class="transport-plan"><div class="transport-plan-hero"><small>D${days[dayIdx].dayNum}・${days[dayIdx].date} 交通摘要</small><strong>${escHtml(plan.summary)}</strong></div><div class="transport-alert">⚠️ ${escHtml(plan.alert)}</div>${body}<div class="transport-actions"><a href="https://www.google.com/maps/dir/?api=1&travelmode=${plan.drive?'driving':'transit'}&destination=${encodeURIComponent(days[dayIdx].region+' Japan')}" target="_blank" rel="noopener">📍 開啟今日導航</a></div><details class="transport-general"><summary>票券、叫車與 4 人搭乘原則</summary><ul>${transportGeneralTips.map(t=>`<li>${escHtml(t)}</li>`).join('')}</ul></details><p class="transport-source-note">資料整理自《京都交通明細｜4 人慢旅行版》；時間、班次與車資為規劃估算。</p></section>`;
+  return `<section class="transport-plan"><div class="transport-plan-hero"><small>D${days[dayIdx].dayNum}・${days[dayIdx].date} 交通摘要</small><strong>${escHtml(plan.summary)}</strong></div><div class="transport-alert">⚠️ ${escHtml(plan.alert)}</div>${body}<div class="transport-actions"><a href="https://www.google.com/maps/dir/?api=1&travelmode=${plan.drive?'driving':'transit'}&destination=${encodeURIComponent(days[dayIdx].region+' Japan')}" target="_blank" rel="noopener">📍 開啟今日導航</a></div><p class="transport-source-note">資料整理自《京都交通明細｜4 人慢旅行版》；時間、班次與車資為規劃估算。共通票券與叫車原則已移至「環線 → 交通提醒」。</p></section>`;
 }
 
 function setActiveDay(i) {
@@ -1412,6 +1458,8 @@ function allSearchableSpots(){
       const routeText=[...(plan.routes||[]),...(plan.choices||[]).flatMap(c=>c.routes||[])].map(r=>[r.from,r.to,r.mode,r.time,r.note].join(' ')).join(' ');
       out.push({dayIdx,key:'transport-'+dayIdx,listType:'transport',name:'每日交通速查',desc:plan.summary,cat:'transport',text:[plan.summary,plan.alert,routeText,'交通 巴士 地下鐵 電車 計程車 自駕'].join(' ').toLocaleLowerCase('zh-Hant')});
     }
+    const extras=transportExtrasStore[dayIdx];
+    (extras?.notes||[]).forEach((n,i)=>out.push({dayIdx,key:`transport-extra-${dayIdx}-${i}`,listType:'transport',name:n.title||'交通補充',desc:n.detail||n.location||'',cat:'transport',text:[n.title,n.detail,n.location,'交通補充 集合 月台 班次'].filter(Boolean).join(' ').toLocaleLowerCase('zh-Hant')}));
   });
   return out;
 }
@@ -1749,7 +1797,7 @@ function renderDayContent(){
       <input type="file" accept="image/*" id="routeMapFile-${activeDay}" style="display:none" multiple onchange="handleRouteMapUpload(event, ${activeDay})">
       <div style="font-size:11px; color:var(--ink-soft); margin-top:8px; line-height:1.5;">可上傳自己規劃或手繪的當日路線圖／導航截圖，並同步給家人。</div></div>
     </div>`;
-  const transportHTML=transportPlanHTML(activeDay);
+  const transportHTML=transportPlanHTML(activeDay)+transportExtrasHTML(activeDay);
 
   dayContent.innerHTML = `
     <div class="day-card-head">
@@ -2268,6 +2316,7 @@ async function migrateLegacyMediaToCloud(){
     kyoto_photos:photoStore,
     kyoto_covers:coverStore,
     kyoto_route_maps:routeMapStore,
+    kyoto_transport_extras:transportExtrasStore,
     kyoto_shop:shopData,
     kyoto_rules:rulesData,
     kyoto_docs:docsData
@@ -2280,6 +2329,7 @@ async function migrateLegacyMediaToCloud(){
     if(key==='kyoto_photos') photoStore=migrated;
     else if(key==='kyoto_covers') coverStore=migrated;
     else if(key==='kyoto_route_maps') routeMapStore=migrated;
+    else if(key==='kyoto_transport_extras') transportExtrasStore=migrated||{};
     else if(key==='kyoto_shop') shopData=migrated;
     else if(key==='kyoto_rules') rulesData=migrated;
     else if(key==='kyoto_docs') docsData=migrated;
@@ -2319,7 +2369,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=43').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=44').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
