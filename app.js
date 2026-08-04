@@ -530,6 +530,48 @@ const days = [
   ]}
 ];
 
+/* v43｜依「京都交通明細｜4 人慢旅行版」整理的每日交通速查。 */
+const transportPlans = [
+  {summary:'KIX 搭 HARUKA 直達京都站；東福寺僅作準時抵達備案。', alert:'建議抓 13:10–13:50 間 HARUKA；若到飯店已超過 15:20，就留在京都站周邊。', routes:[
+    {from:'KIX',to:'京都站',mode:'🚆 JR 特急 HARUKA',time:'75–85 分',note:'JR 關西機場站上車，免轉車'},
+    {from:'京都站',to:'東福寺（備案）',mode:'🚆 JR 奈良線',time:'2–3 分＋步行 10–15 分',note:'也可搭計程車 10–15 分，約 ¥1,500–2,200'}]},
+  {summary:'三千院／高雄／鞍馬三選一；先選方案，再照同色路線走。', alert:'山區回程班次較疏，15:00–16:00 開始回程最安心。', choices:[
+    {name:'A 三千院・大原',routes:[{from:'四條站 K09',to:'國際會館 K01',mode:'🚇 地下鐵烏丸線',time:'20–23 分',note:'07:20–07:40 進站'},{from:'國際會館',to:'大原',mode:'🚌 京都巴士 19／特16／特17',time:'25–40 分',note:'目標 08:00 前後發車；約 20–40 分一班'},{from:'大原站',to:'三千院',mode:'🚶 步行',time:'10–15 分',note:'回程較難叫車'},{from:'國際會館',to:'三千院（備案）',mode:'🚕 計程車',time:'25–35 分',note:'約 ¥4,000–5,500／車'}]},
+    {name:'B 高雄三寺',routes:[{from:'四條',to:'京都站',mode:'🚇 地下鐵烏丸線',time:'約 4 分',note:'07:00–07:20 離開飯店'},{from:'京都站',to:'栂ノ尾',mode:'🚌 JR 巴士 47／48／49',time:'50–65 分',note:'鎖定 07:20 前後班次，提早 20 分排隊'},{from:'栂ノ尾',to:'槇ノ尾・山城高雄',mode:'🚶 步行／區間巴士',time:'依體力',note:'慢旅只選兩寺'},{from:'山城高雄',to:'京都站',mode:'🚌 JR 巴士 47／47S／48／48S／49',time:'50–70 分',note:'15:00–16:00 候車'}]},
+    {name:'C 鞍馬',routes:[{from:'四條烏丸',to:'出町柳',mode:'🚕 計程車',time:'15–30 分',note:'約 ¥2,000–3,000／車'},{from:'出町柳',to:'鞍馬',mode:'🚆 叡山電車鞍馬線',time:'30–35 分',note:'免轉車；日間約 15–20 分一班'},{from:'鞍馬',to:'出町柳',mode:'🚆 叡山電車鞍馬線',time:'30–35 分',note:'鞍馬站難叫車，務必以電車回程'}]}]},
+  {summary:'飯店搭計程車至真如堂，之後一路向南步行，南禪寺再接地下鐵。', alert:'紅葉週日巴士容易擠；真如堂 07:00–07:30 出發最好叫車。', routes:[
+    {from:'飯店',to:'真如堂',mode:'🚕 計程車',time:'25–40 分',note:'約 ¥2,200–3,300／車'},
+    {from:'真如堂',to:'永觀堂',mode:'🚶 步行',time:'15–20 分',note:'住宅區向南，不建議搭車'},
+    {from:'永觀堂',to:'南禪寺',mode:'🚶 步行',time:'10–15 分',note:'沿東山步行'},
+    {from:'南禪寺',to:'新風館',mode:'🚇 東西線',time:'6–8 分＋步行',note:'蹴上 T09 → 烏丸御池 T13；免轉車'}]},
+  {summary:'上午洛北計程車串寺；回飯店取行李後，京都站搭 JR 奈良線至宇治、奈良。', alert:'宇治段優先搭「みやこ路快速」；快速是否直達奈良依當班車確認。', routes:[
+    {from:'飯店',to:'詩仙堂',mode:'🚕 計程車',time:'30–45 分',note:'約 ¥3,000–4,300／車'},
+    {from:'詩仙堂',to:'圓光寺',mode:'🚶 步行',time:'5–10 分',note:'最順路'},
+    {from:'修學院區',to:'飯店',mode:'🚕 計程車',time:'30–45 分',note:'約 ¥3,300–4,800；先走到大路較好叫'},
+    {from:'飯店',to:'京都站',mode:'🚕 計程車',time:'10–20 分',note:'約 ¥1,200–2,000；有行李推薦'},
+    {from:'京都站',to:'宇治',mode:'🚆 JR 奈良線',time:'17–20 分',note:'普通車約 25–30 分'},
+    {from:'宇治',to:'奈良',mode:'🚆 JR 奈良線',time:'35–50 分',note:'依車次銜接'}]},
+  {summary:'Route Inn 步行到乘船場，漂流抵嵐山；回程由嵯峨嵐山搭 JR 回龜岡。', alert:'漂流約 2 小時，秋末注意保暖；天候不佳直接改搭 JR。', routes:[
+    {from:'Route Inn',to:'保津川乘船場',mode:'🚶 步行',time:'約 10 分',note:'飯店／龜岡站北側出發'},
+    {from:'龜岡',to:'嵐山',mode:'🚣 保津川漂流',time:'約 2 小時',note:'天候不佳改搭 JR'},
+    {from:'嵐山下船處',to:'天龍寺',mode:'🚶 步行',time:'10–20 分',note:'核心區塞車，步行較快'},
+    {from:'嵯峨嵐山',to:'龜岡',mode:'🚆 JR 嵯峨野線',time:'8–12 分',note:'免轉車；約 15–20 分一班'}]},
+  {summary:'自駕日｜龜岡 → 南丹 → 綾部 → 京丹後，約 150 km。', alert:'PDF 未指定逐段班次；以導航即時路況為準，山路放慢並保留 15:00 入住緩衝。',drive:true},
+  {summary:'自駕日｜京丹後海岸短距離移動，依風勢選立岩或琴引濱。', alert:'海岸強風或大雨時縮短戶外停留，改走道之驛＋咖啡雨備。',drive:true},
+  {summary:'自駕日｜京丹後 → 金剛院 → 天橋立 → 西舞鶴，約 100–130 km。', alert:'天橋立只選一岸；強風可能影響纜車、單軌與吊椅。',drive:true},
+  {summary:'舞鶴自駕回京都還車，假日與京都市區塞車需多留緩衝。', alert:'車程至少約 2 小時；還車後有行李可搭短程計程車到飯店。', routes:[
+    {from:'舞鶴',to:'京都還車點',mode:'🚗 自駕',time:'2 小時以上',note:'預留假日及市區塞車'},
+    {from:'京都站周邊還車點',to:'Richmond Hotel',mode:'🚶／🚕',time:'5–15 分',note:'計程車約 ¥700–1,300'}]},
+  {summary:'市區三段計程車最省力；13:15 左右由下鴨神社叫車回飯店，京都站搭 HARUKA。', alert:'建議搭 15:00–15:30 間 HARUKA；19:00 起飛，勿再追加遠距景點。', routes:[
+    {from:'飯店',to:'西本願寺',mode:'🚶／🚕',time:'步行 15–20 分',note:'計程車約 ¥700–1,100'},
+    {from:'西本願寺',to:'京都御苑 堺町御門',mode:'🚕 計程車',time:'15–25 分',note:'約 ¥1,600–2,400／車'},
+    {from:'京都御苑',to:'下鴨神社',mode:'🚕 計程車',time:'10–15 分',note:'約 ¥1,200–1,800；園內不能上車'},
+    {from:'下鴨神社',to:'京都站／飯店',mode:'🚕 計程車',time:'25–40 分',note:'約 ¥2,800–4,000；13:15 左右叫車'},
+    {from:'京都站',to:'KIX',mode:'🚆 JR 特急 HARUKA',time:'75–85 分',note:'免轉車'}]}
+];
+
+const transportGeneralTips = ['全程準備 ICOCA，日常路段直接刷卡最靈活','KIX 往返京都各買一張 HARUKA 優惠票','4 人無大型行李可搭一般轎車；4 個大型箱需大型車或兩台','GO Taxi 為主，Uber／DiDi／京都 MK App 備用','紅葉旺季計程車實際費用可能高 10%–30%','所有班次請於出發前 1 個月依 2026 秋季特別班表確認'];
+
 
 /* ============ 京都內容精修（2026-08） ============ */
 (function refineKyotoContent(){
@@ -1331,7 +1373,15 @@ function renderDayChips(){
     </div>`).join('');
 }
 
-let activeSubTabStore = {}; /* dayIdx -> 'main' | 'more' | 'routemap'，記住使用者目前停留在哪個子分頁 */
+let activeSubTabStore = {}; /* dayIdx -> 'main' | 'transport' | 'more' | 'routemap' */
+
+function transportPlanHTML(dayIdx){
+  const plan=transportPlans[dayIdx];
+  if(!plan)return '<div class="empty">今天尚無交通資料。</div>';
+  const routes=rows=>`<div class="transport-steps">${(rows||[]).map((r,i)=>`<div class="transport-step"><span class="transport-step-no">${i+1}</span><div class="transport-step-main"><div class="transport-points"><strong>${escHtml(r.from)}</strong><span>→</span><strong>${escHtml(r.to)}</strong></div><div class="transport-meta"><b>${escHtml(r.mode)}</b><span>⏱ ${escHtml(r.time)}</span></div><small>${escHtml(r.note)}</small></div></div>`).join('')}</div>`;
+  const body=plan.choices?`<div class="transport-choice-list">${plan.choices.map((choice,i)=>`<details class="transport-choice"${i===0?' open':''}><summary>${escHtml(choice.name)}<span>展開路線</span></summary>${routes(choice.routes)}</details>`).join('')}</div>`:plan.drive?`<div class="transport-drive-card"><span>🚗</span><div><strong>今天全程自駕</strong><small>按下方按鈕開啟當日主要地點導航；停車、休息站與道路狀況以當日為準。</small></div></div>`:routes(plan.routes);
+  return `<section class="transport-plan"><div class="transport-plan-hero"><small>D${days[dayIdx].dayNum}・${days[dayIdx].date} 交通摘要</small><strong>${escHtml(plan.summary)}</strong></div><div class="transport-alert">⚠️ ${escHtml(plan.alert)}</div>${body}<div class="transport-actions"><a href="https://www.google.com/maps/dir/?api=1&travelmode=${plan.drive?'driving':'transit'}&destination=${encodeURIComponent(days[dayIdx].region+' Japan')}" target="_blank" rel="noopener">📍 開啟今日導航</a></div><details class="transport-general"><summary>票券、叫車與 4 人搭乘原則</summary><ul>${transportGeneralTips.map(t=>`<li>${escHtml(t)}</li>`).join('')}</ul></details><p class="transport-source-note">資料整理自《京都交通明細｜4 人慢旅行版》；時間、班次與車資為規劃估算。</p></section>`;
+}
 
 function setActiveDay(i) {
   activeDay = i;
@@ -1357,6 +1407,11 @@ function allSearchableSpots(){
     (day.spots||[]).forEach((spot,i)=>add(spot,`d${dayIdx}-m${i}`));
     (day.moreSpots||[]).forEach((spot,i)=>add(spot,`d${dayIdx}-s${i}`));
     (customSpotsStore[dayIdx]||[]).forEach((spot,i)=>add(spot,`d${dayIdx}-c${i}`));
+    const plan=transportPlans[dayIdx];
+    if(plan){
+      const routeText=[...(plan.routes||[]),...(plan.choices||[]).flatMap(c=>c.routes||[])].map(r=>[r.from,r.to,r.mode,r.time,r.note].join(' ')).join(' ');
+      out.push({dayIdx,key:'transport-'+dayIdx,listType:'transport',name:'每日交通速查',desc:plan.summary,cat:'transport',text:[plan.summary,plan.alert,routeText,'交通 巴士 地下鐵 電車 計程車 自駕'].join(' ').toLocaleLowerCase('zh-Hant')});
+    }
   });
   return out;
 }
@@ -1382,6 +1437,7 @@ function jumpToSearchResult(dayIdx,key,listType){
   setTimeout(()=>{
     const card=document.getElementById('spot-card-'+key);
     if(card){card.classList.add('open');openSpotCardKeys.add(String(key));card.scrollIntoView({behavior:'smooth',block:'center'});}
+    else if(listType==='transport')document.querySelector('.transport-plan')?.scrollIntoView({behavior:'smooth',block:'start'});
   },80);
 }
 document.addEventListener('keydown',event=>{if(event.key==='Escape')runGlobalSearch('');});
@@ -1693,6 +1749,7 @@ function renderDayContent(){
       <input type="file" accept="image/*" id="routeMapFile-${activeDay}" style="display:none" multiple onchange="handleRouteMapUpload(event, ${activeDay})">
       <div style="font-size:11px; color:var(--ink-soft); margin-top:8px; line-height:1.5;">可上傳自己規劃或手繪的當日路線圖／導航截圖，並同步給家人。</div></div>
     </div>`;
+  const transportHTML=transportPlanHTML(activeDay);
 
   dayContent.innerHTML = `
     <div class="day-card-head">
@@ -1704,8 +1761,9 @@ function renderDayContent(){
       ${stayQuickHTML}
     </div>
     <div id="day-card-${activeDay}">
-      <div class="spot-subtabs"><button class="spot-subtab${curSubTab==='main'?' active':''}" data-type="main" onclick="switchSubTab(${activeDay}, 'main')">📌 主要亮點 (${mainList.length})</button><button class="spot-subtab${curSubTab==='more'?' active':''}" data-type="more" onclick="switchSubTab(${activeDay}, 'more')">🍴 食衣住 (${lifeList.length})</button><button class="spot-subtab${curSubTab==='routemap'?' active':''}" data-type="routemap" onclick="switchSubTab(${activeDay}, 'routemap')">🗺️ 路線圖${routeMaps.length ? ` (${routeMaps.length})` : ''}</button></div>
+      <div class="spot-subtabs"><button class="spot-subtab${curSubTab==='main'?' active':''}" data-type="main" onclick="switchSubTab(${activeDay}, 'main')">📌 亮點 (${mainList.length})</button><button class="spot-subtab transport-tab${curSubTab==='transport'?' active':''}" data-type="transport" onclick="switchSubTab(${activeDay}, 'transport')">🚉 交通</button><button class="spot-subtab${curSubTab==='more'?' active':''}" data-type="more" onclick="switchSubTab(${activeDay}, 'more')">🍴 食衣住 (${lifeList.length})</button><button class="spot-subtab${curSubTab==='routemap'?' active':''}" data-type="routemap" onclick="switchSubTab(${activeDay}, 'routemap')">🗺️ 路線圖${routeMaps.length ? ` (${routeMaps.length})` : ''}</button></div>
       <div class="subtab-content${curSubTab==='main'?' active':''}" data-type="main">${mainSpotsHTML}<button onclick="switchSubTab(${activeDay}, 'more'); setTimeout(()=>document.getElementById('newSpotName-${activeDay}')?.focus(),80)" class="restore-default-btn">＋ 新增景點／食衣住項目</button></div>
+      <div class="subtab-content${curSubTab==='transport'?' active':''}" data-type="transport">${transportHTML}</div>
       <div class="subtab-content${curSubTab==='more'?' active':''}" data-type="more" style="background:#f4f6f0; border-radius:0 0 var(--r-lg) var(--r-lg); padding:16px 12px 16px; margin-bottom:16px;">${secondaryCardsHTML}${addSpotFormHTML}</div>
       <div class="subtab-content${curSubTab==='routemap'?' active':''}" data-type="routemap" style="background:#f4f6f0; border-radius:0 0 var(--r-lg) var(--r-lg); padding:16px 12px 16px; margin-bottom:16px;">${routeMapHTML}</div>
     </div>
@@ -2261,7 +2319,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=42').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=43').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);

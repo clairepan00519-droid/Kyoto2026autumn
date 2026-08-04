@@ -1,5 +1,5 @@
 /* 京都・奈良・丹後行程：App Shell、圖片與已瀏覽內容離線快取 */
-const CACHE_VERSION='kyoto-trip-v42-desktop-mobile-search';
+const CACHE_VERSION='kyoto-trip-v43-transport-guide';
 const SHELL_CACHE=`kyoto-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE=`kyoto-runtime-${CACHE_VERSION}`;
 const IMAGE_CACHE=`kyoto-images-${CACHE_VERSION}`;
