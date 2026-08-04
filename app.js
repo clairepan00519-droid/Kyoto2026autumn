@@ -64,6 +64,28 @@ function removeLegacyHeaderStatus(){
 removeLegacyHeaderStatus();
 document.addEventListener('DOMContentLoaded',removeLegacyHeaderStatus);
 
+/* 環線交通改為日期索引＋單張展開，避免手機一次捲過所有詳細內容。 */
+function compactRouteTransportCards(){
+  const grid=document.querySelector('.transport-grid'),nav=document.getElementById('transportQuickNav');
+  if(!grid||!nav||grid.dataset.compacted)return;grid.dataset.compacted='1';
+  const cards=[...grid.querySelectorAll('.transport-card')];
+  cards.forEach((card,i)=>{
+    const day=card.querySelector('.transport-day')?.textContent.trim()||`D${i+1}`;
+    const body=card.querySelector(':scope > div:last-child');
+    const title=body?.querySelector('h4')?.textContent.trim()||'交通提醒';
+    const detail=document.createElement('details');detail.className='transport-card transport-card-compact';detail.id=`route-transport-${i}`;
+    const summary=document.createElement('summary');summary.innerHTML=`<span class="transport-day">${escHtml(day)}</span><span class="transport-compact-title"><strong>${escHtml(title)}</strong><small>點擊查看提醒與官方連結</small></span><em>＋</em>`;
+    const content=document.createElement('div');content.className='transport-card-body';while(body?.firstChild)content.appendChild(body.firstChild);
+    detail.append(summary,content);card.replaceWith(detail);
+    const chip=document.createElement('button');chip.type='button';chip.textContent=day;chip.onclick=()=>openRouteTransportCard(i);nav.appendChild(chip);
+  });
+}
+function openRouteTransportCard(i){
+  const target=document.getElementById(`route-transport-${i}`);if(!target)return;
+  target.open=true;target.scrollIntoView({behavior:'smooth',block:'center'});
+}
+document.addEventListener('DOMContentLoaded',compactRouteTransportCards);
+
 /* ============ 桌機編輯／手機旅行雙模式 ============ */
 const UI_MODE_KEY='kyoto_ui_mode_v1';
 const PREVIEW_WIDTH_KEY='kyoto_preview_width_v1';
@@ -1352,24 +1374,25 @@ function transportExtrasFor(dayIdx){
   return transportExtrasStore[dayIdx];
 }
 function persistTransportExtras(){safeSetItem('kyoto_transport_extras',transportExtrasStore);}
-function addTransportExtra(dayIdx){
-  const title=document.getElementById(`transportExtraTitle-${dayIdx}`)?.value.trim();
-  const detail=document.getElementById(`transportExtraDetail-${dayIdx}`)?.value.trim();
-  const location=document.getElementById(`transportExtraLocation-${dayIdx}`)?.value.trim();
+function addTransportExtra(dayIdx,segmentKey='other'){
+  const fieldKey=`${dayIdx}-${segmentKey}`;
+  const title=document.getElementById(`transportExtraTitle-${fieldKey}`)?.value.trim();
+  const detail=document.getElementById(`transportExtraDetail-${fieldKey}`)?.value.trim();
+  const location=document.getElementById(`transportExtraLocation-${fieldKey}`)?.value.trim();
   if(!title){alert('請先輸入交通資訊標題');return;}
-  transportExtrasFor(dayIdx).notes.push({id:stableItemId('transport',[Date.now(),title]),title,detail,location});
+  transportExtrasFor(dayIdx).notes.push({id:stableItemId('transport',[Date.now(),title]),segmentKey,title,detail,location});
   persistTransportExtras();renderDayContent();
 }
 function removeTransportExtra(dayIdx,i){
   const list=transportExtrasFor(dayIdx).notes,removed=list.splice(i,1)[0];persistTransportExtras();renderDayContent();
   offerUndo('已刪除交通補充',()=>{list.splice(i,0,removed);persistTransportExtras();renderDayContent();});
 }
-async function handleTransportImageUpload(e,dayIdx){
+async function handleTransportImageUpload(e,dayIdx,segmentKey='other'){
   const files=[...(e.target.files||[])];e.target.value='';if(!files.length)return;
   updateSyncStatus(null,'saving');
   try{
     const target=transportExtrasFor(dayIdx).images;
-    for(const file of files)target.push({url:await uploadMediaFile(file,`transport/day-${dayIdx}`),title:file.name.replace(/\.[^.]+$/,'')||'交通圖片'});
+    for(const file of files)target.push({url:await uploadMediaFile(file,`transport/day-${dayIdx}`),segmentKey,title:file.name.replace(/\.[^.]+$/,'')||'交通圖片'});
     persistTransportExtras();renderDayContent();
   }catch(err){alert('⚠️ '+friendlySyncError(err)+'\n'+String(err.message||err));updateSyncStatus(err);}
 }
@@ -1382,11 +1405,19 @@ function removeTransportImage(dayIdx,i){
   const list=transportExtrasFor(dayIdx).images,removed=list.splice(i,1)[0];persistTransportExtras();renderDayContent();
   offerUndo('已移除交通圖片',()=>{list.splice(i,0,removed);persistTransportExtras();renderDayContent();});
 }
-function transportExtrasHTML(dayIdx){
+function transportSegmentExtrasHTML(dayIdx,segmentKey){
   const data=transportExtrasFor(dayIdx);
-  const notes=data.notes.length?`<div class="transport-extra-notes">${data.notes.map((n,i)=>`<article><div><strong>${escHtml(n.title)}</strong>${n.detail?`<p>${escHtml(n.detail)}</p>`:''}</div><div class="transport-extra-actions">${n.location?`<a href="${escAttr(mapsLink(n.location))}" target="_blank" rel="noopener">導航</a>`:''}<button class="edit-only" onclick="removeTransportExtra(${dayIdx},${i})">刪除</button></div></article>`).join('')}</div>`:'<div class="empty">尚未新增集合地點或交通備註。</div>';
-  const images=data.images.length?`<div class="transport-extra-gallery">${data.images.map((img,i)=>`<figure><img src="${escAttr(img.url)}" alt="${escAttr(img.title||'交通圖片')}" loading="lazy" onclick="openAttachModal('${escAttr(img.url)}')"><figcaption>${escHtml(img.title||'交通圖片')}</figcaption><div class="edit-only"><button onclick="renameTransportImage(${dayIdx},${i})">改名</button><button onclick="removeTransportImage(${dayIdx},${i})">刪除</button></div></figure>`).join('')}</div>`:'';
-  return `<section class="transport-extras"><div class="transport-extras-head"><div><small>家人共享・離線可看</small><strong>我的交通補充</strong></div><button class="edit-only" onclick="document.getElementById('transportExtraFile-${dayIdx}').click()">＋ 上傳圖片</button></div>${notes}${images}<div class="transport-extra-form edit-only"><input id="transportExtraTitle-${dayIdx}" placeholder="標題，例如：國際會館站集合"><textarea id="transportExtraDetail-${dayIdx}" rows="2" placeholder="班次、月台、出口、集合時間或備註"></textarea><input id="transportExtraLocation-${dayIdx}" placeholder="導航位置：地址、地點名稱、網址或經緯度"><button onclick="addTransportExtra(${dayIdx})">＋ 新增交通資訊</button></div><input id="transportExtraFile-${dayIdx}" type="file" accept="image/*" multiple hidden onchange="handleTransportImageUpload(event,${dayIdx})"><p class="transport-upload-hint edit-only">可上傳站牌、上車點、月台位置或時刻表截圖；上傳後請點「改名」寫清楚用途。</p></section>`;
+  const notes=data.notes.map((n,i)=>({n,i})).filter(x=>(x.n.segmentKey||'other')===segmentKey);
+  const images=data.images.map((img,i)=>({img,i})).filter(x=>(x.img.segmentKey||'other')===segmentKey);
+  const noteHTML=notes.length?`<div class="transport-extra-notes">${notes.map(({n,i})=>`<article><div><strong>${escHtml(n.title)}</strong>${n.detail?`<p>${escHtml(n.detail)}</p>`:''}</div><div class="transport-extra-actions">${n.location?`<a href="${escAttr(mapsLink(n.location))}" target="_blank" rel="noopener">導航</a>`:''}<button class="edit-only" onclick="removeTransportExtra(${dayIdx},${i})">刪除</button></div></article>`).join('')}</div>`:'';
+  const imageHTML=images.length?`<div class="transport-extra-gallery">${images.map(({img,i})=>`<figure><img src="${escAttr(img.url)}" alt="${escAttr(img.title||'交通圖片')}" loading="lazy" onclick="openAttachModal('${escAttr(img.url)}')"><figcaption>${escHtml(img.title||'交通圖片')}</figcaption><div class="edit-only"><button onclick="renameTransportImage(${dayIdx},${i})">改名</button><button onclick="removeTransportImage(${dayIdx},${i})">刪除</button></div></figure>`).join('')}</div>`:'';
+  const fieldKey=`${dayIdx}-${segmentKey}`;
+  return `<div class="transport-segment-extra">${noteHTML}${imageHTML}<details class="transport-segment-add edit-only"><summary>＋ 補充這一段</summary><div class="transport-extra-form"><input id="transportExtraTitle-${fieldKey}" placeholder="例如：京都站 8 號月台"><textarea id="transportExtraDetail-${fieldKey}" rows="2" placeholder="班次、出口、集合時間或備註"></textarea><input id="transportExtraLocation-${fieldKey}" placeholder="導航位置（可留空）"><div class="transport-segment-buttons"><button onclick="addTransportExtra(${dayIdx},'${segmentKey}')">儲存文字</button><button class="secondary" onclick="document.getElementById('transportExtraFile-${fieldKey}').click()">上傳圖片</button></div></div></details><input id="transportExtraFile-${fieldKey}" type="file" accept="image/*" multiple hidden onchange="handleTransportImageUpload(event,${dayIdx},'${segmentKey}')"></div>`;
+}
+function legacyTransportExtrasHTML(dayIdx){
+  const data=transportExtrasFor(dayIdx);
+  if(!data.notes.some(x=>!x.segmentKey)&&!data.images.some(x=>!x.segmentKey))return '';
+  return `<details class="transport-legacy"><summary>其他舊版交通補充</summary>${transportSegmentExtrasHTML(dayIdx,'other')}</details>`;
 }
 
 /* ============ RENDER: ITINERARY ============ */
@@ -1424,9 +1455,9 @@ let activeSubTabStore = {}; /* dayIdx -> 'main' | 'transport' | 'more' | 'routem
 function transportPlanHTML(dayIdx){
   const plan=transportPlans[dayIdx];
   if(!plan)return '<div class="empty">今天尚無交通資料。</div>';
-  const routes=rows=>`<div class="transport-steps">${(rows||[]).map((r,i)=>`<div class="transport-step"><span class="transport-step-no">${i+1}</span><div class="transport-step-main"><div class="transport-points"><strong>${escHtml(r.from)}</strong><span>→</span><strong>${escHtml(r.to)}</strong></div><div class="transport-meta"><b>${escHtml(r.mode)}</b><span>⏱ ${escHtml(r.time)}</span></div><small>${escHtml(r.note)}</small></div></div>`).join('')}</div>`;
-  const body=plan.choices?`<div class="transport-choice-list">${plan.choices.map((choice,i)=>`<details class="transport-choice"${i===0?' open':''}><summary>${escHtml(choice.name)}<span>展開路線</span></summary>${routes(choice.routes)}</details>`).join('')}</div>`:plan.drive?`<div class="transport-drive-card"><span>🚗</span><div><strong>今天全程自駕</strong><small>按下方按鈕開啟當日主要地點導航；停車、休息站與道路狀況以當日為準。</small></div></div>`:routes(plan.routes);
-  return `<section class="transport-plan"><div class="transport-plan-hero"><small>D${days[dayIdx].dayNum}・${days[dayIdx].date} 交通摘要</small><strong>${escHtml(plan.summary)}</strong></div><div class="transport-alert">⚠️ ${escHtml(plan.alert)}</div>${body}<div class="transport-actions"><a href="https://www.google.com/maps/dir/?api=1&travelmode=${plan.drive?'driving':'transit'}&destination=${encodeURIComponent(days[dayIdx].region+' Japan')}" target="_blank" rel="noopener">📍 開啟今日導航</a></div><p class="transport-source-note">資料整理自《京都交通明細｜4 人慢旅行版》；時間、班次與車資為規劃估算。共通票券與叫車原則已移至「環線 → 交通提醒」。</p></section>`;
+  const routes=(rows,prefix='route')=>`<div class="transport-steps">${(rows||[]).map((r,i)=>{const segmentKey=`${prefix}-${i}`;return `<div class="transport-step"><span class="transport-step-no">${i+1}</span><div class="transport-step-main"><div class="transport-points"><strong>${escHtml(r.from)}</strong><span>→</span><strong>${escHtml(r.to)}</strong></div><div class="transport-meta"><b>${escHtml(r.mode)}</b><span>⏱ ${escHtml(r.time)}</span></div><small>${escHtml(r.note)}</small>${transportSegmentExtrasHTML(dayIdx,segmentKey)}</div></div>`;}).join('')}</div>`;
+  const body=plan.choices?`<div class="transport-choice-list">${plan.choices.map((choice,i)=>`<details class="transport-choice"${i===0?' open':''}><summary>${escHtml(choice.name)}<span>展開路線</span></summary>${routes(choice.routes,`choice-${i}`)}</details>`).join('')}</div>`:plan.drive?`<div class="transport-drive-card"><span>🚗</span><div><strong>今天全程自駕</strong><small>按下方按鈕開啟當日主要地點導航；停車、休息站與道路狀況以當日為準。</small>${transportSegmentExtrasHTML(dayIdx,'drive-0')}</div></div>`:routes(plan.routes);
+  return `<section class="transport-plan"><div class="transport-plan-hero"><small>D${days[dayIdx].dayNum}・${days[dayIdx].date} 交通摘要</small><strong>${escHtml(plan.summary)}</strong></div><div class="transport-alert">⚠️ ${escHtml(plan.alert)}</div>${body}${legacyTransportExtrasHTML(dayIdx)}<div class="transport-actions"><a href="https://www.google.com/maps/dir/?api=1&travelmode=${plan.drive?'driving':'transit'}&destination=${encodeURIComponent(days[dayIdx].region+' Japan')}" target="_blank" rel="noopener">📍 開啟今日導航</a></div><p class="transport-source-note">資料整理自《京都交通明細｜4 人慢旅行版》；時間、班次與車資為規劃估算。共通票券與叫車原則已移至「環線 → 交通提醒」。</p></section>`;
 }
 
 function setActiveDay(i) {
@@ -1797,7 +1828,7 @@ function renderDayContent(){
       <input type="file" accept="image/*" id="routeMapFile-${activeDay}" style="display:none" multiple onchange="handleRouteMapUpload(event, ${activeDay})">
       <div style="font-size:11px; color:var(--ink-soft); margin-top:8px; line-height:1.5;">可上傳自己規劃或手繪的當日路線圖／導航截圖，並同步給家人。</div></div>
     </div>`;
-  const transportHTML=transportPlanHTML(activeDay)+transportExtrasHTML(activeDay);
+  const transportHTML=transportPlanHTML(activeDay);
 
   dayContent.innerHTML = `
     <div class="day-card-head">
@@ -2369,7 +2400,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=44').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=45').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);

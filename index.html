@@ -11,7 +11,7 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=44">
+<link rel="stylesheet" href="style.css?v=45">
 </head>
 <body class="family-locked">
 <div id="familyGate" class="family-gate" aria-hidden="false">
@@ -131,21 +131,23 @@
     </div>
 
     <!-- Docs -->
-    <div class="section-card">
-      <h3>📁 行程票券與住宿總匯</h3>
-      <div class="sub">可上傳憑證截圖。點擊「出示截圖」即可全螢幕放大給櫃檯人員確認！</div>
-      <div id="docsListWrap" class="voucher-list"></div>
-    </div>
+    <details class="section-card compact-section voucher-section">
+      <summary class="compact-section-summary"><span>📁</span><div><strong>行程票券與住宿總匯</strong><small>住宿、航班、租車與預約憑證</small></div><em>展開</em></summary>
+      <div class="compact-section-body"><div class="sub">可上傳憑證截圖，需要時點擊「顯示截圖」。</div><div id="docsListWrap" class="voucher-list"></div></div>
+    </details>
     
     <!-- Driving -->
     <div class="section-card transport-section">
       <h3>🚉 交通提醒</h3>
       <div class="sub">依日期分成大眾交通與自駕兩階段；連結已於 2026/8/4 逐一開啟核對，並優先使用營運單位官方頁面。</div>
-      <article class="transport-principles">
-        <div class="transport-principles-head"><span>🎫</span><div><small>4 人慢旅行共通設定</small><h4>票券、叫車與搭乘原則</h4></div></div>
+      <details class="transport-principles">
+        <summary class="transport-principles-head"><span>🎫</span><div><small>4 人慢旅行共通設定</small><h4>票券、叫車與搭乘原則</h4></div><em>展開</em></summary>
+        <div class="transport-principles-body">
         <ul><li>全程準備 ICOCA，日常路段直接刷卡最靈活。</li><li>KIX 往返京都各買一張 HARUKA 優惠票；特急車票與基本乘車券依購票畫面確認。</li><li>GO Taxi 為主，Uber、DiDi、京都 MK App 備用；優先在飯店門口、便利商店、主要道路或車站前叫車。</li><li>4 人無大型行李通常可搭一般轎車；4 個大型行李箱需大型車或拆成兩台。</li><li>寺院山門、狹窄巷道與山區較難停車或叫車，先走到大路再定位。</li><li>紅葉旺季計程車實際費用可能比估算高 10%–30%；公車與列車班次於出發前一個月再確認。</li></ul>
         <div class="transport-link-row"><a href="https://www.westjr.co.jp/travel-information/tc/train-usage-guide/howto/guide/" target="_blank" rel="noopener">HARUKA／ICOCA 搭乘指南</a><a href="https://www.westjr.co.jp/travel-information/tc/plan-your-trip/routes-schedule/" target="_blank" rel="noopener">JR 路線・時刻表</a><a href="https://go.goinc.jp/area" target="_blank" rel="noopener">GO Taxi 對應區域</a><a href="https://support.go.goinc.jp/hc/ja/articles/25883285712281" target="_blank" rel="noopener">GO 迎車／手配費</a></div>
-      </article>
+        </div>
+      </details>
+      <div id="transportQuickNav" class="transport-quick-nav" aria-label="交通日期快速索引"></div>
       <div class="transport-grid">
         <article class="transport-card"><div class="transport-day">D1</div><div><h4>關西機場 → 京都站</h4><p>HARUKA 直達京都站。官網可查購票／領票方式、關西機場站動線、即時運行與京都站站內圖。</p><div class="transport-link-row"><a href="https://www.westjr.co.jp/travel-information/tc/train-usage-guide/howto/guide/" target="_blank" rel="noopener">機場搭車指南</a><a href="https://www.westjr.co.jp/travel-information/tc/plan-your-trip/routes-schedule/" target="_blank" rel="noopener">JR 時刻・運行</a></div></div></article>
         <article class="transport-card"><div class="transport-day">D2</div><div><h4>大原／高雄／鞍馬三選一</h4><p>大原查京都巴士 19／特16／特17；高雄查 JR 巴士高雄京北線 47–49；鞍馬查叡山電車。2026/4 高雄線已改點，秋季特定日班次改為臨時增班，出發前必須重查。</p><div class="transport-link-row"><a href="https://www.kyotobus.jp/route/timetable/" target="_blank" rel="noopener">京都巴士時刻</a><a href="https://nishinihonjrbus.co.jp/news/detail/2043" target="_blank" rel="noopener">高雄線 2026 改點</a><a href="https://eizandensha.co.jp/" target="_blank" rel="noopener">叡山電車</a></div></div></article>
@@ -294,7 +296,7 @@
   </div>
 </div>
 
-<script src="app.js?v=44"></script>
+<script src="app.js?v=45"></script>
 
 </body>
 </html>
