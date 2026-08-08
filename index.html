@@ -3,32 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>謐境・南島 星穹冰河與曠野的雋永私藏</title>
-<meta name="description" content="紐西蘭南島自駕行程規劃：星穹冰河、峽灣與曠野景點指南，含每日行程、天氣、行李與購物清單，並支援家人即時共享同步。">
-<meta property="og:title" content="謐境・南島 星穹冰河與曠野的雋永私藏">
-<meta property="og:description" content="紐西蘭南島自駕行程規劃，含每日景點指南、天氣、行李與購物清單，支援家人即時共享同步。">
+<meta name="theme-color" content="#b95f3f">
+<title>京丹雅行・紅葉海岸十日慢旅</title>
+<meta name="description" content="京都、奈良、京丹後與舞鶴 10 日慢旅行程，含紅葉機動方案、每日景點、天氣、行李與家人共享。">
+<meta property="og:title" content="京丹雅行・紅葉海岸十日慢旅">
+<meta property="og:description" content="京都・奈良・丹後 10 日慢旅行程與家人共享指南。">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=45">
 </head>
 <body class="family-locked">
-<aside class="desktop-workbench" aria-label="桌機顯示模式">
-  <b>🖥️ 桌機工作區</b><span>編輯時用寬版，出發前切手機預覽檢查。</span>
-  <div><button id="wideModeBtn" type="button" onclick="setDesktopLayout('wide')">寬版編輯</button><button id="phoneModeBtn" type="button" onclick="setDesktopLayout('phone')">手機預覽</button></div>
-</aside>
 <div id="familyGate" class="family-gate" aria-hidden="false">
   <div class="family-gate-card">
-    <div class="family-gate-icon">🌿</div>
-    <h2>南島家庭旅行</h2>
-    <p>請使用已授權的家人帳號登入。登入過的裝置即使暫時離線，也能查看已快取的行程。</p>
-    <input id="familyGateEmail" type="email" inputmode="email" autocomplete="username" placeholder="家人登入 Email">
-    <input id="familyGateInput" type="password" inputmode="text" autocomplete="current-password" placeholder="密碼">
-    <button id="familyGateButton" type="button">進入行程</button>
-    <button id="familyOfflineButton" class="family-offline-button" type="button" hidden>離線查看此裝置快取</button>
+    <div class="family-gate-icon">🍁</div>
+    <h2>京都・奈良・丹後家庭旅行</h2>
+    <p>請使用在 Supabase Authentication 建立的家人帳號登入。登入後，各裝置會安全共用同一份行程資料。</p>
+    <input id="familyGateEmail" type="email" inputmode="email" autocomplete="username" placeholder="家人 Email">
+    <input id="familyGateInput" type="password" autocomplete="current-password" placeholder="Password">
+    <button id="familyGateButton" type="button">登入行程</button>
+    <button id="offlineGateButton" class="family-offline-button" type="button" hidden>離線查看已下載行程</button>
     <div id="familyGateError" class="family-gate-error" role="alert"></div>
   </div>
 </div>
+
+<aside id="desktopWorkbench" class="desktop-workbench" aria-label="桌機預覽與編輯工具">
+  <div class="workbench-title">桌機手機預覽</div>
+  <div class="workbench-sub">畫面與手機使用時保持相同寬度與操作邏輯。</div>
+  <div class="workbench-label">顯示模式</div>
+  <div class="workbench-segment">
+    <button type="button" data-ui-mode="edit" onclick="setUiMode('edit')">✎ 編輯</button>
+    <button type="button" data-ui-mode="travel" onclick="setUiMode('travel')">旅行</button>
+  </div>
+  <div class="workbench-label">預覽寬度</div>
+  <div class="workbench-segment preview-size-segment">
+    <button type="button" data-preview-width="390" onclick="setPreviewWidth(390)">390</button>
+    <button type="button" data-preview-width="430" onclick="setPreviewWidth(430)">430</button>
+  </div>
+  <label class="desktop-search-label" for="globalSearchDesktop">搜尋全部行程</label>
+  <div class="global-search-input-wrap">
+    <span>⌕</span><input id="globalSearchDesktop" type="search" placeholder="景點、餐廳、住宿…" oninput="runGlobalSearch(this.value)">
+  </div>
+  <div id="globalSearchResultsDesktop" class="global-search-results"></div>
+</aside>
 
 <div class="app">
 
@@ -36,12 +53,12 @@
   <div class="header" id="main-header" style="background-size: cover; background-position: center;">
     <div class="net-status" id="netStatus"><span class="net-dot online"></span><span class="net-txt">線上</span></div>
     <div class="cloud-sync-status" id="cloudSyncStatus">☁️ 家人共享同步中</div>
-    <div class="eyebrow">SOUTH ISLAND, NEW ZEALAND</div>
-    <h1>謐境・南島<br>星穹冰河與曠野的雋永私藏</h1>
-    <div class="dates">📅 2026.09.11 出發 – 09.28 抵台・南島15天14夜</div>
+    <div class="eyebrow">KYOTO · NARA · TANGO, JAPAN</div>
+    <h1>京丹雅行<br>紅葉、古都與海岸的十日慢旅</h1>
+    <div class="dates">📅 2026.11.27 出發 – 12.06 抵台・10天9夜</div>
     <div class="stat-row">
-      <div class="stat"><b>15</b><span>南島天數</span></div>
-      <div class="stat"><b>7</b><span>住宿地</span></div>
+      <div class="stat"><b>10</b><span>旅行天數</span></div>
+      <div class="stat"><b>6</b><span>住宿地</span></div>
       <div class="stat"><b id="spotCount">--</b><span>精選推薦</span></div>
     </div>
   </div>
@@ -56,7 +73,10 @@
 
   <!-- ================= ITINERARY VIEW ================= -->
   <div class="view active" id="view-itinerary">
-    <div id="todayModeBar"></div>
+    <div class="mobile-global-search">
+      <div class="global-search-input-wrap"><span>⌕</span><input id="globalSearchMobile" type="search" placeholder="搜尋全部 10 天行程…" oninput="runGlobalSearch(this.value)"></div>
+      <div id="globalSearchResultsMobile" class="global-search-results"></div>
+    </div>
     <div class="day-scroll" id="dayScroll"></div>
     <div id="dayContent"></div>
   </div>
@@ -64,83 +84,79 @@
   <!-- ================= ROUTE MAP VIEW ================= -->
   <div class="view" id="view-route">
     <div class="map-wrap" style="margin-top:0; padding-bottom:24px;">
-      <h3 style="margin:0 0 10px; font-size:18px; font-weight:900; text-align:center; color:var(--ink);">🚗 紐西蘭南島自駕路線環線</h3>
+      <h3 style="margin:0 0 10px; font-size:18px; font-weight:900; text-align:center; color:var(--ink);">🗺️ 京都・奈良・丹後 10 日移動路線</h3>
       
-      <div id="nzSouthIslandHandDrawnMap" class="svg-map-container" style="position:relative;">
-        <img id="handDrawnMapImg" src="images/map.webp" alt="紐西蘭南島自駕環線手繪地圖，標示主要城鎮與景點路線" loading="lazy" style="width:100%; border-radius:var(--r-md); box-shadow:var(--shadow-sm); display:block;">
+      <div id="kyotoTangoRouteMap" class="svg-map-container" style="position:relative;">
+        <img id="handDrawnMapImg" src="images/map.webp" alt="京都、奈良、龜岡、京丹後、天橋立與舞鶴 10 日紅葉慢旅行程手繪地圖" loading="lazy" class="route-main-image" onclick="openAttachModal('images/map.webp')">
         <div id="mapFallback" style="display:none; padding:24px 16px; border:2px dashed #c9e2e9; border-radius:var(--r-md); background:#f7fbfd; text-align:center;">
           <p style="font-size:13px; color:#2f3a4a; font-weight:700; line-height:1.6; margin-top:0;">⚠️ 找不到地圖圖片！<br><span style="font-size:11px; font-weight:400;">請點擊下方按鈕手動選擇：</span></p>
           <input type="file" id="mapUploader" style="display:none;" accept="image/*" onchange="loadLocalMap(event)">
           <button onclick="document.getElementById('mapUploader').click()" style="background:var(--blue); color:#fff; border:none; padding:10px 20px; border-radius:999px; font-size:12px; font-weight:700; cursor:pointer;">📁 手動載入圖片</button>
         </div>
       </div>
-      <a href="https://www.google.com/maps/dir/Queenstown+Airport/Wanaka/Lake+Tekapo/Aoraki+Mount+Cook+Village/Oamaru/Dunedin/Te+Anau/Queenstown" target="_blank" rel="noopener" class="btn btn-map" style="display:flex; margin-top:12px; text-decoration:none;">🗺️ 在 Google 地圖開啟完整環線</a>
-    </div>
-
-    <section class="section-card road-check-card">
-      <div class="road-check-head"><div><small>出發前 10 分鐘檢查</small><h3>❄️ 道路封閉／積雪快捷查詢</h3></div><span>官方即時資訊</span></div>
-      <div class="road-risk-strip"><b>本行程需特別看：</b> SH8 Lindis Pass／Burkes Pass、SH80 Mt Cook Road、SH94 Milford Road、Crown Range Road</div>
-      <div class="road-link-grid">
-        <a href="https://www.journeys.nzta.govt.nz/highway-conditions" target="_blank" rel="noopener"><b>🚧 NZTA 國道路況</b><span>封路、事故、施工與攝影機</span></a>
-        <a href="https://www.qldc.govt.nz/winter-road-reports" target="_blank" rel="noopener"><b>🏔️ Crown Range／地方道路</b><span>QLDC 冬季路報與雪鏈要求</span></a>
-        <a href="https://www.milfordroad.co.nz/" target="_blank" rel="noopener"><b>🏞️ Milford Road SH94</b><span>開放狀態、雪崩與管制</span></a>
-        <a href="https://www.metservice.com/warnings/home" target="_blank" rel="noopener"><b>🌨️ 道路降雪警報</b><span>MetService 官方警報</span></a>
+      <div class="map-zoom-hint">🔍 點擊手繪地圖可全螢幕放大</div>
+      <div class="map-date-correction">📅 本次旅程為 2026 年：11/27（五）・11/28（六）・11/29（日）・11/30（一）・12/1（二）・12/2（三）・12/3（四）・12/4（五）・12/5（六）・12/6（日）。手繪圖為路線插畫，日期與星期請以此列及每日卡片為準。</div>
+      <div class="route-summary-card" id="routeSummaryCard">
+        <div class="route-summary-heading" id="routeSummaryHeading" role="button" tabindex="0" aria-expanded="true" aria-controls="routeSummaryBody" onclick="toggleRouteSummary()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleRouteSummary();}">
+          <div>
+            <h4>🍁 D1–D10 路線摘要</h4>
+            <p>先看每日主題，再看移動與重點地區。</p>
+          </div>
+          <span class="route-summary-chevron" id="routeSummaryChevron" aria-hidden="true">▾</span>
+        </div>
+        <div class="route-summary-body" id="routeSummaryBody">
+        <div class="route-summary-grid">
+          <div class="route-summary-item"><div class="route-day"><b>D1</b><span>11/27</span></div><div class="route-copy"><strong>入洛日和</strong><span>KIX → 京都站｜抵達散策</span></div></div>
+          <div class="route-summary-item"><div class="route-day"><b>D2</b><span>11/28</span></div><div class="route-copy"><strong>楓信未定</strong><span>大原／高雄／鞍馬＋貴船</span></div></div>
+          <div class="route-summary-item"><div class="route-day"><b>D3</b><span>11/29</span></div><div class="route-copy"><strong>東山有秋</strong><span>真如堂・永觀堂・南禪寺</span></div></div>
+          <div class="route-summary-item"><div class="route-day"><b>D4</b><span>11/30</span></div><div class="route-copy"><strong>茶里鹿影</strong><span>修學院・宇治・奈良</span></div></div>
+          <div class="route-summary-item"><div class="route-day"><b>D5</b><span>12/1</span></div><div class="route-copy"><strong>一川嵐色</strong><span>奈良 → 龜岡｜保津川・嵐山</span></div></div>
+          <div class="route-summary-item"><div class="route-day"><b>D6</b><span>12/2</span></div><div class="route-copy"><strong>山盡見海</strong><span>龜岡・龍穩寺・綾部 → 京丹後</span></div></div>
+          <div class="route-summary-item"><div class="route-day"><b>D7</b><span>12/3</span></div><div class="route-copy"><strong>海辺無事</strong><span>京丹後海岸慢遊・艸花入住</span></div></div>
+          <div class="route-summary-item"><div class="route-day"><b>D8</b><span>12/4</span></div><div class="route-copy"><strong>橋立暮景</strong><span>金剛院・天橋立・西舞鶴</span></div></div>
+          <div class="route-summary-item"><div class="route-day"><b>D9</b><span>12/5</span></div><div class="route-copy"><strong>港町別章</strong><span>舞鶴市場・五老塔・紅磚公園 → 京都</span></div></div>
+          <div class="route-summary-item"><div class="route-day"><b>D10</b><span>12/6</span></div><div class="route-copy"><strong>餘白京都</strong><span>西本願寺・京都御苑・下鴨神社 → KIX</span></div></div>
+        </div>
+        </div>
       </div>
-      <details class="road-decision"><summary>看到警示時怎麼決定？</summary><ol><li><b>Closed／Road closed：</b>不要出發，不依 Google Maps 小路繞行。</li><li><b>Chains essential：</b>只有車上有合規雪鏈且會安裝才出發；租車規則優先。</li><li><b>Area warning／ice：</b>避開清晨與入夜，放慢速度、加倍跟車距離。</li><li><b>SH94 或 Crown Range 不確定：</b>改走官方開放路線或直接延後，不用硬趕預約。</li></ol></details>
-      <p class="source-note">即時狀態需要網路；離線時仍會保留這份檢查順序與重點道路名稱。</p>
-    </section>
+      <a href="https://www.google.com/maps/dir/Kyoto/Nara/Kameoka/Kyotango/Amanohashidate/Maizuru/Kyoto" target="_blank" rel="noopener" class="btn btn-map" style="display:flex; margin-top:12px; text-decoration:none;">🗺️ 在 Google 地圖開啟主要路線</a>
+    </div>
 
     <!-- Flights -->
     <div class="section-card">
-      <h3>✈️ 飛航資訊</h3>
-      <div class="flight-box">
-        <div class="ftitle">🛫 去程航班 (中華航空 CI53)</div>
-        <div class="flight-row"><span>日期</span><span>2026.09.11 (五)</span></div>
-        <div class="flight-row"><span>出發</span><span>23:55 桃園機場 (TPE)</span></div>
-        <div class="flight-row"><span>轉機</span><span>布里斯本 (BNE)<br><span class="transit-badge">約停留 1.5-2 小時</span></span></div>
-        <div class="flight-row"><span>抵達</span><span>約 18:25 奧克蘭 (AKL) (+1日)</span></div>
-      </div>
-      <div class="flight-box">
-        <div class="ftitle">🛬 回程航班 (中華航空 CI54)</div>
-        <div class="flight-row"><span>日期</span><span>2026.09.27 (日)</span></div>
-        <div class="flight-row"><span>出發</span><span>20:35 奧克蘭 (AKL) 出發</span></div>
-        <div class="flight-row"><span>轉機</span><span>布里斯本 (BNE)<br><span class="transit-badge">約停留 1.5-2 小時</span></span></div>
-        <div class="flight-row"><span>抵達</span><span>約 05:25 抵達 桃園 (TPE) (+1日)</span></div>
-      </div>
-      <div class="source-note">※ 詳細時間請依最新電子機票為準。</div>
+      <h3>✈️ 飛航與主要交通</h3>
+      <div class="flight-box"><div class="ftitle">🛫 去程 TPE → KIX</div><div class="flight-row"><span>日期</span><span>2026.11.27</span></div><div class="flight-row"><span>時間</span><span>08:05 → 11:35</span></div><div class="flight-row"><span>接續</span><span>HARUKA 前往京都站</span></div></div>
+      <div class="flight-box"><div class="ftitle">🛬 回程 KIX → TPE</div><div class="flight-row"><span>日期</span><span>2026.12.06</span></div><div class="flight-row"><span>時間</span><span>19:00 → 21:19</span></div><div class="flight-row"><span>建議</span><span>15:00 前從京都站出發</span></div></div>
+      <div class="source-note">※ 航班、HARUKA 與租車時間仍以最終票券為準。</div>
     </div>
 
     <!-- Docs -->
-    <div class="section-card">
-      <h3>📁 行程票券與住宿總匯</h3>
-      <div class="sub">可上傳憑證截圖。點擊「出示截圖」即可全螢幕放大給櫃檯人員確認！</div>
-      <div id="docsListWrap"></div>
-    </div>
+    <details class="section-card compact-section voucher-section">
+      <summary class="compact-section-summary"><span>📁</span><div><strong>行程票券與住宿總匯</strong><small>住宿、航班、租車與預約憑證</small></div><em>展開</em></summary>
+      <div class="compact-section-body"><div class="sub">可上傳憑證截圖，需要時點擊「顯示截圖」。</div><div id="docsListWrap" class="voucher-list"></div></div>
+    </details>
     
-    <!-- Gas -->
-    <div class="section-card">
-      <h3>⛽ 南島自駕建議加油策略</h3>
-      <div class="sub">南島油價城鎮差異大，建議利用大城市超市優惠券或平價站點。</div>
-      <a href="https://www.gaspy.nz/stats.html" target="_blank" rel="noopener" class="fuel-live-main">⛽ 查看即時油價</a>
-      <div class="rule-item" style="flex-direction:column;">
-        <div style="display:flex; gap:8px;"><span class="dot">📍</span><span><b>Day 1 / 2 (Wanaka)</b>：機場取車後，於 Wanaka 的 BP 或市區加滿，備戰明日長途與山路。</span></div>
-        <a href="https://www.google.com/maps/search/BP+Wanaka" target="_blank" class="btn btn-map" style="display:inline-flex; width:auto; padding:6px 12px; font-size:11px; margin-left:18px; margin-top:4px;">🗺️ 導航至 BP Wanaka</a>
-      </div>
-      <div class="rule-item" style="flex-direction:column;">
-        <div style="display:flex; gap:8px;"><span class="dot">📍</span><span><b>Day 3 (Twizel)</b>：前往 Tekapo 前，推薦在 Twizel 的 NPD 加油站補給，通常麥肯齊盆地最便宜。</span></div>
-        <a href="https://www.google.com/maps/search/NPD+Twizel" target="_blank" class="btn btn-map" style="display:inline-flex; width:auto; padding:6px 12px; font-size:11px; margin-left:18px; margin-top:4px;">🗺️ 導航至 NPD Twizel</a>
-      </div>
-      <div class="rule-item" style="flex-direction:column;">
-        <div style="display:flex; gap:8px;"><span class="dot">📍</span><span><b>Day 6 / 7 (Oamaru)</b>：離開庫克山後，於 Oamaru 市區的 Z Energy 或 NPD 補滿。</span></div>
-        <a href="https://www.google.com/maps/search/NPD+Oamaru" target="_blank" class="btn btn-map" style="display:inline-flex; width:auto; padding:6px 12px; font-size:11px; margin-left:18px; margin-top:4px;">🗺️ 導航至 NPD Oamaru</a>
-      </div>
-      <div class="rule-item" style="flex-direction:column;">
-        <div style="display:flex; gap:8px;"><span class="dot">📍</span><span><b>Day 8 / 9 (Dunedin)</b>：Dunedin 油價相對便宜，強烈建議在 Pak'nSave 採買後領取 Voucher 並於旁邊加油！</span></div>
-        <a href="https://www.google.com/maps/search/Pak'nSave+Dunedin+Fuel" target="_blank" class="btn btn-map" style="display:inline-flex; width:auto; padding:6px 12px; font-size:11px; margin-left:18px; margin-top:4px;">🗺️ 導航至 Pak'nSave Fuel</a>
-      </div>
-      <div class="rule-item" style="flex-direction:column;">
-        <div style="display:flex; gap:8px;"><span class="dot">📍</span><span><b>Day 10 / 11 (Te Anau)</b>：進入峽灣前最後大鎮，務必在 Te Anau 的 NPD 加滿，峽灣內無加油站且極度昂貴。</span></div>
-        <a href="https://www.google.com/maps/search/NPD+Te+Anau" target="_blank" class="btn btn-map" style="display:inline-flex; width:auto; padding:6px 12px; font-size:11px; margin-left:18px; margin-top:4px;">🗺️ 導航至 NPD Te Anau</a>
+    <!-- Driving -->
+    <div class="section-card transport-section">
+      <h3>🚉 交通提醒</h3>
+      <div class="sub">依日期分成大眾交通與自駕兩階段；連結已於 2026/8/4 逐一開啟核對，並優先使用營運單位官方頁面。</div>
+      <details class="transport-principles">
+        <summary class="transport-principles-head"><span>🎫</span><div><small>4 人慢旅行共通設定</small><h4>票券、叫車與搭乘原則</h4></div><em>展開</em></summary>
+        <div class="transport-principles-body">
+        <ul><li>全程準備 ICOCA，日常路段直接刷卡最靈活。</li><li>KIX 往返京都各買一張 HARUKA 優惠票；特急車票與基本乘車券依購票畫面確認。</li><li>GO Taxi 為主，Uber、DiDi、京都 MK App 備用；優先在飯店門口、便利商店、主要道路或車站前叫車。</li><li>4 人無大型行李通常可搭一般轎車；4 個大型行李箱需大型車或拆成兩台。</li><li>寺院山門、狹窄巷道與山區較難停車或叫車，先走到大路再定位。</li><li>紅葉旺季計程車實際費用可能比估算高 10%–30%；公車與列車班次於出發前一個月再確認。</li></ul>
+        <div class="transport-link-row"><a href="https://www.westjr.co.jp/travel-information/tc/train-usage-guide/howto/guide/" target="_blank" rel="noopener">HARUKA／ICOCA 搭乘指南</a><a href="https://www.westjr.co.jp/travel-information/tc/plan-your-trip/routes-schedule/" target="_blank" rel="noopener">JR 路線・時刻表</a><a href="https://go.goinc.jp/area" target="_blank" rel="noopener">GO Taxi 對應區域</a><a href="https://support.go.goinc.jp/hc/ja/articles/25883285712281" target="_blank" rel="noopener">GO 迎車／手配費</a></div>
+        </div>
+      </details>
+      <div id="transportQuickNav" class="transport-quick-nav" aria-label="交通日期快速索引"></div>
+      <div class="transport-grid">
+        <article class="transport-card"><div class="transport-day">D1</div><div><h4>關西機場 → 京都站</h4><p>HARUKA 直達京都站。官網可查購票／領票方式、關西機場站動線、即時運行與京都站站內圖。</p><div class="transport-link-row"><a href="https://www.westjr.co.jp/travel-information/tc/train-usage-guide/howto/guide/" target="_blank" rel="noopener">機場搭車指南</a><a href="https://www.westjr.co.jp/travel-information/tc/plan-your-trip/routes-schedule/" target="_blank" rel="noopener">JR 時刻・運行</a></div></div></article>
+        <article class="transport-card"><div class="transport-day">D2</div><div><h4>大原／高雄／鞍馬三選一</h4><p>大原查京都巴士 19／特16／特17；高雄查 JR 巴士高雄京北線 47–49；鞍馬查叡山電車。2026/4 高雄線已改點，秋季特定日班次改為臨時增班，出發前必須重查。</p><div class="transport-link-row"><a href="https://www.kyotobus.jp/route/timetable/" target="_blank" rel="noopener">京都巴士時刻</a><a href="https://nishinihonjrbus.co.jp/news/detail/2043" target="_blank" rel="noopener">高雄線 2026 改點</a><a href="https://eizandensha.co.jp/" target="_blank" rel="noopener">叡山電車</a></div></div></article>
+        <article class="transport-card"><div class="transport-day">D3</div><div><h4>東山</h4><p>以地下鐵東西線加步行串接真如堂、永觀堂與南禪寺；紅葉旺季減少依賴容易塞車的市巴士。</p><div class="transport-link-row"><a href="https://www2.city.kyoto.lg.jp/kotsu/webguide/" target="_blank" rel="noopener">京都交通指南</a></div></div></article>
+        <article class="transport-card"><div class="transport-day">D4</div><div><h4>修學院 → 宇治 → 奈良</h4><p>依已排定動線：洛北段以計程車減少轉乘，回飯店取行李後由京都站搭 JR 奈良線至宇治、奈良；不再把京阪列為主線。</p><div class="transport-link-row"><a href="https://www.westjr.co.jp/travel-information/tc/plan-your-trip/routes-schedule/" target="_blank" rel="noopener">JR 路線・時刻</a><a href="https://www.narakotsu.co.jp/" target="_blank" rel="noopener">奈良交通</a></div></div></article>
+        <article class="transport-card"><div class="transport-day">D5</div><div><h4>龜岡／保津川／嵐山</h4><p>官網可查預約、費用、時刻與停航；目前公告所需約 2 小時，暴風雨或增水會停航。停航時改搭 JR 嵯峨野線。</p><div class="transport-link-row"><a href="https://www.hozugawakudari.jp/tickets" target="_blank" rel="noopener">預約・費用・時刻</a><a href="https://www.hozugawakudari.jp/" target="_blank" rel="noopener">當日營運</a><a href="https://www.westjr.co.jp/travel-information/tc/plan-your-trip/routes-schedule/" target="_blank" rel="noopener">JR 雨風備案</a></div></div></article>
+        <article class="transport-card"><div class="transport-day">D5–D9</div><div><h4>龜岡・丹波・丹後・舞鶴自駕</h4><p>12/1 奈良取車、12/5 京都還車。山路、海岸風與低溫路況需保留緩衝，並確認冬季胎與保險內容。</p><div class="transport-link-row"><a href="https://www.jartic.or.jp/" target="_blank" rel="noopener">日本道路交通情報</a><a href="https://www.tankai.jp/" target="_blank" rel="noopener">丹後海陸交通</a></div></div></article>
+        <article class="transport-card"><div class="transport-day">D8</div><div><h4>天橋立</h4><p>府中側與文珠側只選一岸；出發前查纜車、單軌、吊椅營業與強風停駛公告。若臨時改大眾運輸，可由丹海與丹鐵官網查詢。</p><div class="transport-link-row"><a href="https://www.tankai.jp/trip/" target="_blank" rel="noopener">傘松公園／丹海</a><a href="https://www.viewland.jp/" target="_blank" rel="noopener">View Land</a><a href="https://trains.willer.co.jp/" target="_blank" rel="noopener">京都丹後鐵道</a></div></div></article>
+        <article class="transport-card"><div class="transport-day">D10</div><div><h4>京都站 → 關西機場</h4><p>13:15 左右由下鴨神社叫車回飯店，取行李後搭 15:00–15:30 間 HARUKA；19:00 起飛。官網同時可查即時誤點。</p><div class="transport-link-row"><a href="https://www.westjr.co.jp/travel-information/tc/plan-your-trip/routes-schedule/" target="_blank" rel="noopener">HARUKA 時刻・運行</a></div></div></article>
       </div>
     </div>
   </div>
@@ -150,12 +166,12 @@
 
     <div class="section-card">
       <h3>🎒 行李打包清單</h3>
-      <div class="sub">南島 9 月為初春，早晚溫差大、山區多風，建議洋蔥式穿搭。點擊項目可勾選完成。</div>
+      <div class="sub">京都 11 月底至 12 月初早晚偏冷，山區與丹後海岸風更強，建議洋蔥式穿搭。點擊項目可勾選完成。</div>
       <div id="packListWrap"></div>
     </div>
 
     <div class="section-card">
-      <h3>🛍️ 紐西蘭購物清單</h3>
+      <h3>🛍️ 京都・丹後購物清單</h3>
       <div class="sub">記得預留行李空間＆秤重額度。您可以自行上傳商品截圖！</div>
       <div id="shopListWrap"></div>
     </div>
@@ -166,13 +182,22 @@
       <div id="rulesListWrap"></div>
     </div>
 
+    <div class="section-card mobile-mode-settings">
+      <h3>⚙️ 顯示模式</h3>
+      <div class="sub">旅行模式會收起排序、刪除與進階編輯按鈕，降低手機誤觸；需要修改時可隨時切回編輯模式。</div>
+      <div class="mobile-mode-buttons">
+        <button type="button" data-ui-mode="travel" onclick="setUiMode('travel')">旅行模式</button>
+        <button type="button" data-ui-mode="edit" onclick="setUiMode('edit')">編輯模式</button>
+      </div>
+    </div>
+
   </div>
 
   <!-- ================= WEATHER VIEW ================= -->
   <div class="view" id="view-weather">
     <div class="section-card" style="margin-bottom:14px;">
-      <h3>🌌 即時氣象與觀星穿搭指南</h3>
-      <div class="sub">串接 Open-Meteo 即時氣象，自動提供各城鎮目前的氣候數據與穿搭建議。</div>
+      <h3>🍁 即時氣象與紅葉季穿搭指南</h3>
+      <div class="sub">串接 Open-Meteo 即時氣象，提供京都、奈良、丹後與舞鶴的氣溫、風雨與穿搭建議。</div>
       <div class="add-row" style="margin-bottom:10px;">
         <button onclick="loadLiveWeather()" style="flex:1; background:var(--blue); color:#fff; border:none; border-radius:999px; padding:10px 0; font-family:inherit; font-weight:700; font-size:12.5px; cursor:pointer; box-shadow:var(--shadow-sm);">🔄 取得最新即時氣象與穿搭</button>
       </div>
@@ -180,15 +205,30 @@
       <div class="source-note" id="liveWeatherTime">即時資料尚未更新</div>
     </div>
 
+
     <div class="section-card" style="margin-bottom:14px;">
-      <h3>🛰️ 即時衛星雲圖</h3>
-      <div class="sub">資料來源：RainViewer 紅外線衛星影像，涵蓋紐西蘭南島，可拖曳縮放並手動重新整理取得最新畫面。</div>
+      <h3>🍁 紅葉前線與我的地圖</h3>
+      <div class="sub">紅葉進度每年受氣溫與降雨影響，請在出發前 2–3 天以多個來源交叉確認。也可以上傳自己截取的紅葉前線地圖，點圖即可放大。</div>
+      <div class="foliage-links">
+        <a href="https://www.data.jma.go.jp/sakura/data/index.html" target="_blank" rel="noopener">日本氣象廳・楓紅葉觀測</a>
+        <a href="https://ja.kyoto.travel/flower/momiji/" target="_blank" rel="noopener">京都觀光 Navi 紅葉だより</a>
+        <a href="https://weathernews.jp/koyo/" target="_blank" rel="noopener">Weathernews 紅葉情報</a>
+        <a href="https://tenki.jp/kouyou/" target="_blank" rel="noopener">tenki.jp 紅葉見頃</a>
+        <a href="https://koyo.walkerplus.com/" target="_blank" rel="noopener">Walkerplus 紅葉名所</a>
+      </div>
+      <div id="foliageMapGallery" class="foliage-map-gallery"></div>
+      <button class="foliage-upload-btn" onclick="document.getElementById('foliageMapFile').click()">📷 上傳紅葉前線地圖</button>
+      <input type="file" id="foliageMapFile" accept="image/*" multiple style="display:none" onchange="handleFoliageMapUpload(event)">
+    </div>
+    <div class="section-card" style="margin-bottom:14px;">
+      <h3>🌧️ 雨雲與天氣圖</h3>
+      <div class="sub">Windy 圖層可查看京都府、奈良與丹後的雲雨、風向與體感變化；日本氣象廳按鈕則連到官方即時雨雲雷達。</div>
       <div class="add-row" style="margin-bottom:10px;">
         <button onclick="refreshRainRadar()" style="flex:1; background:var(--blue); color:#fff; border:none; border-radius:999px; padding:10px 0; font-family:inherit; font-weight:700; font-size:12.5px; cursor:pointer; box-shadow:var(--shadow-sm);">🔄 重新整理雲圖</button>
       </div>
       <div id="rainRadarMap" class="windy-embed-wrap"></div>
       <div class="source-note" id="rainRadarTime">衛星雲圖尚未更新</div>
-      <a href="https://www.metservice.com/maps-radar/forecast/3-days?tab=nz" target="_blank" rel="noopener" style="display:block; text-align:center; margin-top:10px; background:#fff; border:1.5px solid var(--blue); color:var(--blue); border-radius:999px; padding:10px 0; font-family:inherit; font-weight:700; font-size:12.5px; text-decoration:none;">🔗 查看 MetService 官方雷達／衛星雲圖（紐西蘭氣象局，另開新分頁）</a>
+      <a href="https://www.jma.go.jp/bosai/realtimerad/" target="_blank" rel="noopener" style="display:block; text-align:center; margin-top:10px; background:#fff; border:1.5px solid var(--blue); color:var(--blue); border-radius:999px; padding:10px 0; font-family:inherit; font-weight:700; font-size:12.5px; text-decoration:none;">🔗 查看日本氣象廳雨雲雷達（另開新分頁）</a>
     </div>
   </div>
 
@@ -201,13 +241,62 @@
   </div>
 </div>
 
+<div id="undoToast" class="undo-toast" role="status" aria-live="polite" hidden>
+  <span id="undoToastText">已刪除</span>
+  <button id="undoToastButton" type="button">復原</button>
+</div>
+
 <!-- Modal for Images -->
 <div class="attach-modal" id="attachModal" onclick="closeAttachModal()">
   <button class="attach-modal-close" onclick="event.stopPropagation(); closeAttachModal()">✕</button>
-  <img id="attachModalImg" src="" onerror="handleImageError(this)" onclick="event.stopPropagation()">
+  <img id="attachModalImg" src="" onclick="event.stopPropagation()">
 </div>
 
-<script src="app.js"></script>
+<!-- Modal for editing a spot's info all at once -->
+<div class="spot-edit-modal" id="spotEditModal" onclick="if(event.target===this)closeSpotEditModal()">
+  <div class="spot-edit-modal-card" onclick="event.stopPropagation()">
+    <div class="spot-edit-modal-head">
+      <h3>✎ 編輯景點資訊</h3>
+      <button class="spot-edit-modal-close" onclick="closeSpotEditModal()">✕</button>
+    </div>
+    <div class="spot-edit-modal-body">
+      <label class="spot-edit-field">
+        <span>景點名稱</span>
+        <input type="text" id="editSpotName" placeholder="景點名稱">
+      </label>
+      <label class="spot-edit-field">
+        <span>簡介（標題下方一行）</span>
+        <input type="text" id="editSpotDesc" placeholder="一句話簡介">
+      </label>
+      <label class="spot-edit-field">
+        <span>內文簡介（點開卡片後顯示的完整段落）</span>
+        <textarea id="editSpotFullDesc" rows="4" placeholder="展開後顯示的完整介紹"></textarea>
+      </label>
+      <label class="spot-edit-field">
+        <span>營業／開放時間</span>
+        <input type="text" id="editSpotHours" placeholder="例：09:00–17:00，週一公休">
+      </label>
+      <label class="spot-edit-field">
+        <span>重要提點／門票</span>
+        <textarea id="editSpotNote" rows="2" placeholder="門票資訊、注意事項..."></textarea>
+      </label>
+      <label class="spot-edit-field">
+        <span>評論與資訊</span>
+        <textarea id="editSpotInfo" rows="2" placeholder="這個景點的一句話心得或攻略"></textarea>
+      </label>
+      <label class="spot-edit-field">
+        <span>導航位置（可貼 Google Maps 分享網址、地址、經緯度或搜尋關鍵字）</span>
+        <input type="text" id="editSpotMapQuery" placeholder="未填時使用景點名稱">
+      </label>
+    </div>
+    <div class="spot-edit-modal-actions">
+      <button class="spot-edit-reset" onclick="resetSpotEditModal()">還原全部為預設</button>
+      <button class="spot-edit-save" onclick="saveSpotEditModal()">💾 儲存</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js?v=45"></script>
 
 </body>
 </html>
