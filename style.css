@@ -1600,3 +1600,90 @@ details[open]>summary.transport-principles-head em::after{content:'收合';font-
 /* v53：資訊格內文字不要過粗 */
 .info-item .v,.info-item .info-hours,.important-info .v{font-weight:600!important;}
 .built-in-info-text{font-weight:500;}
+
+/* =====================================================================
+   v54
+   ===================================================================== */
+/* MaMa 與「導航／上傳照片」同大小 */
+.action-row .btn-mama{grid-column:auto!important;min-height:44px;padding:8px 10px!important;font-size:13.5px!important;}
+
+/* 食衣住卡：縮圖（有封面才顯示） */
+.sub-spot-header.has-thumb{display:flex!important;flex-direction:row!important;align-items:stretch!important;padding:0!important;}
+.sub-spot-header.has-thumb .gh-thumb.sm{flex:0 0 84px;width:84px;min-height:92px;position:relative;background:#e7dfd2;overflow:hidden;}
+.sub-spot-header.has-thumb .gh-thumb.sm img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.sub-spot-header.has-thumb .sub-spot-header-content{padding:10px 76px 10px 12px!important;flex:1;min-width:0;}
+.sub-spot-details .detail-cover{margin-bottom:12px;}
+
+/* 照片管理 */
+.pm{margin:14px 0 4px;padding:12px;background:#faf6ee;border-radius:14px;border:1px solid #efe3cf;}
+.pm-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-bottom:10px;font-size:13.5px;color:var(--ink);}
+.pm-hint{font-size:11.5px;color:var(--ink-soft);flex-basis:100%;}
+.pm-restore{border:0;background:#e3f0e7;color:#23683d;border-radius:999px;font:inherit;font-size:12px;font-weight:700;padding:5px 12px;cursor:pointer;margin-left:auto;}
+.pm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.pm-tile{background:#fff;border:1.5px solid #efe3cf;border-radius:12px;overflow:hidden;}
+.pm-tile.is-cover{border-color:#e08a4c;}
+.pm-img{position:relative;aspect-ratio:4/3;background:#e7dfd2;cursor:zoom-in;overflow:hidden;}
+.pm-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.pm-b{position:absolute;left:6px;font-size:10.5px;font-weight:800;color:#fff;border-radius:999px;padding:1px 8px;}
+.pm-b.c{top:6px;background:#c9583a;}
+.pm-b.b{top:28px;background:#3a86b8;}
+.pm-b.o{bottom:6px;background:rgba(0,0,0,.55);}
+body.mode-travel .pm-b{display:none;}
+.pm-move{position:absolute;right:4px;top:4px;display:flex;gap:4px;}
+.pm-move button{width:28px;height:28px;border:0;border-radius:50%;background:rgba(255,255,255,.92);font-size:17px;line-height:1;cursor:pointer;}
+.pm-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:6px;}
+.pm-btns button{min-height:34px;border:0;border-radius:8px;background:#eef3fb;color:var(--blue);font:inherit;font-size:11.5px;font-weight:700;cursor:pointer;padding:0;}
+.pm-btns button.on{background:#c9583a;color:#fff;}
+.pm-btns button.del{background:#fff0ec;color:#c1502f;}
+.pm-add{aspect-ratio:4/3;border:2px dashed #e0c9a4;background:#fffaf0;color:#8a4a22;border-radius:12px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;}
+
+/* 今晚住宿（尚未新增） */
+.stay-quick-card.empty .stay-quick-copy strong{color:var(--ink-soft);font-weight:600;}
+.stay-add{min-height:34px;padding:0 14px;border:1.5px solid #e08a4c;background:#fff;color:#b8431f;border-radius:999px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;}
+.stay-add.ghost{border-color:#e0c9a4;color:#8a4a22;background:#fffaf0;}
+
+/* 天氣列：名稱｜圖示｜溫度＋天氣｜箭頭，每列欄位對齊 */
+.weather-city-card.wc-details>summary.wc-sum{display:grid!important;grid-template-columns:minmax(0,1fr) 44px 84px 16px;align-items:center;gap:8px;padding:12px 16px;}
+.wc-name{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;}
+.wc-name strong{font-size:16px;font-weight:800;color:var(--ink);line-height:1.3;}
+.wc-name .live-badge{margin:0;}
+.wc-ico{font-size:30px;line-height:1;text-align:center;}
+.wc-temp{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
+.wc-temp b{font-family:system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:22px;font-weight:700;color:#2f3a4a;line-height:1.1;letter-spacing:0;white-space:nowrap;}
+.wc-temp b small{font-size:13px;font-weight:600;margin-left:1px;}
+.wc-temp em{font-style:normal;font-size:12px;color:var(--ink-soft);white-space:nowrap;}
+.wc-chev{justify-self:end;}
+
+/* 小驚喜：溫柔提醒 */
+.sc-tag.care,.sa-tag.care{background:#fbe3ea;color:#a8365a;}
+
+/* 紅葉前線地圖：明顯／縮圖 */
+.fm-feature{position:relative;background:#fff;border:1px solid #efe3cf;border-radius:14px;padding:8px;margin-bottom:12px;}
+.fm-feature>img{display:block;width:100%;height:auto;max-height:none;object-fit:contain;border-radius:10px;background:#fff;cursor:zoom-in;}
+.fm-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 4px 2px;}
+.fm-title{font-size:13.5px;font-weight:700;color:var(--ink);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fm-feat{flex:none;min-height:34px;padding:0 12px;border:1.5px solid #e0c9a4;background:#fffaf0;color:#8a4a22;border-radius:999px;font:inherit;font-size:12px;font-weight:700;cursor:pointer;}
+.fm-feat.on{background:#fff1dc;border-color:#e08a4c;color:#b8431f;}
+.fm-sub{margin:14px 2px 8px;font-size:13px;font-weight:800;color:#8a3a22;}
+.fm-thumbs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+.fm-thumb{position:relative;display:flex;flex-direction:column;gap:5px;background:#fff;border:1px solid #efe3cf;border-radius:12px;padding:5px;}
+.fm-thumb img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;cursor:zoom-in;background:#f3eee6;}
+.fm-thumb .fm-title{font-size:11.5px;text-align:center;}
+.fm-thumb .fm-feat{min-height:30px;font-size:11px;padding:0 6px;width:100%;}
+.fm-feature .foliage-map-actions,.fm-thumb .foliage-map-actions{position:absolute;right:10px;top:10px;display:flex;gap:4px;}
+.fm-thumb .foliage-map-actions{right:8px;top:8px;}
+.fm-thumb .foliage-map-actions button{width:24px;height:24px;font-size:11px;}
+
+/* 圖片放大檢視：點一下可放大到細節、再點縮回 */
+.attach-modal{overflow:auto;-webkit-overflow-scrolling:touch;}
+.attach-modal.zoomed{align-items:flex-start!important;justify-content:flex-start!important;padding:0!important;}
+.attach-modal img{cursor:zoom-in;}
+.attach-modal img.zoomed{max-width:none!important;max-height:none!important;width:230vw;height:auto;cursor:zoom-out;}
+
+/* v54 修正：紅葉地圖容器不再用舊的格狀排版；住宿空白卡靠左 */
+#foliageMapGallery,.foliage-map-gallery{display:block!important;grid-template-columns:none!important;}
+.fm-feature .foliage-map-actions button,.fm-thumb .foliage-map-actions button{width:28px;height:28px;border:0;border-radius:50%;background:rgba(122,50,1,.86);color:#fff;font-size:12px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;}
+.fm-thumb .foliage-map-actions button{width:24px;height:24px;font-size:11px;}
+.fm-thumb{min-width:0;}
+.stay-quick-card,.stay-quick-card *{text-align:left;}
+.stay-quick-card .stay-quick-copy{flex:1;min-width:0;}

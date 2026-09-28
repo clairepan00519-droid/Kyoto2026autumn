@@ -128,7 +128,7 @@ const SUPABASE_URL = "https://xkahhddatpoxuembeiwl.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrYWhoZGRhdHBveHVlbWJlaXdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NDExNDksImV4cCI6MjEwMDAxNzE0OX0.Jdpxpz7rgyK_OikYkRrVQComDWZiaI4fgf5ZV_SdaII";
 
 const SYNC_META_KEY = 'kyoto_sync_meta_v3';
-const SYNC_KEYS = ['kyoto_notes','kyoto_info_overrides','kyoto_field_overrides','kyoto_photos','kyoto_covers','kyoto_custom_spots','kyoto_order','kyoto_block_order','kyoto_route_maps','kyoto_transport_extras','kyoto_foliage_maps','kyoto_pack','kyoto_shop','kyoto_rules','kyoto_docs','kyoto_hidden_fixed_spots','kyoto_transport_cards','kyoto_eatshop','kyoto_photo_pos','kyoto_marks','kyoto_livelinks','kyoto_mama','kyoto_surprises','kyoto_tips_seen','kyoto_eat_area','kyoto_eat_plan'];
+const SYNC_KEYS = ['kyoto_notes','kyoto_info_overrides','kyoto_field_overrides','kyoto_photos','kyoto_covers','kyoto_custom_spots','kyoto_order','kyoto_block_order','kyoto_route_maps','kyoto_transport_extras','kyoto_foliage_maps','kyoto_pack','kyoto_shop','kyoto_rules','kyoto_docs','kyoto_hidden_fixed_spots','kyoto_transport_cards','kyoto_eatshop','kyoto_photo_pos','kyoto_marks','kyoto_livelinks','kyoto_mama','kyoto_surprises','kyoto_tips_seen','kyoto_eat_area','kyoto_eat_plan','kyoto_detail_covers','kyoto_hidden_orig'];
 const MEDIA_SYNC_KEYS = new Set(['kyoto_photos','kyoto_covers','kyoto_route_maps','kyoto_transport_extras','kyoto_foliage_maps']);
 const STRUCTURED_LIST_KEYS = new Set(['kyoto_shop','kyoto_rules','kyoto_docs','kyoto_transport_cards','kyoto_eatshop','kyoto_livelinks','kyoto_surprises']);
 const cloudSync = {enabled:false, starting:false, applyingRemote:false, pending:{}, timer:null, pollTimer:null, lastError:null, ready:false};
@@ -475,7 +475,7 @@ function flushPendingDayRender(){
 }
 function applyStoreUpdate(key,jsonStr){
   let parsed;try{parsed=JSON.parse(jsonStr);}catch(e){return;}
-  switch(key){case'kyoto_notes':notesStore=parsed;break;case'kyoto_info_overrides':infoOverrideStore=parsed||{};break;case'kyoto_field_overrides':fieldOverrideStore=parsed||{};break;case'kyoto_photos':photoStore=parsed;break;case'kyoto_covers':coverStore=parsed;break;case'kyoto_custom_spots':customSpotsStore=parsed;break;case'kyoto_order':orderStore=parsed;break;case'kyoto_block_order':blockOrderStore=parsed;break;case'kyoto_route_maps':routeMapStore=parsed;break;case'kyoto_transport_extras':transportExtrasStore=parsed||{};break;case'kyoto_foliage_maps':foliageMapStore=Array.isArray(parsed)?parsed:[];renderFoliageMaps();return;case'kyoto_pack':packData=migratePackCategoryNames(parsed);window._packLive=packData;if(isPackComposerEditing()){window._packRemoteRenderPending=true;}else{renderPackList();}return;case'kyoto_shop':shopData=normalizeStructuredList('kyoto_shop',parsed);renderShopList();return;case'kyoto_rules':rulesData=normalizeStructuredList('kyoto_rules',parsed);renderRulesList();return;case'kyoto_docs':docsData=mergeDocsWithDefaults(parsed);persistDocs();renderDocsList();return;case'kyoto_transport_cards':transportCardsData=normalizeStructuredList('kyoto_transport_cards',parsed);renderTransportCards();return;case'kyoto_eatshop':eatShopStore=normalizeStructuredList('kyoto_eatshop',parsed);if(typeof activeDay==='string')renderDayContent();return;case'kyoto_photo_pos':photoPosStore=parsed||{};safeRenderDayContent();return;case'kyoto_marks':marksStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};renderMarksBar();safeRenderDayContent();return;case'kyoto_livelinks':liveData=normalizeStructuredList('kyoto_livelinks',parsed);renderLive();return;case'kyoto_surprises':surprisesData=normalizeStructuredList('kyoto_surprises',parsed);renderSurpriseAdmin();return;case'kyoto_tips_seen':tipsSeen=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};return;case'kyoto_eat_plan':eatPlanStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_area':eatAreaStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};if(typeof activeDay==='string')safeRenderDayContent();return;case'kyoto_mama':mamaStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};refreshMamaButtons(null);if(document.getElementById('mamaModal'))renderMamaList();return;case'kyoto_hidden_fixed_spots':hiddenFixedSpotsStore=parsed||{};safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();return;default:return;}
+  switch(key){case'kyoto_notes':notesStore=parsed;break;case'kyoto_info_overrides':infoOverrideStore=parsed||{};break;case'kyoto_field_overrides':fieldOverrideStore=parsed||{};break;case'kyoto_photos':photoStore=parsed;break;case'kyoto_covers':coverStore=parsed;break;case'kyoto_custom_spots':customSpotsStore=parsed;break;case'kyoto_order':orderStore=parsed;break;case'kyoto_block_order':blockOrderStore=parsed;break;case'kyoto_route_maps':routeMapStore=parsed;break;case'kyoto_transport_extras':transportExtrasStore=parsed||{};break;case'kyoto_foliage_maps':foliageMapStore=Array.isArray(parsed)?parsed:[];renderFoliageMaps();return;case'kyoto_pack':packData=migratePackCategoryNames(parsed);window._packLive=packData;if(isPackComposerEditing()){window._packRemoteRenderPending=true;}else{renderPackList();}return;case'kyoto_shop':shopData=normalizeStructuredList('kyoto_shop',parsed);renderShopList();return;case'kyoto_rules':rulesData=normalizeStructuredList('kyoto_rules',parsed);renderRulesList();return;case'kyoto_docs':docsData=mergeDocsWithDefaults(parsed);persistDocs();renderDocsList();return;case'kyoto_transport_cards':transportCardsData=normalizeStructuredList('kyoto_transport_cards',parsed);renderTransportCards();return;case'kyoto_eatshop':eatShopStore=normalizeStructuredList('kyoto_eatshop',parsed);if(typeof activeDay==='string')renderDayContent();return;case'kyoto_photo_pos':photoPosStore=parsed||{};safeRenderDayContent();return;case'kyoto_marks':marksStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};renderMarksBar();safeRenderDayContent();return;case'kyoto_livelinks':liveData=normalizeStructuredList('kyoto_livelinks',parsed);renderLive();return;case'kyoto_surprises':surprisesData=normalizeStructuredList('kyoto_surprises',parsed);renderSurpriseAdmin();return;case'kyoto_tips_seen':tipsSeen=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};return;case'kyoto_detail_covers':detailCoverStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_hidden_orig':hiddenOrigStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_plan':eatPlanStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_area':eatAreaStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};if(typeof activeDay==='string')safeRenderDayContent();return;case'kyoto_mama':mamaStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};refreshMamaButtons(null);if(document.getElementById('mamaModal'))renderMamaList();return;case'kyoto_hidden_fixed_spots':hiddenFixedSpotsStore=parsed||{};safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();return;default:return;}
   safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();
 }
 function scheduleCloudPush(key,valueObj){
@@ -1240,12 +1240,7 @@ function persistPhotos(){ return safeSetItem('kyoto_photos', photoStore); }
    而不是每次上傳新照片就自動覆蓋原本的封面 */
 let coverStore = JSON.parse(localStorage.getItem('kyoto_covers')) || {};
 function persistCover(){ safeSetItem('kyoto_covers', coverStore); }
-function setCoverPhoto(key, sel) {
-  coverStore[key] = sel;
-  persistCover();
-  renderDayContent();
-  setTimeout(()=>{ const card = document.getElementById('spot-card-'+key); if(card) card.classList.add('open'); }, 50);
-}
+/* (v54 已改寫) */
 
 /* 自訂新增景點：依「天」儲存在 LocalStorage，重新整理後仍會保留 */
 let customSpotsStore = JSON.parse(localStorage.getItem('kyoto_custom_spots')) || {};
@@ -1692,16 +1687,11 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
   else infoBits.push(`<div class="info-item full-w is-empty"><div class="k">重要提點／門票</div><div class="v"><button class="field-add-btn" onclick="event.stopPropagation(); editSpotField(event,'${idx}','note','重要提點／門票')">＋ 新增</button></div></div>`);
   
   const userPhotos = photoStore[idx] || [];
-  let thumbImgs = userPhotos.length > 0 ? userPhotos : (spot.img ? [spot.img] : []);
-  const thumbImgsAreUserPhotos = userPhotos.length > 0;
-
-  /* 封面：預設優先使用原本配圖（不會被新上傳的照片自動蓋掉），
-     使用者可在照片區點「設為封面」自行指定要用哪一張（含步道地圖、菜單翻譯等也不會被誤認成封面） */
-  const coverSel = coverStore[idx];
-  let bg;
-  if (coverSel === 'original' && spot.img) bg = spot.img;
-  else if (typeof coverSel === 'number' && userPhotos[coverSel]) bg = userPhotos[coverSel];
-  else bg = spot.img || userPhotos[0] || FALLBACK_IMAGE;
+  const thumbImgs = [];
+  const thumbImgsAreUserPhotos = false;
+  const coverUrl = coverUrlFor(idx, spot);
+  const bg = coverUrl || FALLBACK_IMAGE;
+  const detailUrl = detailUrlFor(idx, spot);
 
   /* 使用者新增的資訊：可新增多筆，各自獨立刪除，不會互相覆蓋 */
   let userNotes = notesStore[idx] || [];
@@ -1723,33 +1713,7 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
 
   let miniStripHTML = thumbImgs.length > 0 ? `<div class="mini-photo-strip" onclick="event.stopPropagation();">` + thumbImgs.map((u, i) => `<div style="position:relative; display:inline-block;"><img src="${u}"${photoPosAttr(u)} onclick="openAttachModal('${u}')">${thumbImgsAreUserPhotos ? `<button class="photo-remove" onclick="removePhoto(event, '${idx}', ${i})" style="position:absolute; top:2px; right:2px; width:16px; height:16px; font-size:8px;">✕</button>` : ''}</div>`).join('') + `</div>` : '';
 
-  /* 照片區：主要亮點卡片會列出「原始配圖 + 所有使用者上傳的照片」，並可個別指定作為封面；
-     次要（食衣住）景點沒有封面概念，維持原本只顯示使用者照片的邏輯 */
-  let pStrip = '';
-  if (isMainSpot) {
-    const galleryEntries = [];
-    if (spot.img) galleryEntries.push({url: spot.img, sel: 'original'});
-    userPhotos.forEach((u, i) => galleryEntries.push({url: u, sel: i}));
-    if (galleryEntries.length) {
-      pStrip = `<div class="photo-strip" onclick="event.stopPropagation()">` + galleryEntries.map(g => {
-        const isCover = g.url === bg;
-        const selArg = (typeof g.sel === 'string') ? `'${g.sel}'` : g.sel;
-        const coverTag = isCover
-          ? `<span style="position:absolute; bottom:3px; left:3px; right:3px; background:var(--blue); color:#fff; font-size:8.5px; font-weight:700; padding:2px 3px; border-radius:5px; text-align:center; line-height:1.3;">★ 封面</span>`
-          : `<button class="cover-select-btn" onclick="event.stopPropagation(); setCoverPhoto('${idx}', ${selArg})" style="position:absolute; bottom:3px; left:3px; right:3px; background:rgba(0,0,0,.6); color:#fff; border:none; font-size:8.5px; font-weight:700; padding:2px 3px; border-radius:5px; cursor:pointer; line-height:1.3;">設為封面</button>`;
-        const removeBtn = (g.sel !== 'original')
-          ? `<button class="photo-remove" onclick="removePhoto(event, '${idx}', ${g.sel})" style="position:absolute; top:2px; right:2px; width:20px; height:20px; font-size:10px;">✕</button>`
-          : '';
-        return `<div class="photo-item-wrap"><img src="${g.url}"${photoPosAttr(g.url)} onclick="openAttachModal('${g.url}')">${removeBtn}${coverTag}</div>`;
-      }).join('') + `</div>`;
-    }
-  } else {
-    pStrip = (userPhotos.length) ? `<div class="photo-strip" onclick="event.stopPropagation()">` + userPhotos.map((u, i)=>{
-      const moveLeft = i > 0 ? `<button class="photo-move photo-move-l" onclick="movePhoto(event,'${idx}',${i},-1)" title="往前移">‹</button>` : '';
-      const moveRight = i < userPhotos.length - 1 ? `<button class="photo-move photo-move-r" onclick="movePhoto(event,'${idx}',${i},1)" title="往後移">›</button>` : '';
-      return `<div class="photo-item-wrap"><img src="${u}" onclick="openAttachModal('${u}')"><button class="photo-remove" onclick="removePhoto(event, '${idx}', ${i})" title="刪除">✕</button>${moveLeft}${moveRight}</div>`;
-    }).join('') + `</div>` : '';
-  }
+  const pStrip = photoManagerHTML(idx, spot);
 
   const badgesHTML = badges.length ? `<div class="badges" style="margin-bottom:6px;">${badges.join('')}</div>` : '';
   const infoHTML = infoBits.length ? `<div class="info-grid">${infoBits.join('')}</div>` : '';
@@ -1795,10 +1759,10 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
     </div>` : '';
 
   if (!isMainSpot) {
-    return `<div class="sub-spot-card sub-spot-${spot.cat || 'other'}" id="spot-card-${idx}"><div class="sub-spot-header" onclick="toggleSpotDetails('${idx}')"><div class="sub-spot-header-content"><h4>${safeName} ${statusChipHTML(idx)}</h4><p class="short-desc">${safeDesc}</p>${miniStripHTML}</div>${favBtnHTML(idx,"inline")}<div class="chevron">▼</div></div><div class="sub-spot-details-wrap"><div class="sub-spot-details" onclick="event.stopPropagation()">${customBar}${editSpotAreaHTML}<p class="full-desc">${safeFullDesc}</p>${marksBoxHTML(idx)}${spot.recDishes ? `<div class="dish-tag">🍲 必點推薦：${escHtml(spot.recDishes)}</div>` : ''}${reorderableBlocksHTML}<div class="action-row" style="margin-top:10px;"><a class="btn btn-map" href="${escAttr(mapsLink(navQuery))}" target="_blank" rel="noopener">導航</a><button class="btn btn-photo edit-only" onclick="event.stopPropagation(); editSpotField(event,'${idx}','mapQuery','導航位置（Google Maps 網址、地址、經緯度或關鍵字；留空＝用景點名稱）')">修正導航</button>${spot.link ? `<a class="btn btn-photo" href="${escAttr(spot.link)}" target="_blank" rel="noopener">${escHtml(spot.linkLabel)}</a>` : ''}<button class="btn btn-photo" onclick="document.getElementById('file-${idx}').click()">上傳照片</button>${mamaBtnHTML(idx)}</div><input type="file" accept="image/*" id="file-${idx}" style="display:none" multiple onchange="handlePhoto(event, '${idx}')">${pStrip}</div></div></div>`;
+    return `<div class="sub-spot-card sub-spot-${spot.cat || 'other'}" id="spot-card-${idx}"><div class="sub-spot-header${coverUrl?' has-thumb':''}" onclick="toggleSpotDetails('${idx}')">${coverUrl?`<div class="gh-thumb sm">${coverImgHTML('guide-cover-img',coverUrl)}</div>`:''}<div class="sub-spot-header-content"><h4>${safeName} ${statusChipHTML(idx)}</h4><p class="short-desc">${safeDesc}</p>${miniStripHTML}</div>${favBtnHTML(idx,"inline")}<div class="chevron">▼</div></div><div class="sub-spot-details-wrap"><div class="sub-spot-details" onclick="event.stopPropagation()">${detailUrl?`<img class="detail-cover" src="${escAttr(detailUrl)}"${photoPosAttr(detailUrl)} alt="" loading="lazy" onclick="openAttachModal(this.src)" onerror="imageErrorFallback(this)">`:''}${customBar}${editSpotAreaHTML}<p class="full-desc">${safeFullDesc}</p>${marksBoxHTML(idx)}${spot.recDishes ? `<div class="dish-tag">🍲 必點推薦：${escHtml(spot.recDishes)}</div>` : ''}${reorderableBlocksHTML}<div class="action-row" style="margin-top:10px;"><a class="btn btn-map" href="${escAttr(mapsLink(navQuery))}" target="_blank" rel="noopener">導航</a><button class="btn btn-photo edit-only" onclick="event.stopPropagation(); editSpotField(event,'${idx}','mapQuery','導航位置（Google Maps 網址、地址、經緯度或關鍵字；留空＝用景點名稱）')">修正導航</button>${spot.link ? `<a class="btn btn-photo" href="${escAttr(spot.link)}" target="_blank" rel="noopener">${escHtml(spot.linkLabel)}</a>` : ''}<button class="btn btn-photo" onclick="document.getElementById('file-${idx}').click()">上傳照片</button>${mamaBtnHTML(idx)}</div><input type="file" accept="image/*" id="file-${idx}" style="display:none" multiple onchange="handlePhoto(event, '${idx}')">${pStrip}</div></div></div>`;
   }
 
-  return `<div class="guide-card" id="spot-card-${idx}"><div class="guide-header" style="--scrim:${CAT_SCRIM[spot.cat]||'34,22,14'}" onclick="toggleSpotDetails('${idx}')"><div class="gh-thumb"><img class="guide-cover-img" src="${escAttr(bg)}"${photoPosAttr(bg)} alt="" loading="lazy" onerror="imageErrorFallback(this)"><button class="photo-pos-btn edit-only" type="button" data-src="${escAttr(bg)}" onclick="openPhotoPosEditor(event,this)">調整位置</button></div><div class="guide-header-content"><div class="gh-meta"><span class="cat-label ${c.cls}">${c.emoji} ${c.label}</span>${statusChipHTML(idx)}</div><h3>${safeName}</h3><p class="short-desc">${safeDesc}</p></div>${favBtnHTML(idx,"on-cover")}<div class="chevron">▼</div></div><div class="guide-details-wrap"><div class="guide-details" onclick="event.stopPropagation()"><img class="detail-cover" src="${escAttr(bg)}"${photoPosAttr(bg)} alt="" loading="lazy" onclick="openAttachModal(this.src)" onerror="imageErrorFallback(this)">${customBar}${editSpotAreaHTML}<p class="full-desc">${safeFullDesc}</p>${marksBoxHTML(idx)}${reorderableBlocksHTML}${spot.tip?`<div class="tip-box"><b>📸 拍照與自駕小解密：</b>${escHtml(spot.tip)}</div>`:''}${spot.docMap?`<div class="tip-box" style="background: linear-gradient(120deg,#e8f8ee,#fff); border-color:#D0F4FC; color:#22513f;"><b>🗺️ 官方步道地圖與狀態：</b><a href="${escAttr(spot.docMap)}" target="_blank" rel="noopener" style="color:var(--blue); font-weight:700; text-decoration:underline;">點此開啟</a></div>`:''}${spot.park?`<div class="park-box"><b>🅿️ 停車＆自駕補給：</b>${escHtml(spot.park)}</div>`:''}<div class="action-row" style="margin-top:10px;"><a class="btn btn-map" href="${escAttr(mapsLink(navQuery))}" target="_blank" rel="noopener">導航導出</a><button class="btn btn-photo edit-only" onclick="event.stopPropagation(); editSpotField(event,'${idx}','mapQuery','導航位置（Google Maps 網址、地址、經緯度或關鍵字；留空＝用景點名稱）')">修正導航</button>${spot.link ? `<a class="btn btn-photo" href="${escAttr(spot.link)}" target="_blank" rel="noopener">${escHtml(spot.linkLabel)}</a>` : ''}<button class="btn btn-photo" onclick="document.getElementById('file-${idx}').click()">上傳照片</button>${mamaBtnHTML(idx)}</div><input type="file" accept="image/*" id="file-${idx}" style="display:none" multiple onchange="handlePhoto(event, '${idx}')">${pStrip}</div></div></div>`;
+  return `<div class="guide-card" id="spot-card-${idx}"><div class="guide-header" style="--scrim:${CAT_SCRIM[spot.cat]||'34,22,14'}" onclick="toggleSpotDetails('${idx}')"><div class="gh-thumb"><img class="guide-cover-img" src="${escAttr(bg)}"${photoPosAttr(bg)} alt="" loading="lazy" onerror="imageErrorFallback(this)"><button class="photo-pos-btn edit-only" type="button" data-src="${escAttr(bg)}" onclick="openPhotoPosEditor(event,this)">調整位置</button></div><div class="guide-header-content"><div class="gh-meta"><span class="cat-label ${c.cls}">${c.emoji} ${c.label}</span>${statusChipHTML(idx)}</div><h3>${safeName}</h3><p class="short-desc">${safeDesc}</p></div>${favBtnHTML(idx,"on-cover")}<div class="chevron">▼</div></div><div class="guide-details-wrap"><div class="guide-details" onclick="event.stopPropagation()">${detailUrl?`<img class="detail-cover" src="${escAttr(detailUrl)}"${photoPosAttr(detailUrl)} alt="" loading="lazy" onclick="openAttachModal(this.src)" onerror="imageErrorFallback(this)">`:''}${customBar}${editSpotAreaHTML}<p class="full-desc">${safeFullDesc}</p>${marksBoxHTML(idx)}${reorderableBlocksHTML}${spot.tip?`<div class="tip-box"><b>📸 拍照與自駕小解密：</b>${escHtml(spot.tip)}</div>`:''}${spot.docMap?`<div class="tip-box" style="background: linear-gradient(120deg,#e8f8ee,#fff); border-color:#D0F4FC; color:#22513f;"><b>🗺️ 官方步道地圖與狀態：</b><a href="${escAttr(spot.docMap)}" target="_blank" rel="noopener" style="color:var(--blue); font-weight:700; text-decoration:underline;">點此開啟</a></div>`:''}${spot.park?`<div class="park-box"><b>🅿️ 停車＆自駕補給：</b>${escHtml(spot.park)}</div>`:''}<div class="action-row" style="margin-top:10px;"><a class="btn btn-map" href="${escAttr(mapsLink(navQuery))}" target="_blank" rel="noopener">導航導出</a><button class="btn btn-photo edit-only" onclick="event.stopPropagation(); editSpotField(event,'${idx}','mapQuery','導航位置（Google Maps 網址、地址、經緯度或關鍵字；留空＝用景點名稱）')">修正導航</button>${spot.link ? `<a class="btn btn-photo" href="${escAttr(spot.link)}" target="_blank" rel="noopener">${escHtml(spot.linkLabel)}</a>` : ''}<button class="btn btn-photo" onclick="document.getElementById('file-${idx}').click()">上傳照片</button>${mamaBtnHTML(idx)}</div><input type="file" accept="image/*" id="file-${idx}" style="display:none" multiple onchange="handlePhoto(event, '${idx}')">${pStrip}</div></div></div>`;
 }
 
 /* 讀取檔案並自動壓縮：長邊限制在 1600px、轉存為 JPEG(品質0.82)，
@@ -1845,7 +1809,7 @@ async function handlePhoto(e, idx){
   }catch(err){ alert('⚠️ '+friendlySyncError(err)+'\n'+String(err.message||err)); updateSyncStatus(err); }
 }
 function movePhoto(e, idx, photoIdx, dir) {
-  e.stopPropagation();
+  if(e)e.stopPropagation();
   const arr = photoStore[idx];
   if (!arr) return;
   const target = photoIdx + dir;
@@ -1860,27 +1824,10 @@ function movePhoto(e, idx, photoIdx, dir) {
   setTimeout(()=>{ const card = document.getElementById('spot-card-'+idx); if(card) card.classList.add('open'); }, 50);
 }
 
-function removePhoto(e, idx, photoIdx) {
-  e.stopPropagation();
-  const removed=photoStore[idx].splice(photoIdx, 1)[0];
-  const sel = coverStore[idx];
-  const oldCover=sel;
-  if (typeof sel === 'number') {
-    if (sel === photoIdx) delete coverStore[idx];
-    else if (sel > photoIdx) coverStore[idx] = sel - 1;
-    persistCover();
-  }
-  persistPhotos();
-  renderDayContent();
-  offerUndo('已刪除照片',()=>{if(!photoStore[idx])photoStore[idx]=[];photoStore[idx].splice(photoIdx,0,removed);if(typeof oldCover!=='undefined'){coverStore[idx]=oldCover;persistCover();}persistPhotos();renderDayContent();});
-  setTimeout(()=>{ const card = document.getElementById('spot-card-'+idx); if(card) card.classList.add('open'); }, 50);
-}
+/* (v54 已改寫) */
 
-function openAttachModal(src) {
-  document.getElementById('attachModalImg').src = src;
-  document.getElementById('attachModal').classList.add('active');
-}
-function closeAttachModal() { document.getElementById('attachModal').classList.remove('active'); }
+/* (v54 已改寫) */
+function closeAttachModal() { const m=document.getElementById('attachModal');m.classList.remove('active','zoomed');document.getElementById('attachModalImg').classList.remove('zoomed'); }
 
 /* (v49 已改寫，見檔案後段) */
 
@@ -1899,7 +1846,7 @@ function renderDayContent(){
   const curSubTab = activeSubTabStore[activeDay] || 'main';
   const stayList=dayStays(activeDay);
   const stayBtns=stayList.length?`<span class="stay-quick-btns"><a class="stay-quick-nav" href="${escAttr(mapsLink(stayList[0].nav))}" target="_blank" rel="noopener">導航</a><button class="stay-quick-fix edit-only" type="button" onclick="editSpotField(event,'${stayList[0].key}','mapQuery','導航位置（Google Maps 網址、地址、經緯度或關鍵字）')">修正</button></span>`:'';
-  const stayQuickHTML=stayList.length?`<div class="stay-quick-card"><div class="stay-quick-top"><div class="stay-quick-icon"><img src="images/nav-lodging.webp" alt="" width="34" height="34"></div><div class="stay-quick-copy"><small>今晚住宿</small><strong>${stayList.map(x=>escHtml(x.name)).join('、')}</strong></div></div>${stayList.map((x,i)=>`<div class="stay-quick-amen">${stayList.length>1?`<em>${escHtml(x.name)}</em>`:''}${hotelAmenityChips(x.key)}${i===stayList.length-1?stayBtns:''}</div>`).join('')}</div>`:`<div class="stay-quick-card"><div class="stay-quick-top"><div class="stay-quick-icon"><img src="images/nav-lodging.webp" alt="" width="34" height="34"></div><div class="stay-quick-copy"><small>今晚住宿</small><strong>返家／無住宿</strong></div></div></div>`;
+  const stayQuickHTML=stayList.length?`<div class="stay-quick-card"><div class="stay-quick-top"><div class="stay-quick-icon"><img src="images/nav-lodging.webp" alt="" width="34" height="34"></div><div class="stay-quick-copy"><small>今晚住宿</small><strong>${stayList.map(x=>escHtml(x.name)).join('、')}</strong></div></div>${stayList.map((x,i)=>`<div class="stay-quick-amen">${stayList.length>1?`<em>${escHtml(x.name)}</em>`:''}${hotelAmenityChips(x.key)}${i===stayList.length-1?stayBtns:''}</div>`).join('')}</div>`:emptyStayCardHTML(activeDay);
 
   const mainList = applyOrder(activeDay, 'main', getNaturalList(activeDay, 'main'));
   const lifeList = applyOrder(activeDay, 'life', getNaturalList(activeDay, 'life'));
@@ -2141,15 +2088,10 @@ function renderOneLiveCity(k){
   const isOpen=(window._weatherOpen||(window._weatherOpen=new Set())).has(k);
   el.innerHTML = `
     <details class="weather-city-card wc-details" ${isOpen?'open':''} ontoggle="weatherToggle('${k}',this.open)">
-      <summary class="weather-primary">
-        <div class="weather-place">
-          <strong>${CITIES[k].label}</strong>
-          ${badgeHtml}
-        </div>
-        <div class="weather-main">
-          <span class="weather-icon">${ico}</span>
-          <div><b>${desc}</b><strong>${temp}°C</strong></div>
-        </div>
+      <summary class="weather-primary wc-sum">
+        <div class="wc-name"><strong>${CITIES[k].label}</strong>${badgeHtml}</div>
+        <span class="wc-ico">${ico}</span>
+        <div class="wc-temp"><b>${temp}<small>°C</small></b><em>${desc}</em></div>
         <i class="wc-chev" aria-hidden="true">▾</i>
       </summary>
       <div class="wc-body">
@@ -2512,7 +2454,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=53').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=54').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -2786,7 +2728,7 @@ function photoPosAttr(url){
   return ` style="object-fit:${fit};object-position:${isNaN(x)?50:x}% ${isNaN(y)?50:y}%;"`;
 }
 function openPhotoPosEditor(event,btn){
-  event.stopPropagation();
+  if(event)event.stopPropagation();
   const url=btn.dataset.src;
   const hw=16,hh=9;   /* 展開後的大封面是 16:9，以此比例預覽 */
   const cur=photoPosStore[url]||{};
@@ -3119,7 +3061,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v53-2026-09-28';
+const APP_VERSION='v54-2026-09-28';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -3388,12 +3330,7 @@ function openMarksPanel(filter){
 }
 
 /* ---------- 封面圖、蒐集景點、畫廊卡片 ---------- */
-function spotCoverFor(key,spot){
-  const up=photoStore[key]||[],sel=coverStore[key];
-  if(sel==='original'&&spot.img)return spot.img;
-  if(typeof sel==='number'&&up[sel])return up[sel];
-  return spot.img||up[0]||'';
-}
+/* (v54 已改寫) */
 function collectSpots(filterFn){
   const out=[];
   days.forEach((day,dayIdx)=>{
@@ -3702,44 +3639,16 @@ function accountKey(){
   try{email=(typeof familyAuthSession!=='undefined'&&familyAuthSession&&familyAuthSession.email)||(readAuthSession()&&readAuthSession().email)||'';}catch(e){}
   return 'a'+hash36(String(email||'guest').toLowerCase());
 }
-function nextSurprise(){
-  if(!surprisesData.length)return null;
-  const acct=accountKey();
-  let seen=new Set(tipsSeen[acct]||[]);
-  let pool=surprisesData.filter(x=>!seen.has(x.id));
-  if(!pool.length){seen=new Set();pool=surprisesData.slice();tipsSeen[acct]=[];}   /* 全部看過一輪後重新開始 */
-  /* 讓三種類型輪流出現，避免連續看到同一類 */
-  const lastType=window._lastSurpriseType;
-  const other=pool.filter(x=>x.type!==lastType);
-  const pick=(other.length?other:pool)[Math.floor(Math.random()*(other.length?other.length:pool.length))];
-  window._lastSurpriseType=pick.type;
-  tipsSeen[acct]=[...seen,pick.id];
-  safeSetItem('kyoto_tips_seen',tipsSeen);
-  return pick;
-}
+/* (v54 已改寫) */
 const SURPRISE_LABEL={tip:'小知識',joke:'笑話',photo:'旅程照片'};
 function closeSurprise(){document.getElementById('surpriseCard')?.remove();}
-function showSurprise(fromEl){
-  const item=nextSurprise();
-  if(!item){alert('還沒有小驚喜內容。請在編輯模式的指南頁新增。');return;}
-  closeSurprise();
-  const card=document.createElement('div');card.id='surpriseCard';card.className='surprise-card';
-  const img=item.img?`<img class="sc-img" src="${escAttr(item.img)}" alt="" loading="lazy">`:'';
-  card.innerHTML=`<div class="sc-head"><span class="sc-tag ${item.type}">${SURPRISE_LABEL[item.type]||'小驚喜'}</span><button type="button" class="sc-x" aria-label="關閉">✕</button></div>${img}${item.text?`<p>${escHtml(item.text)}</p>`:''}<div class="sc-actions"><button type="button" class="sc-more">再來一則</button></div>`;
-  document.body.appendChild(card);
-  card.querySelector('.sc-x').onclick=closeSurprise;
-  card.querySelector('.sc-more').onclick=()=>showSurprise();
-  requestAnimationFrame(()=>card.classList.add('in'));
-  clearTimeout(window._surpriseTimer);window._surpriseTimer=setTimeout(closeSurprise,25000);
-}
+/* (v54 已改寫) */
 /* 內容庫管理（指南頁，只在編輯模式出現） */
 function renderSurpriseAdmin(){
   const wrap=document.getElementById('surpriseAdminWrap');if(!wrap)return;
   wrap.innerHTML=`<div class="sa-list">${surprisesData.map(x=>`<div class="sa-row"><span class="sa-tag ${x.type}">${SURPRISE_LABEL[x.type]||x.type}</span><div class="sa-text">${x.img?`<img src="${escAttr(x.img)}" alt="">`:''}<span>${escHtml(x.text||'（照片）')}</span></div><div class="sa-btns"><button type="button" onclick="editSurprise('${x.id}')">修改</button><button type="button" class="del" onclick="deleteSurprise('${x.id}')">刪除</button></div></div>`).join('')||'<div class="empty compact">還沒有內容。</div>'}</div><div class="tc-add-row"><button type="button" onclick="addSurprise()">＋ 新增小驚喜</button><button type="button" onclick="showSurprise()">預覽一則</button><button type="button" onclick="restoreSurprises()">還原預設內容</button></div>`;
 }
-function surpriseFields(x){
-  return [{id:'type',label:'類型',type:'select',value:x.type,options:[{value:'tip',label:'小知識'},{value:'joke',label:'笑話'},{value:'photo',label:'旅程照片'}]},{id:'text',label:'文字（照片可寫一句說明）',type:'textarea',rows:4,value:x.text||''},{id:'file',label:x.img?'更換照片（不選則保留原本的）':'旅程照片（選填）',type:'file'}];
-}
+/* (v54 已改寫) */
 async function saveSurpriseFromForm(target,v,isNew){
   if(!v.text&&!v.file&&!target.img){alert('請輸入文字或選擇照片');return false;}
   if(v.type==='photo'&&!v.file&&!target.img){alert('「旅程照片」類型需要選一張照片');return false;}
@@ -3796,11 +3705,8 @@ function spawnPeek(){
   setTimeout(()=>el.remove(),10500);
   return true;
 }
-function critterTick(){spawnPeek();critter.timer=setTimeout(critterTick,240000+Math.random()*240000);}   /* 之後約每 4–8 分鐘一次 */
-function startCritters(){
-  if(critter.timer||reducedMotion())return;
-  critter.timer=setTimeout(critterTick,60000+Math.random()*60000);                                     /* 開啟後約 1–2 分鐘才第一次 */
-}
+/* (v54 已改寫) */   /* 之後約每 4–8 分鐘一次 */
+/* (v54 已改寫) */
 document.addEventListener('DOMContentLoaded',()=>{startCritters();initSurprises();});
 
 /* =====================================================================
@@ -4088,6 +3994,221 @@ function checkBuiltinIndex(){
 }
 checkBuiltinIndex();
 
+/* =====================================================================
+   v54：照片管理（封面／展開大圖／新增／刪除）、住宿空白卡、天氣整齊、小驚喜分類、紅葉地圖主次
+   ===================================================================== */
+let detailCoverStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_detail_covers'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
+let hiddenOrigStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_hidden_orig'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
+function persistDetailCovers(){safeSetItem('kyoto_detail_covers',detailCoverStore);}
+function persistHiddenOrig(){safeSetItem('kyoto_hidden_orig',hiddenOrigStore);}
+
+/* 一個景點可用的照片：原圖（可隱藏）＋你上傳的照片 */
+function spotPhotoList(idx,spot){
+  const list=[];
+  if(spot&&spot.img&&!hiddenOrigStore[idx])list.push({url:spot.img,kind:'orig'});
+  (photoStore[idx]||[]).forEach((u,i)=>list.push({url:u,kind:'user',i}));
+  return list;
+}
+function pickPhotoBySel(sel,idx,spot){
+  if(sel==null)return null;
+  const list=spotPhotoList(idx,spot);
+  if(sel==='original')return list.find(p=>p.kind==='orig')?spot.img:null;
+  if(typeof sel==='number'){const p=list.find(x=>x.kind==='user'&&x.i===sel);return p?p.url:null;}
+  if(typeof sel==='string'){const p=list.find(x=>x.url===sel);return p?p.url:null;}
+  return null;
+}
+function coverUrlFor(idx,spot){
+  const l=spotPhotoList(idx,spot);
+  return pickPhotoBySel(coverStore[idx],idx,spot)||(l[0]&&l[0].url)||'';
+}
+function detailUrlFor(idx,spot){
+  return pickPhotoBySel(detailCoverStore[idx],idx,spot)||coverUrlFor(idx,spot);
+}
+function spotCoverFor(key,spot){return coverUrlFor(key,spot)||'';}
+function reopenCard(idx){setTimeout(()=>{const card=document.getElementById('spot-card-'+idx);if(card){card.classList.add('open');openSpotCardKeys.add(String(idx));}},50);}
+function selValueFor(p){return p.kind==='orig'?'original':p.url;}
+function setCoverPhoto(key,sel){coverStore[key]=sel;persistCover();renderDayContent();reopenCard(key);}
+function setDetailPhoto(key,sel){detailCoverStore[key]=sel;persistDetailCovers();renderDayContent();reopenCard(key);}
+function hideOrigPhoto(idx){
+  const prev={hidden:hiddenOrigStore[idx],cover:coverStore[idx],big:detailCoverStore[idx]};
+  hiddenOrigStore[idx]=1;
+  if(coverStore[idx]==='original')delete coverStore[idx];
+  if(detailCoverStore[idx]==='original')delete detailCoverStore[idx];
+  persistHiddenOrig();persistCover();persistDetailCovers();renderDayContent();reopenCard(idx);
+  offerUndo('已隱藏原圖',()=>{if(prev.hidden===undefined)delete hiddenOrigStore[idx];else hiddenOrigStore[idx]=prev.hidden;if(prev.cover!==undefined)coverStore[idx]=prev.cover;if(prev.big!==undefined)detailCoverStore[idx]=prev.big;persistHiddenOrig();persistCover();persistDetailCovers();renderDayContent();reopenCard(idx);});
+}
+function restoreOrigPhoto(e,idx){if(e)e.stopPropagation();delete hiddenOrigStore[idx];persistHiddenOrig();renderDayContent();reopenCard(idx);}
+function pmAct(e,idx,i,act){
+  if(e)e.stopPropagation();
+  const spot=spotByKey(idx)||{};
+  const p=spotPhotoList(idx,spot)[i];if(!p)return;
+  if(act==='cover')return setCoverPhoto(idx,selValueFor(p));
+  if(act==='big')return setDetailPhoto(idx,selValueFor(p));
+  if(act==='pos')return openPhotoPosEditor(e,{dataset:{src:p.url}});
+  if(act==='del')return p.kind==='orig'?hideOrigPhoto(idx):removePhoto(e,idx,p.i);
+  if(act==='left')return movePhoto(e,idx,p.i,-1);
+  if(act==='right')return movePhoto(e,idx,p.i,1);
+}
+function photoManagerHTML(idx,spot){
+  const list=spotPhotoList(idx,spot);
+  const hidden=!!(spot&&spot.img&&hiddenOrigStore[idx]);
+  if(!list.length&&!hidden)return '';
+  const cover=coverUrlFor(idx,spot),big=detailUrlFor(idx,spot),q=jsQuote(idx);
+  const userCount=list.filter(p=>p.kind==='user').length;
+  const tiles=list.map((p,i)=>{
+    const isC=p.url===cover,isB=p.url===big;
+    const mv=p.kind==='user'?`<div class="pm-move edit-only">${p.i>0?`<button type="button" onclick="pmAct(event,'${q}',${i},'left')" aria-label="往前">‹</button>`:'<span></span>'}${p.i<userCount-1?`<button type="button" onclick="pmAct(event,'${q}',${i},'right')" aria-label="往後">›</button>`:'<span></span>'}</div>`:'';
+    return `<div class="pm-tile ${isC?'is-cover':''}"><div class="pm-img" data-src="${escAttr(p.url)}" onclick="event.stopPropagation();openAttachModal(this.dataset.src)"><img src="${escAttr(p.url)}"${photoPosAttr(p.url)} alt="" loading="lazy" onerror="imageErrorFallback(this)">${isC?'<span class="pm-b c">封面</span>':''}${isB?'<span class="pm-b b">大圖</span>':''}${p.kind==='orig'?'<span class="pm-b o">原圖</span>':''}${mv}</div><div class="pm-btns edit-only"><button type="button" class="${isC?'on':''}" onclick="pmAct(event,'${q}',${i},'cover')">封面</button><button type="button" class="${isB?'on':''}" onclick="pmAct(event,'${q}',${i},'big')">大圖</button><button type="button" onclick="pmAct(event,'${q}',${i},'pos')">位置</button><button type="button" class="del" onclick="pmAct(event,'${q}',${i},'del')">${p.kind==='orig'?'隱藏':'刪除'}</button></div></div>`;
+  }).join('');
+  const add=`<button type="button" class="pm-add edit-only" onclick="event.stopPropagation();document.getElementById('file-${escAttr(idx)}').click()">＋ 新增照片</button>`;
+  return `<div class="pm" onclick="event.stopPropagation()"><div class="pm-head"><b>照片（${list.length}）</b><span class="pm-hint edit-only">「封面」＝卡片縮圖，「大圖」＝展開後最上方的圖</span>${hidden?`<button type="button" class="pm-restore edit-only" onclick="restoreOrigPhoto(event,'${q}')">還原原圖</button>`:''}</div><div class="pm-grid">${tiles}${add}</div></div>`;
+}
+function removePhoto(e,idx,photoIdx){
+  if(e)e.stopPropagation();
+  const removed=photoStore[idx].splice(photoIdx,1)[0];
+  const oldCover=coverStore[idx],oldBig=detailCoverStore[idx];
+  const fix=(store,persist)=>{const sel=store[idx];if(typeof sel==='number'){if(sel===photoIdx)delete store[idx];else if(sel>photoIdx)store[idx]=sel-1;persist();}else if(sel===removed){delete store[idx];persist();}};
+  fix(coverStore,persistCover);fix(detailCoverStore,persistDetailCovers);
+  persistPhotos();renderDayContent();reopenCard(idx);
+  offerUndo('已刪除照片',()=>{if(!photoStore[idx])photoStore[idx]=[];photoStore[idx].splice(photoIdx,0,removed);if(oldCover!==undefined){coverStore[idx]=oldCover;persistCover();}if(oldBig!==undefined){detailCoverStore[idx]=oldBig;persistDetailCovers();}persistPhotos();renderDayContent();reopenCard(idx);});
+}
+function coverImgHTML(cls,url){return `<img class="${cls}" src="${escAttr(url)}"${photoPosAttr(url)} alt="" loading="lazy" onerror="imageErrorFallback(this)">`;}
+
+/* ---------- 今晚住宿：還沒新增時顯示空白卡，可直接新增，之後自動變成住宿卡 ---------- */
+function addStayForDay(dayIdx){
+  openFormModal({title:'新增住宿',fields:[{id:'name',label:'住宿名稱',value:'',placeholder:'例：Richmond Hotel 京都站'},{id:'nav',label:'導航位置（地址、Google Maps 網址或關鍵字；留空＝用名稱）',value:''}],saveText:'新增',
+    onSave:v=>{
+      if(!v.name){alert('請輸入住宿名稱');return false;}
+      const g=generateAutoDesc(v.name,'hotel','',null);
+      const spot=S(v.name,'hotel',g.short,{fullDesc:g.full,genSource:'offline'});
+      if(!customSpotsStore[dayIdx])customSpotsStore[dayIdx]=[];
+      customSpotsStore[dayIdx].push(spot);persistCustomSpots();
+      if(v.nav){fieldOverrideStore[fieldOverrideKey(`d${dayIdx}-c${customSpotsStore[dayIdx].length-1}`,'mapQuery')]=v.nav;persistFieldOverrides();}
+      renderDayContent();updateSpotCount();
+    }});
+}
+function copyPrevStay(dayIdx){
+  const prev=dayStays(dayIdx-1);if(!prev.length)return;
+  if(!customSpotsStore[dayIdx])customSpotsStore[dayIdx]=[];
+  prev.forEach(p=>{
+    const src=spotByKey(p.key)||{};
+    const spot=S(p.name,'hotel',src.desc||'',{fullDesc:src.fullDesc||'',genSource:'offline'});
+    customSpotsStore[dayIdx].push(spot);
+    const nk=`d${dayIdx}-c${customSpotsStore[dayIdx].length-1}`;
+    if(p.nav&&p.nav!==p.name)fieldOverrideStore[fieldOverrideKey(nk,'mapQuery')]=p.nav;
+    HOTEL_AMENITIES.forEach(a=>{const v=currentFieldValue(p.key,'amen_'+a.id,null);if(v)fieldOverrideStore[fieldOverrideKey(nk,'amen_'+a.id)]=v;});
+  });
+  persistCustomSpots();persistFieldOverrides();renderDayContent();updateSpotCount();
+}
+function emptyStayCardHTML(dayIdx){
+  const last=dayIdx===days.length-1;
+  const prev=dayIdx>0?dayStays(dayIdx-1):[];
+  return `<div class="stay-quick-card empty"><div class="stay-quick-top"><div class="stay-quick-icon"><img src="images/nav-lodging.webp" alt="" width="34" height="34"></div><div class="stay-quick-copy"><small>今晚住宿</small><strong>${last?'返程日（不需住宿）':'尚未新增住宿'}</strong></div></div><div class="stay-quick-amen edit-only"><button type="button" class="stay-add" onclick="addStayForDay(${dayIdx})">＋ 新增住宿</button>${prev.length?`<button type="button" class="stay-add ghost" onclick="copyPrevStay(${dayIdx})">沿用前一晚：${escHtml(prev.map(x=>x.name).join('、'))}</button>`:''}</div></div>`;
+}
+
+/* ---------- 天氣列：整齊的欄位 ---------- */
+/* （樣式在 CSS：名稱 | 圖示 | 溫度＋天氣 | 箭頭） */
+
+/* ---------- 小驚喜：分類權重與「溫柔提醒」 ---------- */
+SURPRISE_LABEL.care='溫柔提醒';
+const SURPRISE_CARE_SEED=[
+  {id:'sd-c01',type:'care',text:'今天走了不少路，記得多喝水，也記得找個地方坐下來休息一下。'},
+  {id:'sd-c02',type:'care',text:'行程只是參考，累了就放慢一點，留一點空白也是旅行的一部分。'},
+  {id:'sd-c03',type:'care',text:'出門前摸摸口袋：護照、手機、ICOCA，都在嗎？'},
+  {id:'sd-c04',type:'care',text:'天氣轉涼，記得圍上圍巾、貼好暖暖包，別讓自己著涼。'},
+  {id:'sd-c05',type:'care',text:'在寺院裡放輕腳步、輕聲說話，把安靜留給每一個人。'},
+  {id:'sd-c06',type:'care',text:'腳痠的時候，換一雙乾爽的襪子會舒服很多。'},
+  {id:'sd-c07',type:'care',text:'拍照時留意身後的人和車，安全比一張好照片更重要。'},
+  {id:'sd-c08',type:'care',text:'山路和海邊風大，天黑前先回到溫暖的地方。'},
+  {id:'sd-c09',type:'care',text:'今天辛苦了，晚上泡個熱水澡，好好睡一覺。'}
+];
+SURPRISE_SEED.push(...SURPRISE_CARE_SEED);
+function mergeNewSeeds(){
+  let seen=[];try{seen=JSON.parse(localStorage.getItem('kyoto_seed_seen_v1'))||[];}catch(e){}
+  const ids=new Set(surprisesData.map(x=>x.id));let added=0;
+  SURPRISE_SEED.forEach(x=>{if(!seen.includes(x.id)){if(!ids.has(x.id)){surprisesData.push(structuredClone(x));added++;}seen.push(x.id);}});
+  try{localStorage.setItem('kyoto_seed_seen_v1',JSON.stringify(seen));}catch(e){}
+  if(added)persistSurprises();
+}
+function pickWeightedType(mode){
+  const has=t=>surprisesData.some(x=>x.type===t);
+  const w=mode==='more'?{tip:75,joke:25}:{tip:40,care:25,joke:20,photo:15};
+  const opts=Object.entries(w).filter(([t])=>has(t));
+  if(!opts.length){const any=surprisesData[0];return any?any.type:null;}
+  const sum=opts.reduce((a,[,v])=>a+v,0);let r=Math.random()*sum;
+  for(const [t,v] of opts){r-=v;if(r<=0)return t;}
+  return opts[0][0];
+}
+function nextSurprise(mode){
+  if(!surprisesData.length)return null;
+  const acct=accountKey();
+  const type=pickWeightedType(mode);
+  const ofType=surprisesData.filter(x=>x.type===type);
+  let seen=new Set(tipsSeen[acct]||[]);
+  let pool=ofType.filter(x=>!seen.has(x.id));
+  if(!pool.length){ofType.forEach(x=>seen.delete(x.id));pool=ofType.slice();}   /* 這一類看完一輪才重新開始 */
+  const pick=pool[Math.floor(Math.random()*pool.length)];
+  seen.add(pick.id);
+  tipsSeen[acct]=[...seen];
+  safeSetItem('kyoto_tips_seen',tipsSeen);
+  return pick;
+}
+function showSurprise(mode){
+  const m=(mode==='more')?'more':'first';
+  const item=nextSurprise(m);
+  if(!item){alert('還沒有小驚喜內容。請在編輯模式的指南頁新增。');return;}
+  closeSurprise();
+  const card=document.createElement('div');card.id='surpriseCard';card.className='surprise-card';
+  const img=item.img?`<img class="sc-img" src="${escAttr(item.img)}" alt="" loading="lazy">`:'';
+  card.innerHTML=`<div class="sc-head"><span class="sc-tag ${item.type}">${SURPRISE_LABEL[item.type]||'小驚喜'}</span><button type="button" class="sc-x" aria-label="關閉">✕</button></div>${img}${item.text?`<p>${escHtml(item.text)}</p>`:''}<div class="sc-actions"><button type="button" class="sc-more">再來一則</button></div>`;
+  document.body.appendChild(card);
+  card.querySelector('.sc-x').onclick=closeSurprise;
+  card.querySelector('.sc-more').onclick=()=>showSurprise('more');
+  requestAnimationFrame(()=>card.classList.add('in'));
+  clearTimeout(window._surpriseTimer);window._surpriseTimer=setTimeout(closeSurprise,25000);
+}
+function surpriseFields(x){
+  return [{id:'type',label:'類型',type:'select',value:x.type,options:[{value:'tip',label:'小知識'},{value:'joke',label:'笑話'},{value:'care',label:'溫柔提醒'},{value:'photo',label:'旅程照片'}]},{id:'text',label:'文字（照片可寫一句說明）',type:'textarea',rows:4,value:x.text||''},{id:'file',label:x.img?'更換照片（不選則保留原本的）':'旅程照片（選填）',type:'file'}];
+}
+function critterTick(){const ok=spawnPeek();critter.timer=setTimeout(critterTick,ok?(90000+Math.random()*60000):15000);}   /* 約每 1.5–2.5 分鐘一次；被擋住時 15 秒後再試 */
+function startCritters(){
+  if(critter.timer||reducedMotion())return;
+  critter.timer=setTimeout(critterTick,25000+Math.random()*20000);                                        /* 開啟後約 25–45 秒第一次 */
+}
+
+/* ---------- 紅葉前線地圖：自己決定哪幾張明顯、哪幾張縮小 ---------- */
+function foliageIsFeatured(m,i){
+  const explicit=foliageMapStore.some(x=>x.featured!==undefined);
+  return explicit?!!m.featured:i===0;
+}
+function toggleFoliageFeatured(i){
+  const wasFeat=foliageIsFeatured(foliageMapStore[i],i);
+  const states=foliageMapStore.map((m,k)=>foliageIsFeatured(m,k));   /* 先把目前的狀態全部固定下來 */
+  foliageMapStore.forEach((m,k)=>{m.featured=states[k];});
+  foliageMapStore[i].featured=!wasFeat;
+  persistFoliageMaps();renderFoliageMaps();
+}
+function renderFoliageMaps(){
+  const el=document.getElementById('foliageMapGallery');if(!el)return;
+  if(!foliageMapStore.length){el.innerHTML='<div class="empty">尚未上傳紅葉前線地圖。</div>';return;}
+  const feat=[],rest=[];
+  foliageMapStore.forEach((m,i)=>(foliageIsFeatured(m,i)?feat:rest).push({m,i}));
+  const actions=i=>`<div class="foliage-map-actions"><button onclick="editFoliageMap(${i})" aria-label="改名">✎</button><button onclick="document.getElementById('foliageReplace-${i}').click()" aria-label="更換">↻</button><button onclick="removeFoliageMap(${i})" aria-label="刪除">✕</button></div><input type="file" id="foliageReplace-${i}" accept="image/*" style="display:none" onchange="replaceFoliageMap(event,${i})">`;
+  const big=feat.map(({m,i})=>`<div class="fm-feature"><img src="${escAttr(m.url)}" data-src="${escAttr(m.url)}" onclick="openAttachModal(this.dataset.src)" alt="${escAttr(m.title||'紅葉前線地圖')}"><div class="fm-row"><span class="fm-title">${escHtml(m.title||`紅葉地圖 ${i+1}`)}</span><button type="button" class="fm-feat on" onclick="toggleFoliageFeatured(${i})">改為縮圖</button></div>${actions(i)}</div>`).join('');
+  const small=rest.length?`<h4 class="fm-sub">其他地圖（點一下放大）</h4><div class="fm-thumbs">${rest.map(({m,i})=>`<div class="fm-thumb"><img src="${escAttr(m.url)}" data-src="${escAttr(m.url)}" onclick="openAttachModal(this.dataset.src)" alt="${escAttr(m.title||'紅葉前線地圖')}" loading="lazy"><span class="fm-title">${escHtml(m.title||`紅葉地圖 ${i+1}`)}</span><button type="button" class="fm-feat" onclick="toggleFoliageFeatured(${i})">設為明顯</button>${actions(i)}</div>`).join('')}</div>`:'';
+  el.innerHTML=big+small;
+}
+function openAttachModal(src){
+  const m=document.getElementById('attachModal'),img=document.getElementById('attachModalImg');
+  img.src=src;m.classList.remove('zoomed');img.classList.remove('zoomed');m.classList.add('active');
+}
+/* 圖片檢視：點圖片放大到細節、再點縮回（用捕獲階段，不受 img 上原有 onclick 影響） */
+document.addEventListener('click',e=>{
+  const t=e.target;
+  if(t&&t.id==='attachModalImg'){const z=!t.classList.contains('zoomed');t.classList.toggle('zoomed',z);document.getElementById('attachModal').classList.toggle('zoomed',z);}
+},true);
+document.addEventListener('DOMContentLoaded',()=>{mergeNewSeeds();renderSurpriseAdmin();});
+
 /* ---- 初次渲染 ---- */
 renderDayChips();
 renderDayContent();
@@ -4109,15 +4230,7 @@ initRainRadar();
 let foliageMapStore = JSON.parse(localStorage.getItem('kyoto_foliage_maps')) || [];
 foliageMapStore = foliageMapStore.map((item,i)=> typeof item==='string' ? {url:item,title:`紅葉地圖 ${i+1}`} : item);
 function persistFoliageMaps(){ safeSetItem('kyoto_foliage_maps',foliageMapStore); }
-function renderFoliageMaps(){
-  const el=document.getElementById('foliageMapGallery'); if(!el)return;
-  el.innerHTML=foliageMapStore.length?foliageMapStore.map((item,i)=>`<div class="foliage-map-item">
-    <img src="${item.url}" onclick="openAttachModal('${item.url}')" alt="${item.title||'紅葉前線地圖'}">
-    <div class="foliage-map-caption">${escHtml(item.title||`紅葉地圖 ${i+1}`)}</div>
-    <div class="foliage-map-actions"><button onclick="editFoliageMap(${i})">✎</button><button onclick="document.getElementById('foliageReplace-${i}').click()">↻</button><button onclick="removeFoliageMap(${i})">✕</button></div>
-    <input type="file" id="foliageReplace-${i}" accept="image/*" style="display:none" onchange="replaceFoliageMap(event,${i})">
-  </div>`).join(''):'<div class="empty">尚未上傳紅葉前線地圖。</div>';
-}
+/* (v54 已改寫) */
 async function handleFoliageMapUpload(e){
   const files=[...(e.target.files||[])];
   for(const f of files){ try{foliageMapStore.push({url:await uploadMediaFile(f,'foliage-maps'),title:f.name.replace(/\.[^.]+$/,'')});}catch(err){alert('⚠️ '+friendlySyncError(err));} }
