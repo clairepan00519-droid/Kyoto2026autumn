@@ -1,5 +1,5 @@
 /* 京都・奈良・丹後行程：App Shell、圖片與已瀏覽內容離線快取 */
-const CACHE_VERSION='kyoto-trip-v46-sync-fix';
+const CACHE_VERSION='kyoto-trip-v48-marks-live';
 const SHELL_CACHE=`kyoto-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE=`kyoto-runtime-${CACHE_VERSION}`;
 const IMAGE_CACHE=`kyoto-images-${CACHE_VERSION}`;
@@ -19,8 +19,9 @@ self.addEventListener('activate',event=>{
     .then(keys=>Promise.all(keys.filter(k=>k!==SHELL_CACHE&&k!==RUNTIME_CACHE&&k!==IMAGE_CACHE).map(k=>caches.delete(k))))
     .then(async()=>{
       await self.clients.claim();
+      /* 不再強制 navigate 重新載入（會打斷正在輸入的家人）；改通知頁面，由使用者決定何時更新 */
       const windows=await self.clients.matchAll({type:'window'});
-      await Promise.all(windows.map(client=>client.navigate(client.url).catch(()=>null)));
+      windows.forEach(client=>client.postMessage({type:'SW_ACTIVATED',version:CACHE_VERSION}));
     }));
 });
 
@@ -38,6 +39,11 @@ self.addEventListener('fetch',event=>{
 
   if(req.mode==='navigate'){
     event.respondWith(fetch(req).then(res=>{const copy=res.clone();caches.open(SHELL_CACHE).then(c=>c.put('./index.html',copy));return res;}).catch(async()=>await caches.match('./index.html')||await caches.match('./')));
+    return;
+  }
+
+  if(url.origin===self.location.origin&&/\.(webp|png|jpe?g|gif|svg|ico)$/i.test(url.pathname)){
+    event.respondWith(caches.match(req).then(c=>c||fetch(req).then(res=>{if(res.ok)caches.open(SHELL_CACHE).then(x=>x.put(req,res.clone()));return res;})));
     return;
   }
 

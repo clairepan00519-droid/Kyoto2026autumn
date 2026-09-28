@@ -11,7 +11,7 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=45">
+<link rel="stylesheet" href="style.css?v=48">
 </head>
 <body class="family-locked">
 <div id="familyGate" class="family-gate" aria-hidden="false">
@@ -63,6 +63,16 @@
     </div>
   </div>
 
+  <!-- Quick controls -->
+  <div class="quick-controls" aria-label="顯示設定">
+    <div class="qc-seg" role="group" aria-label="旅行或編輯模式">
+      <button type="button" data-ui-mode="travel" onclick="setUiMode('travel')">🧭 旅行模式</button>
+      <button type="button" data-ui-mode="edit" onclick="setUiMode('edit')">✎ 編輯模式</button>
+    </div>
+    <div class="qc-seg qc-size" role="group" aria-label="文字大小"><button type="button" data-text-size="0" onclick="setTextSize(0)">標準</button><button type="button" data-text-size="1" onclick="setTextSize(1)">放大</button><button type="button" data-text-size="2" onclick="setTextSize(2)">特大</button></div>
+    <button type="button" class="qc-elder" onclick="setElderMode()">👵 長輩版</button>
+  </div>
+
   <!-- Top Tabs -->
   <div class="tabbar-top">
     <button class="tab-btn active" onclick="setTab('itinerary')">🚗 行程</button>
@@ -78,6 +88,7 @@
       <div id="globalSearchResultsMobile" class="global-search-results"></div>
     </div>
     <div class="day-scroll" id="dayScroll"></div>
+    <div class="marks-bar" id="marksBar" aria-label="收藏與預約狀態"></div>
     <div id="dayContent"></div>
   </div>
 
@@ -136,6 +147,13 @@
       <div class="compact-section-body"><div class="sub">可上傳憑證截圖，需要時點擊「顯示截圖」。</div><div id="docsListWrap" class="voucher-list"></div></div>
     </details>
     
+    <!-- Live road / driving -->
+    <div class="section-card">
+      <h3>🚧 自駕即時路況與緊急聯絡</h3>
+      <div class="sub">D5–D9 自駕前後使用。連結為官方頁面，內容與判斷規則都可以在編輯模式修改、刪除或新增。</div>
+      <div id="liveRoadWrap"></div>
+    </div>
+
     <!-- Driving -->
     <div class="section-card transport-section">
       <h3>🚉 交通提醒</h3>
@@ -182,12 +200,41 @@
       <div id="rulesListWrap"></div>
     </div>
 
+    <div class="section-card">
+      <h3>🛟 資料備份與還原</h3>
+      <div class="sub">建議出發前下載一次完整備份。網站每天第一次開啟時，也會在這台裝置自動保留最近 3 份快照；誤刪資料時可從快照救回。</div>
+      <div class="mobile-mode-buttons backup-btns">
+        <button type="button" onclick="downloadBackup()">⬇️ 下載完整備份</button>
+        <button type="button" onclick="document.getElementById('restoreFile').click()">⬆️ 從備份還原</button>
+        <button type="button" onclick="showSnapshots()">🕘 查看本機快照</button>
+      </div>
+      <input type="file" id="restoreFile" accept="application/json,.json" style="display:none" onchange="restoreBackupFile(event)">
+    </div>
+
+    <div class="section-card">
+      <h3>📱 版本與同步狀態</h3>
+      <div class="sub">家人看到的畫面和你不一樣時，請先請他截圖這一區，並按「比對雲端」。</div>
+      <div id="deviceStatusBody" class="ds-body"></div>
+      <div class="mobile-mode-buttons backup-btns">
+        <button type="button" onclick="syncNowManual()">🔄 立即同步</button>
+        <button type="button" onclick="diagnoseCloud()">🔍 比對雲端</button>
+        <button type="button" onclick="forceRefreshApp()">⬇️ 強制更新到最新版</button>
+      </div>
+    </div>
+
     <div class="section-card mobile-mode-settings">
       <h3>⚙️ 顯示模式</h3>
       <div class="sub">旅行模式會收起排序、刪除與進階編輯按鈕，降低手機誤觸；需要修改時可隨時切回編輯模式。</div>
       <div class="mobile-mode-buttons">
         <button type="button" data-ui-mode="travel" onclick="setUiMode('travel')">旅行模式</button>
         <button type="button" data-ui-mode="edit" onclick="setUiMode('edit')">編輯模式</button>
+      </div>
+      <div class="sub" style="margin-top:12px;">大字模式會放大全站文字與按鈕，適合長輩閱讀；「長輩版」＝大字＋旅行模式。</div>
+      <div class="mobile-mode-buttons">
+        <button type="button" data-text-size="0" onclick="setTextSize(0)">標準字</button>
+        <button type="button" data-text-size="1" onclick="setTextSize(1)">放大</button>
+        <button type="button" data-text-size="2" onclick="setTextSize(2)">特大</button>
+        <button type="button" onclick="setElderMode()">👵 長輩版</button>
       </div>
     </div>
 
@@ -197,7 +244,7 @@
   <div class="view" id="view-weather">
     <div class="section-card" style="margin-bottom:14px;">
       <h3>🍁 即時氣象與紅葉季穿搭指南</h3>
-      <div class="sub">串接 Open-Meteo 即時氣象，提供京都、奈良、丹後與舞鶴的氣溫、風雨與穿搭建議。</div>
+      <div class="sub">以日本氣象廳（JMA）模式的預報數值顯示京都、奈良、丹後與舞鶴的氣溫、風雨與穿搭建議；每個地點下方都有 tenki.jp 逐時／10 天預報連結。</div>
       <div class="add-row" style="margin-bottom:10px;">
         <button onclick="loadLiveWeather()" style="flex:1; background:var(--blue); color:#fff; border:none; border-radius:999px; padding:10px 0; font-family:inherit; font-weight:700; font-size:12.5px; cursor:pointer; box-shadow:var(--shadow-sm);">🔄 取得最新即時氣象與穿搭</button>
       </div>
@@ -273,6 +320,10 @@
         <textarea id="editSpotFullDesc" rows="4" placeholder="展開後顯示的完整介紹"></textarea>
       </label>
       <label class="spot-edit-field">
+        <span>建議停留時間</span>
+        <input type="text" id="editSpotDur" placeholder="例：約 1–1.5 小時（清空＝刪除）">
+      </label>
+      <label class="spot-edit-field">
         <span>營業／開放時間</span>
         <input type="text" id="editSpotHours" placeholder="例：09:00–17:00，週一公休">
       </label>
@@ -284,6 +335,13 @@
         <span>評論與資訊</span>
         <textarea id="editSpotInfo" rows="2" placeholder="這個景點的一句話心得或攻略"></textarea>
       </label>
+      <div id="hotelAmenityFields" class="hotel-amen-fields" style="display:none;">
+        <div class="hotel-amen-title">🏨 住宿設施</div>
+        <label class="spot-edit-field"><span>浴缸</span><select id="editAmen_bath"><option value="">待確認</option><option value="yes">有浴缸</option><option value="no">無浴缸</option></select></label>
+        <label class="spot-edit-field"><span>免費洗衣機</span><select id="editAmen_laundry"><option value="">待確認</option><option value="yes">有免費洗衣機</option><option value="no">無免費洗衣機</option></select></label>
+        <label class="spot-edit-field"><span>早餐</span><select id="editAmen_breakfast"><option value="">待確認</option><option value="yes">有早餐</option><option value="no">無早餐</option></select></label>
+        <label class="spot-edit-field"><span>晚餐</span><select id="editAmen_dinner"><option value="">待確認</option><option value="yes">有晚餐</option><option value="no">無晚餐</option></select></label>
+      </div>
       <label class="spot-edit-field">
         <span>導航位置（可貼 Google Maps 分享網址、地址、經緯度或搜尋關鍵字）</span>
         <input type="text" id="editSpotMapQuery" placeholder="未填時使用景點名稱">
@@ -296,7 +354,7 @@
   </div>
 </div>
 
-<script src="app.js?v=45"></script>
+<script src="app.js?v=48"></script>
 
 </body>
 </html>
