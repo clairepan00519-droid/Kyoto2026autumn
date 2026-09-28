@@ -1443,3 +1443,160 @@ body.large-text .view{zoom:1.18;}
 .sa-btns button{border:0;background:#eef3fb;color:var(--blue);border-radius:999px;font:inherit;font-size:11.5px;font-weight:700;padding:5px 10px;cursor:pointer;}
 .sa-btns .del{background:#fff0ec;color:#c1502f;}
 .sheet-row.one{grid-template-columns:1fr;}
+
+/* =====================================================================
+   v52
+   ===================================================================== */
+/* 卡片封面更高一點，讓照片看得見（文字仍在半透明色塊上） */
+.guide-header{height:172px!important;}
+.compact-section[open] .compact-section-summary em::after{color:var(--blue)!important;}
+.built-in-info-text{white-space:pre-line;}
+body.mode-travel .info-item.is-empty{display:none!important;}
+
+/* 吃·京都標題（不再有說明文字與切換列） */
+.eatshop-hero{display:flex;align-items:center;gap:10px;padding:8px 14px!important;margin:8px 12px 4px!important;background:transparent!important;}
+.eatshop-hero h2{margin:0;font-size:22px;font-weight:800;color:var(--ink);}
+.eatshop-hero .eh-ic{width:52px!important;height:52px!important;}
+.gall-actions button.pri{background:#fbe3da;color:#a8391f;}
+.gall-actions button.on{background:#e3f0e7;color:#23683d;}
+.gall-img{cursor:pointer;}
+.gall-day{background:#c9583a!important;color:#fff!important;}
+.dp-sub{margin:12px 2px 8px;font-size:13.5px;font-weight:800;color:#8a3a22;}
+.dp-empty{font-size:12.5px;color:var(--ink-soft);line-height:1.6;background:#fff;border-radius:12px;padding:12px;}
+
+/* 詳情頁（吃·逛京都的完整資料） */
+body.detail-open{overflow:hidden;}
+.detail-sheet{position:fixed;inset:0;z-index:10050;background:#fffaf0;display:flex;flex-direction:column;}
+.detail-top{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px;background:#fdedd5;border-bottom:1px solid #f0d3ac;flex:none;}
+.detail-back{min-height:44px;padding:0 16px;border:0;border-radius:999px;background:#fff;color:#8a3a22;font:inherit;font-size:15px;font-weight:800;box-shadow:0 2px 6px rgba(122,60,30,.18);cursor:pointer;flex:none;}
+.detail-title{font-size:15px;font-weight:800;color:#8a3a22;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.detail-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px calc(30px + env(safe-area-inset-bottom,0px));}
+.detail-plan{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fff;border:1.5px solid #f0d3ac;border-radius:14px;padding:10px 14px;margin-bottom:12px;}
+.detail-plan small{display:block;font-size:11.5px;color:var(--ink-soft);}
+.detail-plan b{font-size:14.5px;color:var(--ink);}
+.detail-plan button{min-height:40px;padding:0 16px;border:0;border-radius:999px;background:#c9583a;color:#fff;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer;flex:none;}
+.detail-sheet .sub-spot-header{pointer-events:none;}
+.detail-sheet .sub-spot-header .mark-star{pointer-events:auto;}
+.detail-sheet .sub-spot-header .chevron{display:none;}
+.detail-sheet .sub-spot-details-wrap{max-height:none!important;}
+body.large-text .detail-sheet{zoom:1.18;}
+
+/* 購物清單：一個品項一張卡 */
+.shop-filter{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none;}
+.shop-filter::-webkit-scrollbar{display:none;}
+.shop-filter button{flex:none;min-height:38px;padding:0 14px;border:1.5px solid #ecdfca;background:#fff;border-radius:999px;font:inherit;font-size:13px;font-weight:700;color:#8a6a55;cursor:pointer;}
+.shop-filter button b{margin-left:6px;font-size:11.5px;color:var(--blue);}
+.shop-filter button.on{background:#fff1dc;border-color:#e08a4c;color:#b8431f;}
+.shop-progress{font-size:12px;color:var(--ink-soft);margin:0 2px 8px;}
+.shop-cards{display:flex;flex-direction:column;gap:14px;}
+.shop-card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm);}
+.shop-card.is-done{opacity:.6;}
+.shop-card.is-done .shop-card-title span{text-decoration:line-through;}
+.shop-car{position:relative;background:#f3eee6;}
+.shop-car-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.shop-car-track::-webkit-scrollbar{display:none;}
+.shop-car-slide{flex:0 0 100%;scroll-snap-align:center;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;cursor:zoom-in;overflow:hidden;}
+.shop-car-slide img{width:100%;height:100%;object-fit:cover;display:block;}
+.shop-car-slide.ph{cursor:default;background:#f7ecd9;}
+.shop-car-slide.ph img{width:42%;height:auto;object-fit:contain;}
+.shop-car-nav{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;border-radius:50%;background:rgba(255,255,255,.9);box-shadow:0 2px 8px rgba(0,0,0,.25);font-size:24px;line-height:1;color:var(--ink);cursor:pointer;}
+.shop-car-nav.prev{left:8px;}.shop-car-nav.next{right:8px;}
+.shop-car-dots{position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:center;gap:5px;pointer-events:none;}
+.shop-car-dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.6);box-shadow:0 0 2px rgba(0,0,0,.4);}
+.shop-car-dots i.on{background:#fff;width:18px;border-radius:4px;}
+.shop-car-count{position:absolute;right:8px;bottom:8px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:1px 8px;}
+.shop-cat-tag{position:absolute;left:8px;top:8px;color:#fff;font-size:11px;font-weight:800;border-radius:999px;padding:2px 10px;}
+.shop-card-body{padding:12px 14px 14px;}
+.shop-card-title{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:800;color:var(--ink);}
+.shop-card-title input{width:24px;height:24px;flex:none;}
+.shop-card-title span{flex:1;min-width:0;}
+.shop-card-title em{font-style:normal;font-size:14px;color:var(--blue);font-weight:700;}
+.shop-card-note{margin:8px 0 0 34px;font-size:14px;line-height:1.7;color:var(--ink);white-space:pre-line;}
+.shop-extra textarea{width:100%;box-sizing:border-box;border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;font-size:13px;line-height:1.5;resize:vertical;background:#fff;}
+.camera-btn{font-size:11.5px!important;}
+
+/* 天氣：每個地點可展開／收合 */
+.wc-tools{display:flex;gap:8px;margin:0 0 10px;}
+.wc-tools button{flex:1;min-height:40px;border:1.5px solid #e9c89a;background:#fff;color:#8a4a22;border-radius:999px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;}
+.weather-city-card.wc-details{padding:0!important;overflow:hidden;}
+.weather-city-card.wc-details>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;cursor:pointer;}
+.weather-city-card.wc-details>summary::-webkit-details-marker{display:none;}
+.weather-city-card.wc-details .weather-primary{margin:0!important;border:0!important;}
+.wc-chev{font-style:normal;color:var(--ink-soft);font-size:16px;transition:transform .2s;flex:none;}
+.wc-details[open] .wc-chev{transform:rotate(180deg);}
+.wc-body{padding:0 16px 16px;border-top:1px dashed #eadfca;padding-top:12px;}
+
+/* v52 微調 */
+.spot-edit-modal-actions{display:flex;gap:10px;}
+.spot-edit-modal-actions .spot-edit-save{flex:1;min-height:48px;}
+.spot-edit-modal-actions .spot-edit-reset{min-height:48px;}
+.gall-actions{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px!important;}
+.gall-actions a,.gall-actions button{justify-content:center;text-align:center;min-height:36px!important;padding:6px 4px!important;}
+.gall-actions button.pri,.gall-actions button.on{grid-column:1/-1;}
+.shop-car-slide.ph{aspect-ratio:16/7!important;}
+.wc-body{border-top:0!important;padding-top:4px!important;}
+
+/* v52：字太小的地方一律放大到好讀（環線頁交通區、標籤、連結） */
+.transport-section .source-note,.source-note{font-size:11.5px!important;}
+.transport-principles-head small,.transport-compact-title small{font-size:11.5px!important;}
+.transport-quick-nav button{font-size:12.5px!important;min-height:34px;padding:0 12px!important;}
+.transport-card-compact .transport-day,.transport-day{font-size:11.5px!important;}
+.transport-card-body p,.tc-text{font-size:13.5px!important;line-height:1.7!important;}
+.transport-link-row a{font-size:12.5px!important;min-height:34px;display:inline-flex;align-items:center;padding:0 12px!important;}
+.transport-compact-title strong{font-size:14px!important;}
+.transport-principles-head h4{font-size:14.5px!important;}
+.transport-principles-body li{font-size:13px!important;line-height:1.7!important;}
+.transport-principles-head em,.transport-card-compact>summary em{font-size:12px!important;}
+.own-badge{min-height:26px;font-size:11.5px!important;}
+.photo-badge,.cover-badge,.photo-item-wrap .cover-tag{font-size:10.5px!important;}
+.checklist-group-head small,.checklist-group-head b{font-size:11.5px!important;}
+.dw-tenki,.weather-tenki-row a{min-height:34px;display:inline-flex;align-items:center;}
+.live-badge{font-size:10.5px!important;}
+.amen-chip{min-height:30px!important;}
+.sa-btns button,.tc-edit-row button,.tc-add-row button{min-height:34px;}
+
+/* v52 修正：展開時「展開」與「收合」文字重疊 */
+details[open]>summary.transport-principles-head em{font-size:0!important;}
+details[open]>summary.transport-principles-head em::after{content:'收合';font-size:12px;}
+.transport-card-compact>summary em{font-size:18px!important;font-style:normal;transition:transform .2s;}
+.transport-card-compact[open]>summary em{transform:rotate(45deg);}
+
+/* =====================================================================
+   v53：景點卡改成「縮圖＋文字」橫式卡（文字在乾淨底色上，照片完整可見）
+   ===================================================================== */
+.guide-card{border-radius:16px!important;margin-bottom:10px!important;overflow:hidden;}
+.guide-header{height:auto!important;min-height:0!important;display:flex!important;flex-direction:row!important;align-items:stretch!important;position:relative;background:linear-gradient(90deg,rgba(var(--scrim,34,22,14),.07),#fff 65%)!important;padding:0!important;}
+.guide-header::before{display:none!important;}
+.gh-thumb{position:relative;flex:0 0 108px;width:108px;min-height:112px;background:#e7dfd2;overflow:hidden;}
+.gh-thumb .guide-cover-img{position:absolute!important;inset:0;width:100%!important;height:100%!important;object-fit:cover;}
+.guide-header-content{position:static!important;flex:1;min-width:0;background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;color:var(--ink)!important;padding:10px 46px 12px 12px!important;display:flex;flex-direction:column;justify-content:center;gap:2px;}
+.gh-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:2px;}
+.guide-header-content .cat-label{margin:0!important;}
+.guide-header-content h3{display:block!important;margin:0!important;font-size:16.5px!important;font-weight:800!important;line-height:1.3;color:var(--ink)!important;text-shadow:none!important;}
+.guide-header-content p.short-desc{margin:2px 0 0!important;font-size:12.5px!important;line-height:1.5!important;color:var(--ink-soft)!important;text-shadow:none!important;opacity:1!important;-webkit-line-clamp:2;}
+.guide-header .mark-star.on-cover{position:absolute!important;top:6px!important;right:6px!important;width:34px;height:34px;background:#f6f1e6;box-shadow:none;}
+.guide-header .mark-star.on-cover.on{background:#fff3c4;}
+.guide-header .chevron{position:absolute!important;right:14px!important;bottom:10px!important;color:var(--ink-soft)!important;font-size:14px!important;}
+.gh-thumb .photo-pos-btn{position:absolute!important;left:5px!important;right:auto!important;top:auto!important;bottom:5px!important;padding:3px 9px!important;font-size:11px!important;background:rgba(0,0,0,.62)!important;color:#fff;border-radius:999px;z-index:2;}
+.detail-cover{display:block;width:100%;aspect-ratio:16/9;max-height:230px;object-fit:cover;border-radius:12px;margin:0 0 12px;cursor:zoom-in;background:#e7dfd2;}
+.own-badge{display:none!important;}
+
+/* 住宿卡：按鈕與設施同一列，整張更矮 */
+.stay-quick-card{display:block!important;padding:10px 12px!important;}
+.stay-quick-top{display:flex;align-items:center;gap:10px;}
+.stay-quick-amen{margin-top:8px;display:flex!important;flex-wrap:wrap;align-items:center;gap:6px!important;}
+.stay-quick-amen .stay-quick-btns{margin-left:auto;display:inline-flex!important;flex-direction:row!important;gap:6px;}
+.stay-quick-nav,.stay-quick-fix{min-height:30px!important;padding:0 14px!important;font-size:13px!important;}
+
+/* 環線：交通連結整齊兩欄、票券說明圖示 */
+.transport-link-row{display:grid!important;grid-template-columns:1fr 1fr;gap:8px!important;margin-top:12px;}
+.transport-link-row a{display:flex!important;align-items:center;justify-content:center;text-align:center;min-height:44px!important;padding:6px 10px!important;border-radius:14px!important;line-height:1.35;}
+.tp-ic{width:38px;height:38px;object-fit:contain;flex:none;}
+.transport-principles-head{align-items:center;}
+.doc-ic{width:34px;height:34px;object-fit:contain;display:block;}
+.voucher-section .voucher-icon{display:flex;align-items:center;}
+.voucher-section .voucher-main{align-items:center;}
+
+/* v53：資訊格內文字不要過粗 */
+.info-item .v,.info-item .info-hours,.important-info .v{font-weight:600!important;}
+.built-in-info-text{font-weight:500;}

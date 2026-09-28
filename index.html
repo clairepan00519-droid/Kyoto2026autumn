@@ -19,7 +19,7 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=51">
+<link rel="stylesheet" href="style.css?v=53">
 </head>
 <body class="family-locked">
 <div id="familyGate" class="family-gate" aria-hidden="false">
@@ -130,7 +130,7 @@
       <div class="compact-section-body">
       <div class="sub" style="margin-bottom:12px;">依日期分成大眾交通與自駕兩階段；連結已於 2026/8/4 逐一開啟核對，並優先使用營運單位官方頁面。</div>
       <details class="transport-principles">
-        <summary class="transport-principles-head"><span>🎫</span><div><small>4 人慢旅行共通設定</small><h4>票券、叫車與搭乘原則</h4></div><em>展開</em></summary>
+        <summary class="transport-principles-head"><img class="tp-ic" src="images/nav-route.webp" alt="" width="34" height="34"><div><small>4 人慢旅行共通設定</small><h4>票券、叫車與搭乘原則</h4></div><em>展開</em></summary>
         <div class="transport-principles-body">
         <ul><li>全程準備 ICOCA，日常路段直接刷卡最靈活。</li><li>KIX 往返京都各買一張 HARUKA 優惠票；特急車票與基本乘車券依購票畫面確認。</li><li>GO Taxi 為主，Uber、DiDi、京都 MK App 備用；優先在飯店門口、便利商店、主要道路或車站前叫車。</li><li>4 人無大型行李通常可搭一般轎車；4 個大型行李箱需大型車或拆成兩台。</li><li>寺院山門、狹窄巷道與山區較難停車或叫車，先走到大路再定位。</li><li>紅葉旺季計程車實際費用可能比估算高 10%–30%；公車與列車班次於出發前一個月再確認。</li></ul>
         <div class="transport-link-row"><a href="https://www.westjr.co.jp/travel-information/tc/train-usage-guide/howto/guide/" target="_blank" rel="noopener">HARUKA／ICOCA 搭乘指南</a><a href="https://www.westjr.co.jp/travel-information/tc/plan-your-trip/routes-schedule/" target="_blank" rel="noopener">JR 路線・時刻表</a><a href="https://go.goinc.jp/area" target="_blank" rel="noopener">GO Taxi 對應區域</a><a href="https://support.go.goinc.jp/hc/ja/articles/25883285712281" target="_blank" rel="noopener">GO 迎車／手配費</a></div>
@@ -152,7 +152,7 @@
 
     <!-- Live road / driving -->
     <details class="section-card compact-section live-section">
-      <summary class="compact-section-summary"><div><h3>自駕即時路況與緊急聯絡</h3><div class="sub">D5–D9 自駕前後使用</div></div><em>展開</em></summary>
+      <summary class="compact-section-summary"><div><h3>自駕即時路況</h3><div class="sub">D5–D9 自駕前後使用</div></div><em>展開</em></summary>
       <div class="compact-section-body">
       <div class="sub" style="margin-bottom:12px;">連結為官方頁面，內容與判斷規則都可以在編輯模式修改、刪除或新增。</div>
       <div id="liveRoadWrap"></div>
@@ -198,6 +198,7 @@
       <div class="add-row" style="margin-bottom:10px;">
         <button onclick="loadLiveWeather()" style="flex:1; background:var(--blue); color:#fff; border:none; border-radius:999px; padding:10px 0; font-family:inherit; font-weight:700; font-size:12.5px; cursor:pointer; box-shadow:var(--shadow-sm);">🔄 取得最新即時氣象與穿搭</button>
       </div>
+      <div class="wc-tools"><button type="button" onclick="weatherExpandAll(true)">全部展開</button><button type="button" onclick="weatherExpandAll(false)">全部收合</button></div>
       <div id="liveWeatherList"></div>
       <div class="source-note" id="liveWeatherTime">即時資料尚未更新</div>
     </div>
@@ -306,7 +307,7 @@
 
 <input type="file" id="restoreFile" accept="application/json,.json" style="display:none" onchange="restoreBackupFile(event)">
 
-<script src="app.js?v=51"></script>
+<script src="app.js?v=53"></script>
 
 </body>
 </html>
