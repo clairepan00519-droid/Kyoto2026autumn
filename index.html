@@ -19,7 +19,7 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=50">
+<link rel="stylesheet" href="style.css?v=51">
 </head>
 <body class="family-locked">
 <div id="familyGate" class="family-gate" aria-hidden="false">
@@ -77,13 +77,9 @@
       <div class="dates">2026.11.27 出發 – 12.06 抵台・10天9夜</div>
     </div>
     <div class="header-scene">
-      <img class="header-art" src="images/header.webp" alt="" width="1500" height="439" decoding="async">
-      <div class="stat-row">
-        <div class="stat"><b>10</b><span>旅行天數</span></div>
-        <div class="stat"><b>6</b><span>住宿地</span></div>
-        <div class="stat"><b id="spotCount">--</b><span>精選推薦</span></div>
-      </div>
+      <img class="header-art" src="images/header.webp" alt="" width="1500" height="361" decoding="async">
     </div>
+    <span id="spotCount" hidden>--</span>
   </div>
 
   <!-- ================= ITINERARY VIEW ================= -->
@@ -110,31 +106,7 @@
           <button onclick="document.getElementById('mapUploader').click()" style="background:var(--blue); color:#fff; border:none; padding:10px 20px; border-radius:999px; font-size:12px; font-weight:700; cursor:pointer;">📁 手動載入圖片</button>
         </div>
       </div>
-      <div class="map-zoom-hint">🔍 點擊手繪地圖可全螢幕放大</div>
-      <div class="map-date-correction">📅 本次旅程為 2026 年：11/27（五）・11/28（六）・11/29（日）・11/30（一）・12/1（二）・12/2（三）・12/3（四）・12/4（五）・12/5（六）・12/6（日）。手繪圖為路線插畫，日期與星期請以此列及每日卡片為準。</div>
-      <div class="route-summary-card" id="routeSummaryCard">
-        <div class="route-summary-heading" id="routeSummaryHeading" role="button" tabindex="0" aria-expanded="true" aria-controls="routeSummaryBody" onclick="toggleRouteSummary()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleRouteSummary();}">
-          <div>
-            <h4>🍁 D1–D10 路線摘要</h4>
-            <p>先看每日主題，再看移動與重點地區。</p>
-          </div>
-          <span class="route-summary-chevron" id="routeSummaryChevron" aria-hidden="true">▾</span>
-        </div>
-        <div class="route-summary-body" id="routeSummaryBody">
-        <div class="route-summary-grid">
-          <div class="route-summary-item"><div class="route-day"><b>D1</b><span>11/27</span></div><div class="route-copy"><strong>入洛日和</strong><span>KIX → 京都站｜抵達散策</span></div></div>
-          <div class="route-summary-item"><div class="route-day"><b>D2</b><span>11/28</span></div><div class="route-copy"><strong>楓信未定</strong><span>大原／高雄／鞍馬＋貴船</span></div></div>
-          <div class="route-summary-item"><div class="route-day"><b>D3</b><span>11/29</span></div><div class="route-copy"><strong>東山有秋</strong><span>真如堂・永觀堂・南禪寺</span></div></div>
-          <div class="route-summary-item"><div class="route-day"><b>D4</b><span>11/30</span></div><div class="route-copy"><strong>茶里鹿影</strong><span>修學院・宇治・奈良</span></div></div>
-          <div class="route-summary-item"><div class="route-day"><b>D5</b><span>12/1</span></div><div class="route-copy"><strong>一川嵐色</strong><span>奈良 → 龜岡｜保津川・嵐山</span></div></div>
-          <div class="route-summary-item"><div class="route-day"><b>D6</b><span>12/2</span></div><div class="route-copy"><strong>山盡見海</strong><span>龜岡・龍穩寺・綾部 → 京丹後</span></div></div>
-          <div class="route-summary-item"><div class="route-day"><b>D7</b><span>12/3</span></div><div class="route-copy"><strong>海辺無事</strong><span>京丹後海岸慢遊・艸花入住</span></div></div>
-          <div class="route-summary-item"><div class="route-day"><b>D8</b><span>12/4</span></div><div class="route-copy"><strong>橋立暮景</strong><span>金剛院・天橋立・西舞鶴</span></div></div>
-          <div class="route-summary-item"><div class="route-day"><b>D9</b><span>12/5</span></div><div class="route-copy"><strong>港町別章</strong><span>舞鶴市場・五老塔・紅磚公園 → 京都</span></div></div>
-          <div class="route-summary-item"><div class="route-day"><b>D10</b><span>12/6</span></div><div class="route-copy"><strong>餘白京都</strong><span>西本願寺・京都御苑・下鴨神社 → KIX</span></div></div>
-        </div>
-        </div>
-      </div>
+      <div class="map-zoom-hint">點擊手繪地圖可全螢幕放大</div>
       <a href="https://www.google.com/maps/dir/Kyoto/Nara/Kameoka/Kyotango/Amanohashidate/Maizuru/Kyoto" target="_blank" rel="noopener" class="btn btn-map" style="display:flex; margin-top:12px; text-decoration:none;">🗺️ 在 Google 地圖開啟主要路線</a>
     </div>
 
@@ -149,13 +121,14 @@
     <!-- Docs -->
     <details class="section-card compact-section voucher-section">
       <summary class="compact-section-summary"><div><h3>行程票券與住宿總匯</h3><div class="sub">住宿、航班、租車與預約憑證</div></div><em>展開</em></summary>
-      <div class="compact-section-body"><div class="sub">可上傳憑證截圖，需要時點擊「顯示截圖」。</div><div id="docsListWrap" class="voucher-list"></div></div>
+      <div class="compact-section-body"><div id="docsListWrap" class="voucher-list"></div></div>
     </details>
-    
+
     <!-- Driving -->
-    <div class="section-card transport-section">
-      <h3>交通提醒</h3>
-      <div class="sub">依日期分成大眾交通與自駕兩階段；連結已於 2026/8/4 逐一開啟核對，並優先使用營運單位官方頁面。</div>
+    <details class="section-card compact-section transport-section">
+      <summary class="compact-section-summary"><div><h3>交通提醒</h3><div class="sub">各日搭乘與自駕提醒、官方連結</div></div><em>展開</em></summary>
+      <div class="compact-section-body">
+      <div class="sub" style="margin-bottom:12px;">依日期分成大眾交通與自駕兩階段；連結已於 2026/8/4 逐一開啟核對，並優先使用營運單位官方頁面。</div>
       <details class="transport-principles">
         <summary class="transport-principles-head"><span>🎫</span><div><small>4 人慢旅行共通設定</small><h4>票券、叫車與搭乘原則</h4></div><em>展開</em></summary>
         <div class="transport-principles-body">
@@ -174,19 +147,21 @@
         <article class="transport-card"><div class="transport-day">D8</div><div><h4>天橋立</h4><p>府中側與文珠側只選一岸；出發前查纜車、單軌、吊椅營業與強風停駛公告。若臨時改大眾運輸，可由丹海與丹鐵官網查詢。</p><div class="transport-link-row"><a href="https://www.tankai.jp/trip/" target="_blank" rel="noopener">傘松公園／丹海</a><a href="https://www.viewland.jp/" target="_blank" rel="noopener">View Land</a><a href="https://trains.willer.co.jp/" target="_blank" rel="noopener">京都丹後鐵道</a></div></div></article>
         <article class="transport-card"><div class="transport-day">D10</div><div><h4>京都站 → 關西機場</h4><p>13:15 左右由下鴨神社叫車回飯店，取行李後搭 15:00–15:30 間 HARUKA；19:00 起飛。官網同時可查即時誤點。</p><div class="transport-link-row"><a href="https://www.westjr.co.jp/travel-information/tc/plan-your-trip/routes-schedule/" target="_blank" rel="noopener">HARUKA 時刻・運行</a></div></div></article>
       </div>
-    </div>
+      </div>
+    </details>
 
     <!-- Live road / driving -->
-    <div class="section-card">
-      <h3>自駕即時路況與緊急聯絡</h3>
-      <div class="sub">D5–D9 自駕前後使用。連結為官方頁面，內容與判斷規則都可以在編輯模式修改、刪除或新增。</div>
+    <details class="section-card compact-section live-section">
+      <summary class="compact-section-summary"><div><h3>自駕即時路況與緊急聯絡</h3><div class="sub">D5–D9 自駕前後使用</div></div><em>展開</em></summary>
+      <div class="compact-section-body">
+      <div class="sub" style="margin-bottom:12px;">連結為官方頁面，內容與判斷規則都可以在編輯模式修改、刪除或新增。</div>
       <div id="liveRoadWrap"></div>
-    </div>
+      </div>
+    </details>
   </div>
 
   <!-- ================= GUIDE VIEW ================= -->
   <div class="view" id="view-guide">
-    <div class="page-banner"><img src="images/other-2.webp" alt="" width="84" height="84"><div><b>行前準備</b><span>行李、購物與旅遊提醒都在這裡。</span></div></div>
 
     <div class="section-card">
       <h3><img class="h-ic" src="images/nav-guide.webp" alt="" width="28" height="28"> 行李打包清單</h3>
@@ -207,11 +182,16 @@
     </div>
 
 
+    <div class="section-card edit-only" id="surpriseAdmin">
+      <h3>小驚喜內容庫</h3>
+      <div class="sub">點畫面角落偶爾探頭的小動物，會出現這裡的小知識、笑話或旅程照片；同一個帳號會盡量不重複，全部看過一輪才重新開始。</div>
+      <div id="surpriseAdminWrap"></div>
+    </div>
+
   </div>
 
   <!-- ================= WEATHER VIEW ================= -->
   <div class="view" id="view-weather">
-    <div class="page-banner"><img src="images/other-5.webp" alt="" width="84" height="84"><div><b>天氣與穿搭</b><span>11 月底早晚冷，記得帶圍巾。</span></div></div>
     <div class="section-card" style="margin-bottom:14px;">
       <h3><img class="h-ic" src="images/nav-weather.webp" alt="" width="28" height="28"> 即時氣象與紅葉季穿搭指南</h3>
       <div class="sub">以日本氣象廳（JMA）模式的預報數值顯示京都、奈良、丹後與舞鶴的氣溫、風雨與穿搭建議；每個地點下方都有 tenki.jp 逐時／10 天預報連結。</div>
@@ -326,7 +306,7 @@
 
 <input type="file" id="restoreFile" accept="application/json,.json" style="display:none" onchange="restoreBackupFile(event)">
 
-<script src="app.js?v=50"></script>
+<script src="app.js?v=51"></script>
 
 </body>
 </html>

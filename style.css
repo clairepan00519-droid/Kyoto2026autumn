@@ -1323,3 +1323,123 @@ body.large-text .view{zoom:1.18;}
 @keyframes cLeaf{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--dx,0),110px) rotate(var(--dr,180deg))}}
 @keyframes cBob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
 @media (prefers-reduced-motion:reduce){#critterLayer{display:none}.end-note img.bob{animation:none}}
+
+/* =====================================================================
+   v51
+   ===================================================================== */
+/* ---- 標頭：圖往上靠，去掉統計 ---- */
+.header-title{padding:6px 2px 0!important;}
+.header-scene{margin:-16px -14px 0!important;}
+.header-art{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 24%)!important;mask-image:linear-gradient(180deg,transparent 0,#000 24%)!important;}
+
+/* ---- 每日工具列：彩色按鈕（無 emoji） ---- */
+.day-tools{display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:6px!important;margin:8px 0 4px!important;padding:0!important;background:transparent!important;border-radius:0!important;}
+.day-tool{min-height:40px!important;border:0!important;border-radius:12px!important;font:inherit;font-size:13.5px!important;font-weight:700!important;letter-spacing:.02em;cursor:pointer;box-shadow:none!important;transition:transform .12s,box-shadow .12s;padding:0!important;}
+.day-tool:active{transform:scale(.95);}
+.day-tool.t-itinerary{background:#fbe3da!important;color:#a8391f!important;}
+.day-tool.t-weather{background:#dcecf7!important;color:#1f6a9a!important;}
+.day-tool.t-transport{background:#d9efe9!important;color:#1d7266!important;}
+.day-tool.t-routemap{background:#e7efd2!important;color:#59721a!important;}
+.day-tool.t-eat{background:#fde9c8!important;color:#9a5a0a!important;}
+.day-tool.t-itinerary.active{background:#c9583a!important;color:#fff!important;}
+.day-tool.t-weather.active{background:#3a86b8!important;color:#fff!important;}
+.day-tool.t-transport.active{background:#2f9284!important;color:#fff!important;}
+.day-tool.t-routemap.active{background:#7d9a2b!important;color:#fff!important;}
+.day-tool.t-eat.active{background:#e08a1e!important;color:#fff!important;}
+.day-tool.active{box-shadow:0 3px 8px -2px rgba(90,50,20,.35)!important;}
+
+/* ---- 日期晶片：文字置中 ---- */
+.day-chip{display:flex!important;flex-direction:column;align-items:center;justify-content:center;min-height:54px;gap:1px;}
+.day-chip .d,.day-chip .m{line-height:1.25;}
+
+/* ---- 主景點卡：文字放在半透明色塊上 ---- */
+.guide-header{height:150px!important;}
+.guide-header::before{background:linear-gradient(180deg,rgba(0,0,0,.0) 0,rgba(0,0,0,.0) 100%)!important;}
+.guide-header-content{background:rgba(var(--scrim,34,22,14),.82)!important;-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);padding:8px 12px 10px!important;}
+.guide-header-content .cat-label{display:inline-block!important;margin:0 6px 0 0!important;vertical-align:middle;font-size:10.5px!important;padding:2px 8px!important;}
+.guide-header-content h3{display:inline!important;vertical-align:middle;font-size:17px!important;text-shadow:none!important;}
+.guide-header-content p.short-desc{margin-top:4px!important;color:#fff!important;font-size:13px!important;line-height:1.5!important;text-shadow:none!important;-webkit-line-clamp:2;}
+.guide-header .chevron{bottom:10px!important;}
+.own-badge{top:8px!important;left:8px!important;font-size:10.5px!important;padding:3px 9px!important;}
+.photo-pos-btn{top:8px!important;right:48px!important;padding:5px 11px!important;font-size:11.5px!important;font-weight:700!important;}
+
+/* ---- 食衣住卡片：收合時只有標題與簡介 ---- */
+.sub-spot-header{padding:12px 14px!important;}
+.sub-spot-header-content{padding-right:74px!important;}
+.sub-spot-header-content h4{font-size:15.5px!important;margin:0 0 4px!important;}
+.sub-spot-header-content p.short-desc{font-size:12.5px!important;margin:0!important;}
+.sub-spot-card:not(.open) .mini-photo-strip{display:none!important;}
+.sub-spot-header .mark-star.inline{position:absolute!important;top:8px;right:40px;margin:0!important;width:32px;height:32px;font-size:18px;}
+.sub-spot-header .chevron{top:15px!important;right:14px!important;}
+.sub-spot-card{margin-bottom:10px!important;}
+
+/* ---- 住宿卡：縮小 ---- */
+.stay-quick-card{padding:8px 10px!important;gap:6px 8px!important;margin-top:8px!important;border-radius:12px!important;}
+.stay-quick-icon img{width:26px!important;height:26px!important;}
+.stay-quick-copy small{font-size:10.5px!important;}
+.stay-quick-copy strong{font-size:13.5px!important;margin-top:0!important;}
+.stay-quick-nav,.stay-quick-fix{min-height:30px!important;padding:0 12px!important;font-size:12.5px!important;}
+.stay-quick-amen,.amen-row{display:flex!important;flex-wrap:wrap;gap:4px!important;}
+.stay-quick-amen em{flex:0 0 100%;}
+.amen-chip{display:inline-flex!important;min-height:26px!important;padding:0 9px!important;font-size:11.5px!important;border-radius:999px!important;gap:5px!important;}
+.amen-chip b{margin-left:2px!important;}
+
+/* ---- 三個可收合區塊：外觀完全一致 ---- */
+.compact-section-summary{display:flex!important;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px!important;cursor:pointer;list-style:none;}
+.compact-section-summary>div{min-width:0;}
+.compact-section-summary h3{margin:0 0 3px!important;font-size:15.5px!important;font-weight:800!important;color:var(--ink);display:block!important;}
+.compact-section-summary .sub{margin:0!important;font-size:11.5px!important;color:var(--ink-soft);line-height:1.5;}
+.compact-section-summary em{font-style:normal;font-size:12px!important;font-weight:700!important;color:var(--blue)!important;flex:none;}
+.compact-section[open] .compact-section-summary em{font-size:0!important;}
+.compact-section[open] .compact-section-summary em::after{content:'收合';font-size:12px!important;}
+.compact-section-body{padding:12px 16px 16px!important;}
+.compact-section-body>.sub{font-size:11.5px;color:var(--ink-soft);line-height:1.5;}
+
+/* ---- 憑證卡：標題整行顯示，按鈕縮小排在下方 ---- */
+.voucher-section .voucher-card,.voucher-section .voucher-card.is-confirmed{display:grid!important;grid-template-columns:1fr!important;gap:8px!important;padding:12px 14px!important;border-radius:14px!important;}
+.voucher-section .voucher-title{font-size:14px!important;font-weight:700!important;line-height:1.4!important;}
+.voucher-section .voucher-sub{font-size:12px!important;margin-top:2px!important;}
+.voucher-section .voucher-actions{display:flex!important;flex-direction:row!important;flex-wrap:wrap;align-items:center;gap:8px!important;width:100%!important;max-width:none!important;min-width:0!important;justify-content:flex-start;}
+.voucher-section .voucher-status,.voucher-section .voucher-upload{width:auto!important;font-size:12px!important;font-weight:700!important;padding:5px 12px!important;line-height:1.3;border-radius:999px!important;}
+.voucher-section .voucher-remove{font-size:11.5px!important;}
+
+/* ---- MaMa：放進按鈕列，帶線條圖示 ---- */
+.btn-mama{background:linear-gradient(135deg,#fff4e2,#ffe0bd)!important;color:#8a3a12!important;border:1.5px solid #e6b98a!important;gap:7px!important;}
+.btn-mama .mama-ic{flex:none;}
+.btn-mama span{letter-spacing:.06em;font-weight:800;}
+.btn-mama b{background:#d34631;color:#fff;border-radius:999px;font-size:11px;padding:0 7px;min-width:18px;text-align:center;line-height:18px;}
+.action-row .btn-mama{grid-column:1/-1;}
+.end-mama{display:flex;flex-direction:column;align-items:center;gap:6px;margin:16px 0 4px;}
+.end-mama .btn-mama.wide{width:100%;max-width:420px;min-height:48px;font-size:14.5px!important;}
+.end-mama small{font-size:11.5px;color:var(--ink-soft);}
+
+/* ---- 天氣：日出日落 ---- */
+.dw-sun{margin:4px 0 2px;font-size:12.5px;color:#8a5a20;font-weight:600;}
+
+/* ---- 角落小動物與小驚喜 ---- */
+.critter-peek{top:auto!important;bottom:calc(96px + env(safe-area-inset-bottom,0px));}
+.critter-peek.left.in{transform:translateX(-30%) rotate(6deg)!important;}
+.critter-peek.right.in{transform:translateX(30%) rotate(-6deg)!important;}
+.surprise-card{position:fixed;z-index:10001;left:12px;right:12px;bottom:calc(104px + env(safe-area-inset-bottom,0px));max-width:420px;margin:0 auto;background:#fffaf0;border:1.5px solid #f0d3ac;border-radius:18px;padding:12px 14px 12px;box-shadow:0 12px 32px rgba(90,50,20,.28);transform:translateY(24px);opacity:0;transition:transform .35s cubic-bezier(.34,1.4,.64,1),opacity .25s;max-height:60vh;overflow:auto;}
+.surprise-card.in{transform:none;opacity:1;}
+.sc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.sc-tag{font-size:11.5px;font-weight:800;border-radius:999px;padding:3px 10px;}
+.sc-tag.tip{background:#e3f0e7;color:#23683d;}
+.sc-tag.joke{background:#fde9c8;color:#9a5a0a;}
+.sc-tag.photo{background:#dcecf7;color:#1f6a9a;}
+.sc-x{width:34px;height:34px;border:0;border-radius:50%;background:#f4ead8;color:#7a5a3a;font-size:14px;cursor:pointer;}
+.surprise-card p{margin:4px 0 8px;font-size:15px;line-height:1.75;color:var(--ink);}
+.sc-img{display:block;width:100%;max-height:240px;object-fit:cover;border-radius:12px;margin:4px 0 8px;}
+.sc-actions{display:flex;justify-content:flex-end;}
+.sc-more{border:0;border-radius:999px;background:linear-gradient(135deg,#e2673a,#f0a13a);color:#fff;font:inherit;font-size:13.5px;font-weight:800;padding:0 16px;min-height:38px;cursor:pointer;}
+.sa-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px;}
+.sa-row{display:flex;align-items:center;gap:8px;background:#f8f4ec;border-radius:12px;padding:8px 10px;}
+.sa-tag{flex:none;font-size:10.5px;font-weight:800;border-radius:999px;padding:2px 8px;}
+.sa-tag.tip{background:#e3f0e7;color:#23683d;}.sa-tag.joke{background:#fde9c8;color:#9a5a0a;}.sa-tag.photo{background:#dcecf7;color:#1f6a9a;}
+.sa-text{flex:1;min-width:0;display:flex;align-items:center;gap:8px;font-size:12.5px;line-height:1.5;}
+.sa-text img{width:40px;height:40px;object-fit:cover;border-radius:8px;flex:none;}
+.sa-text span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.sa-btns{display:flex;gap:4px;flex:none;}
+.sa-btns button{border:0;background:#eef3fb;color:var(--blue);border-radius:999px;font:inherit;font-size:11.5px;font-weight:700;padding:5px 10px;cursor:pointer;}
+.sa-btns .del{background:#fff0ec;color:#c1502f;}
+.sheet-row.one{grid-template-columns:1fr;}
