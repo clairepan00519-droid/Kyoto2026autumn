@@ -1,9 +1,9 @@
 /* 京都・奈良・丹後行程：App Shell、圖片與已瀏覽內容離線快取 */
-const CACHE_VERSION='kyoto-trip-v48-marks-live';
+const CACHE_VERSION='kyoto-trip-v49-mobile-app';
 const SHELL_CACHE=`kyoto-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE=`kyoto-runtime-${CACHE_VERSION}`;
 const IMAGE_CACHE=`kyoto-images-${CACHE_VERSION}`;
-const SHELL=['./','./index.html','./app.js','./style.css','./images/map.webp'];
+const SHELL=['./','./index.html','./app.js','./style.css','./manifest.webmanifest','./images/map.webp','./images/header.webp','./images/icon-192.png','./images/apple-touch-icon.png','./images/favicon.png','./images/nav-itinerary.webp','./images/nav-route.webp','./images/nav-guide.webp','./images/nav-weather.webp','./images/nav-food.webp','./images/nav-shopping.webp','./images/nav-lodging.webp','./images/other-1.webp','./images/other-2.webp','./images/other-3.webp','./images/other-4.webp','./images/other-5.webp'];
 
 self.addEventListener('install',event=>{
   self.skipWaiting();

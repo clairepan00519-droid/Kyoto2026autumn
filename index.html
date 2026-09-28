@@ -3,7 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#b95f3f">
+<meta name="theme-color" content="#fdedd5">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="64x64" href="images/favicon.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="京丹雅行">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
 <title>京丹雅行・紅葉海岸十日慢旅</title>
 <meta name="description" content="京都、奈良、京丹後與舞鶴 10 日慢旅行程，含紅葉機動方案、每日景點、天氣、行李與家人共享。">
 <meta property="og:title" content="京丹雅行・紅葉海岸十日慢旅">
@@ -11,12 +19,12 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=48">
+<link rel="stylesheet" href="style.css?v=49">
 </head>
 <body class="family-locked">
 <div id="familyGate" class="family-gate" aria-hidden="false">
   <div class="family-gate-card">
-    <div class="family-gate-icon">🍁</div>
+    <img class="family-gate-img" src="images/icon-192.png" alt="京丹雅行" width="84" height="84">
     <h2>京都・奈良・丹後家庭旅行</h2>
     <p>請使用在 Supabase Authentication 建立的家人帳號登入。登入後，各裝置會安全共用同一份行程資料。</p>
     <input id="familyGateEmail" type="email" inputmode="email" autocomplete="username" placeholder="家人 Email">
@@ -50,35 +58,28 @@
 <div class="app">
 
   <!-- Header -->
-  <div class="header" id="main-header" style="background-size: cover; background-position: center;">
-    <div class="net-status" id="netStatus"><span class="net-dot online"></span><span class="net-txt">線上</span></div>
-    <div class="cloud-sync-status" id="cloudSyncStatus">☁️ 家人共享同步中</div>
+  <div class="header" id="main-header">
+    <div class="header-top">
+      <div class="header-status">
+        <div class="net-status" id="netStatus"><span class="net-dot online"></span><span class="net-txt">線上</span></div>
+        <div class="cloud-sync-status" id="cloudSyncStatus">☁️ 同步中</div>
+      </div>
+      <div class="header-tools">
+        <button type="button" class="ht-btn ht-fav" id="favCorner" onclick="openMarksPanel('fav')" aria-label="收藏與預約">★<span class="ht-badge" id="favBadge" style="display:none"></span></button>
+        <button type="button" class="ht-pill" id="modeBtn" onclick="toggleUiMode()">🧭 旅行</button>
+        <button type="button" class="ht-pill" id="sizeBtn" onclick="toggleTextSize()">Aa 標準</button>
+        <button type="button" class="ht-btn" onclick="openToolsSheet()" aria-label="工具與設定">⚙️</button>
+      </div>
+    </div>
     <div class="eyebrow">KYOTO · NARA · TANGO, JAPAN</div>
-    <h1>京丹雅行<br>紅葉、古都與海岸的十日慢旅</h1>
+    <h1>京丹雅行<small>紅葉、古都與海岸的十日慢旅</small></h1>
     <div class="dates">📅 2026.11.27 出發 – 12.06 抵台・10天9夜</div>
+    <img class="header-art" src="images/header.webp" alt="" width="1500" height="500" decoding="async">
     <div class="stat-row">
       <div class="stat"><b>10</b><span>旅行天數</span></div>
       <div class="stat"><b>6</b><span>住宿地</span></div>
       <div class="stat"><b id="spotCount">--</b><span>精選推薦</span></div>
     </div>
-  </div>
-
-  <!-- Quick controls -->
-  <div class="quick-controls" aria-label="顯示設定">
-    <div class="qc-seg" role="group" aria-label="旅行或編輯模式">
-      <button type="button" data-ui-mode="travel" onclick="setUiMode('travel')">🧭 旅行模式</button>
-      <button type="button" data-ui-mode="edit" onclick="setUiMode('edit')">✎ 編輯模式</button>
-    </div>
-    <div class="qc-seg qc-size" role="group" aria-label="文字大小"><button type="button" data-text-size="0" onclick="setTextSize(0)">標準</button><button type="button" data-text-size="1" onclick="setTextSize(1)">放大</button><button type="button" data-text-size="2" onclick="setTextSize(2)">特大</button></div>
-    <button type="button" class="qc-elder" onclick="setElderMode()">👵 長輩版</button>
-  </div>
-
-  <!-- Top Tabs -->
-  <div class="tabbar-top">
-    <button class="tab-btn active" onclick="setTab('itinerary')">🚗 行程</button>
-    <button class="tab-btn" onclick="setTab('route')">🗺️ 環線</button>
-    <button class="tab-btn" onclick="setTab('guide')">🧳 指南</button>
-    <button class="tab-btn" onclick="setTab('weather')">☀️ 天氣</button>
   </div>
 
   <!-- ================= ITINERARY VIEW ================= -->
@@ -88,14 +89,13 @@
       <div id="globalSearchResultsMobile" class="global-search-results"></div>
     </div>
     <div class="day-scroll" id="dayScroll"></div>
-    <div class="marks-bar" id="marksBar" aria-label="收藏與預約狀態"></div>
     <div id="dayContent"></div>
   </div>
 
   <!-- ================= ROUTE MAP VIEW ================= -->
   <div class="view" id="view-route">
     <div class="map-wrap" style="margin-top:0; padding-bottom:24px;">
-      <h3 style="margin:0 0 10px; font-size:18px; font-weight:900; text-align:center; color:var(--ink);">🗺️ 京都・奈良・丹後 10 日移動路線</h3>
+      <h3 class="page-title"><img src="images/nav-route.webp" alt="" width="34" height="34"> 京都・奈良・丹後 10 日移動路線</h3>
       
       <div id="kyotoTangoRouteMap" class="svg-map-container" style="position:relative;">
         <img id="handDrawnMapImg" src="images/map.webp" alt="京都、奈良、龜岡、京丹後、天橋立與舞鶴 10 日紅葉慢旅行程手繪地圖" loading="lazy" class="route-main-image" onclick="openAttachModal('images/map.webp')">
@@ -181,15 +181,16 @@
 
   <!-- ================= GUIDE VIEW ================= -->
   <div class="view" id="view-guide">
+    <div class="page-banner"><img src="images/other-2.webp" alt="" width="84" height="84"><div><b>行前準備</b><span>行李、購物與旅遊提醒都在這裡。</span></div></div>
 
     <div class="section-card">
-      <h3>🎒 行李打包清單</h3>
+      <h3><img class="h-ic" src="images/nav-guide.webp" alt="" width="28" height="28"> 行李打包清單</h3>
       <div class="sub">京都 11 月底至 12 月初早晚偏冷，山區與丹後海岸風更強，建議洋蔥式穿搭。點擊項目可勾選完成。</div>
       <div id="packListWrap"></div>
     </div>
 
     <div class="section-card">
-      <h3>🛍️ 京都・丹後購物清單</h3>
+      <h3><img class="h-ic" src="images/nav-shopping.webp" alt="" width="28" height="28"> 京都・丹後購物清單</h3>
       <div class="sub">記得預留行李空間＆秤重額度。您可以自行上傳商品截圖！</div>
       <div id="shopListWrap"></div>
     </div>
@@ -200,50 +201,14 @@
       <div id="rulesListWrap"></div>
     </div>
 
-    <div class="section-card">
-      <h3>🛟 資料備份與還原</h3>
-      <div class="sub">建議出發前下載一次完整備份。網站每天第一次開啟時，也會在這台裝置自動保留最近 3 份快照；誤刪資料時可從快照救回。</div>
-      <div class="mobile-mode-buttons backup-btns">
-        <button type="button" onclick="downloadBackup()">⬇️ 下載完整備份</button>
-        <button type="button" onclick="document.getElementById('restoreFile').click()">⬆️ 從備份還原</button>
-        <button type="button" onclick="showSnapshots()">🕘 查看本機快照</button>
-      </div>
-      <input type="file" id="restoreFile" accept="application/json,.json" style="display:none" onchange="restoreBackupFile(event)">
-    </div>
-
-    <div class="section-card">
-      <h3>📱 版本與同步狀態</h3>
-      <div class="sub">家人看到的畫面和你不一樣時，請先請他截圖這一區，並按「比對雲端」。</div>
-      <div id="deviceStatusBody" class="ds-body"></div>
-      <div class="mobile-mode-buttons backup-btns">
-        <button type="button" onclick="syncNowManual()">🔄 立即同步</button>
-        <button type="button" onclick="diagnoseCloud()">🔍 比對雲端</button>
-        <button type="button" onclick="forceRefreshApp()">⬇️ 強制更新到最新版</button>
-      </div>
-    </div>
-
-    <div class="section-card mobile-mode-settings">
-      <h3>⚙️ 顯示模式</h3>
-      <div class="sub">旅行模式會收起排序、刪除與進階編輯按鈕，降低手機誤觸；需要修改時可隨時切回編輯模式。</div>
-      <div class="mobile-mode-buttons">
-        <button type="button" data-ui-mode="travel" onclick="setUiMode('travel')">旅行模式</button>
-        <button type="button" data-ui-mode="edit" onclick="setUiMode('edit')">編輯模式</button>
-      </div>
-      <div class="sub" style="margin-top:12px;">大字模式會放大全站文字與按鈕，適合長輩閱讀；「長輩版」＝大字＋旅行模式。</div>
-      <div class="mobile-mode-buttons">
-        <button type="button" data-text-size="0" onclick="setTextSize(0)">標準字</button>
-        <button type="button" data-text-size="1" onclick="setTextSize(1)">放大</button>
-        <button type="button" data-text-size="2" onclick="setTextSize(2)">特大</button>
-        <button type="button" onclick="setElderMode()">👵 長輩版</button>
-      </div>
-    </div>
 
   </div>
 
   <!-- ================= WEATHER VIEW ================= -->
   <div class="view" id="view-weather">
+    <div class="page-banner"><img src="images/other-5.webp" alt="" width="84" height="84"><div><b>天氣與穿搭</b><span>11 月底早晚冷，記得帶圍巾。</span></div></div>
     <div class="section-card" style="margin-bottom:14px;">
-      <h3>🍁 即時氣象與紅葉季穿搭指南</h3>
+      <h3><img class="h-ic" src="images/nav-weather.webp" alt="" width="28" height="28"> 即時氣象與紅葉季穿搭指南</h3>
       <div class="sub">以日本氣象廳（JMA）模式的預報數值顯示京都、奈良、丹後與舞鶴的氣溫、風雨與穿搭建議；每個地點下方都有 tenki.jp 逐時／10 天預報連結。</div>
       <div class="add-row" style="margin-bottom:10px;">
         <button onclick="loadLiveWeather()" style="flex:1; background:var(--blue); color:#fff; border:none; border-radius:999px; padding:10px 0; font-family:inherit; font-weight:700; font-size:12.5px; cursor:pointer; box-shadow:var(--shadow-sm);">🔄 取得最新即時氣象與穿搭</button>
@@ -280,11 +245,11 @@
   </div>
 
   <!-- Bottom Nav -->
-  <div class="bottom-nav">
-    <button class="nav-btn active" onclick="setTab('itinerary')"><span class="ic">🚗</span><span class="lb">行程</span></button>
-    <button class="nav-btn" onclick="setTab('route')"><span class="ic">🗺️</span><span class="lb">環線</span></button>
-    <button class="nav-btn" onclick="setTab('guide')"><span class="ic">🧳</span><span class="lb">指南</span></button>
-    <button class="nav-btn" onclick="setTab('weather')"><span class="ic">☀️</span><span class="lb">天氣</span></button>
+  <div class="bottom-nav" role="tablist">
+    <button class="nav-btn active" onclick="setTab('itinerary')"><img class="nav-img" src="images/nav-itinerary.webp" alt="" width="34" height="34"><span class="lb">行程</span></button>
+    <button class="nav-btn" onclick="setTab('route')"><img class="nav-img" src="images/nav-route.webp" alt="" width="34" height="34"><span class="lb">環線</span></button>
+    <button class="nav-btn" onclick="setTab('guide')"><img class="nav-img" src="images/nav-guide.webp" alt="" width="34" height="34"><span class="lb">指南</span></button>
+    <button class="nav-btn" onclick="setTab('weather')"><img class="nav-img" src="images/nav-weather.webp" alt="" width="34" height="34"><span class="lb">天氣</span></button>
   </div>
 </div>
 
@@ -354,7 +319,9 @@
   </div>
 </div>
 
-<script src="app.js?v=48"></script>
+<input type="file" id="restoreFile" accept="application/json,.json" style="display:none" onchange="restoreBackupFile(event)">
+
+<script src="app.js?v=49"></script>
 
 </body>
 </html>

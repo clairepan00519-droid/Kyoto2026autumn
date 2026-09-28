@@ -1,0 +1,17 @@
+{
+  "name": "京丹雅行・紅葉海岸十日慢旅",
+  "short_name": "京丹雅行",
+  "description": "京都・奈良・丹後 10 日慢旅行程與家人共享指南",
+  "lang": "zh-Hant",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fdedd5",
+  "theme_color": "#fdedd5",
+  "icons": [
+    {"src": "images/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "images/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
