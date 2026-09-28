@@ -5,6 +5,23 @@ create table if not exists public.kyoto_sync (
   updated_at timestamptz not null default now()
 );
 
+-- 一律由資料庫時鐘決定 updated_at，忽略每支手機／電腦自己送來的時間。
+-- 這是修正「同步後資料消失」「家人看到的跟我不一樣」最關鍵的一步：
+-- 舊版用各裝置自己的系統時間互相比較新舊，只要有一支手機時間不準（快、慢、時區錯），
+-- 就可能讓比較新的資料被誤判成比較舊，整筆被舊資料蓋掉。
+create or replace function public.kyoto_sync_touch_updated_at()
+returns trigger language plpgsql as $$
+begin
+  new.updated_at := now();
+  return new;
+end;
+$$;
+
+drop trigger if exists kyoto_sync_touch_updated_at on public.kyoto_sync;
+create trigger kyoto_sync_touch_updated_at
+before insert or update on public.kyoto_sync
+for each row execute function public.kyoto_sync_touch_updated_at();
+
 alter table public.kyoto_sync enable row level security;
 
 drop policy if exists "kyoto public read" on public.kyoto_sync;

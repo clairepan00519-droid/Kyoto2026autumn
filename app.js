@@ -280,10 +280,23 @@ async function restGetRows(){
   const r=await fetch(`${SUPABASE_URL}/rest/v1/kyoto_sync?select=key,value,updated_at`,{headers:syncHeaders(),cache:'no-store'});
   const text=await r.text(); if(!r.ok) throw new Error(text||`HTTP ${r.status}`); return text?JSON.parse(text):[];
 }
+async function restGetRow(key){
+  await ensureAuthToken();
+  const r=await fetch(`${SUPABASE_URL}/rest/v1/kyoto_sync?key=eq.${encodeURIComponent(key)}&select=key,value,updated_at`,{headers:syncHeaders(),cache:'no-store'});
+  const text=await r.text(); if(!r.ok) throw new Error(text||`HTTP ${r.status}`);
+  const rows=text?JSON.parse(text):[]; return rows[0]||null;
+}
+/* 改為讓資料庫（而非各裝置的時鐘）決定 updated_at：
+   1) 這裡不再送出用戶端時間，改由資料庫觸發器 kyoto_sync_touch_updated_at 蓋掉；
+   2) 用 return=representation 讀回資料庫真正寫入的 updated_at，回傳給呼叫端記錄，
+   避免手機時鐘不準（快、慢或時區設定錯誤）造成「明明比較新卻被判定成舊資料而被覆蓋／消失」。
+   舊的 updatedAt 參數仍接受，但只作為找不到觸發器時的備援，不影響有安裝 SUPABASE_SETUP.sql 的家人。 */
 async function restUpsert(key,valueObj,updatedAt){
   await ensureAuthToken();
-  const r=await fetch(`${SUPABASE_URL}/rest/v1/kyoto_sync?on_conflict=key`,{method:'POST',headers:syncHeaders({'Prefer':'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify({key,value:JSON.stringify(valueObj),updated_at:updatedAt||new Date().toISOString()})});
-  const text=await r.text(); if(!r.ok) throw new Error(text||`HTTP ${r.status}`); return true;
+  const r=await fetch(`${SUPABASE_URL}/rest/v1/kyoto_sync?on_conflict=key`,{method:'POST',headers:syncHeaders({'Prefer':'resolution=merge-duplicates,return=representation'}),body:JSON.stringify({key,value:JSON.stringify(valueObj),updated_at:updatedAt||new Date().toISOString()})});
+  const text=await r.text(); if(!r.ok) throw new Error(text||`HTTP ${r.status}`);
+  const rows=text?JSON.parse(text):[];
+  return rows[0]?.updated_at || updatedAt || new Date().toISOString();
 }
 async function initCloudSync(){
   updateSyncStatus(null,'connecting');
@@ -294,15 +307,19 @@ async function initCloudSync(){
     clearInterval(cloudSync.pollTimer); cloudSync.pollTimer=setInterval(pollCloudChanges,12000);
   }catch(e){cloudSync.enabled=false;cloudSync.lastError=e;console.error('家人同步初始化失敗：',e);updateSyncStatus(e);throw e;}
 }
+/* 開啟網站時的第一次對帳。
+   舊版邏輯是「時間比較新的整包蓋掉舊的」，只要某台裝置離線編輯過、或系統時間不準，
+   就可能讓一整個分類（例如所有筆記、所有自訂景點）被另一台裝置的舊資料整包蓋掉，
+   使用者會覺得「資料同步後消失了」。
+   新版一律採用「合併」而非「整包覆蓋」：物件／陣列類的資料會把本機與雲端內容聯集起來，
+   再把合併結果同時寫回本機與雲端，兩邊就會收斂成同一份、且不會平白遺失任一邊獨有的內容。
+   時間戳也一律以資料庫寫回的時間為準，不再用各裝置自己的時鐘互相比較。 */
 async function reconcileInitialCloudData(){
   const rows=await restGetRows();
   const remoteMap=new Map(rows.map(r=>[r.key,r]));
-  const meta=getSyncMeta();
   for(const key of SYNC_KEYS){
     const remote=remoteMap.get(key);
     const localRaw=localStorage.getItem(key);
-    const localTime=Date.parse(meta[key]||0)||0;
-    const remoteTime=Date.parse(remote&&remote.updated_at||0)||0;
     let localValue=null, remoteValue=null;
     try{ if(localRaw!=null) localValue=JSON.parse(localRaw); }catch(e){}
     try{ if(remote) remoteValue=JSON.parse(remote.value); }catch(e){}
@@ -311,21 +328,19 @@ async function reconcileInitialCloudData(){
       const progress={done:0,total:0};
       if(localValue!=null) localValue=await migrateMediaTree(localValue,`legacy/local/${key}`,progress);
       if(remoteValue!=null) remoteValue=await migrateMediaTree(remoteValue,`legacy/cloud/${key}`,progress);
-      let merged;
-      if(localValue!=null && remoteValue!=null) merged=mergePreservingLocal(localValue,remoteValue);
-      else merged=localValue!=null?localValue:remoteValue;
-      if(merged!=null){
-        const t=new Date(Math.max(localTime,remoteTime,Date.now())).toISOString();
-        cloudSync.applyingRemote=true;
-        try{ replaceLocalJson(key,merged); setSyncMeta(key,t); applyStoreUpdate(key,JSON.stringify(merged)); }
-        finally{ cloudSync.applyingRemote=false; }
-        await restUpsert(key,merged,t);
-      }
-      continue;
     }
 
-    if(remote&&remoteTime>=localTime){ applyRemoteRow(remote); }
-    else if(localValue!=null){ await restUpsert(key,localValue,meta[key]||new Date().toISOString()); }
+    let merged;
+    if(localValue!=null && remoteValue!=null) merged=normalizeSyncValue(key,mergePreservingLocal(localValue,remoteValue));
+    else if(localValue!=null) merged=normalizeSyncValue(key,localValue);
+    else if(remoteValue!=null) merged=normalizeSyncValue(key,remoteValue);
+    else continue;
+
+    cloudSync.applyingRemote=true;
+    try{ replaceLocalJson(key,merged); applyStoreUpdate(key,JSON.stringify(merged)); }
+    finally{ cloudSync.applyingRemote=false; }
+    const serverTime=await restUpsert(key,merged);
+    setSyncMeta(key,serverTime);
   }
 }
 
@@ -403,11 +418,42 @@ function applyStoreUpdate(key,jsonStr){
   safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();
 }
 function scheduleCloudPush(key,valueObj){
-  if(!cloudSync.enabled||cloudSync.applyingRemote)return;const t=new Date().toISOString();setSyncMeta(key,t);cloudSync.pending[key]={valueObj,updatedAt:t};clearTimeout(cloudSync.timer);cloudSync.timer=setTimeout(flushCloudPush,700);updateSyncStatus(null,'saving');
+  /* 注意：這裡不再提前把 syncMeta 設成「現在」的用戶端時間。
+     舊版一按下編輯就先寫入本機時間戳，若這台裝置的時鐘比家人的快，
+     之後家人真正較新的更新反而會被誤判成「比較舊」而被忽略，
+     於是這台裝置就會停在自己剛剛的版本、看起來跟家人的不一樣。
+     現在改成：真正寫入資料庫成功、拿到資料庫回傳的時間後，才更新 syncMeta（見 flushCloudPush）。 */
+  if(!cloudSync.enabled||cloudSync.applyingRemote)return;
+  cloudSync.pending[key]=valueObj;
+  clearTimeout(cloudSync.timer);cloudSync.timer=setTimeout(flushCloudPush,700);updateSyncStatus(null,'saving');
 }
 async function flushCloudPush(){
   const entries=Object.entries(cloudSync.pending);cloudSync.pending={};
-  for(const[key,item]of entries){try{await restUpsert(key,item.valueObj,item.updatedAt);cloudSync.lastError=null;}catch(e){cloudSync.lastError=e;console.error('同步寫入失敗',e);updateSyncStatus(e);return;}}
+  for(const[key,localSnapshot]of entries){
+    try{
+      /* 推送前先讀一次雲端目前的版本，和這台裝置要送出的內容做合併（聯集），
+         而不是直接整包覆蓋過去。這樣就算家人在你按下儲存前的一兩秒內，
+         剛好也改了同一分類裡的「不同項目」，兩邊的變更都會保留，
+         不會有一邊的資料在同步後憑空消失。 */
+      let mergedValue=localSnapshot;
+      try{
+        const remoteRow=await restGetRow(key);
+        if(remoteRow){
+          let remoteValue=null; try{remoteValue=JSON.parse(remoteRow.value);}catch(e){}
+          if(remoteValue!=null) mergedValue=normalizeSyncValue(key,mergePreservingLocal(localSnapshot,remoteValue));
+        }
+      }catch(e){ /* 讀不到雲端目前版本就先用本機版本推送，不讓整個同步卡住 */ }
+      const serverTime=await restUpsert(key,mergedValue);
+      if(JSON.stringify(mergedValue)!==JSON.stringify(localSnapshot)){
+        /* 合併後比本機原本的內容多了家人那邊的東西，寫回本機讓這台裝置也看得到 */
+        cloudSync.applyingRemote=true;
+        try{ replaceLocalJson(key,mergedValue); applyStoreUpdate(key,JSON.stringify(mergedValue)); }
+        finally{ cloudSync.applyingRemote=false; }
+      }
+      setSyncMeta(key,serverTime);
+      cloudSync.lastError=null;
+    }catch(e){cloudSync.lastError=e;console.error('同步寫入失敗',e);updateSyncStatus(e);return;}
+  }
   updateSyncStatus();setTimeout(pollCloudChanges,500);
 }
 function updateSyncStatus(err,state){

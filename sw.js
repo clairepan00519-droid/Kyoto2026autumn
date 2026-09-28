@@ -1,5 +1,5 @@
 /* 京都・奈良・丹後行程：App Shell、圖片與已瀏覽內容離線快取 */
-const CACHE_VERSION='kyoto-trip-v45-compact-route';
+const CACHE_VERSION='kyoto-trip-v46-sync-fix';
 const SHELL_CACHE=`kyoto-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE=`kyoto-runtime-${CACHE_VERSION}`;
 const IMAGE_CACHE=`kyoto-images-${CACHE_VERSION}`;
@@ -42,10 +42,13 @@ self.addEventListener('fetch',event=>{
   }
 
   if(url.origin===self.location.origin){
-    event.respondWith(caches.match(req).then(cached=>{
-      const update=fetch(req).then(res=>{if(res.ok)caches.open(SHELL_CACHE).then(c=>c.put(req,res.clone()));return res;}).catch(()=>cached);
-      return cached||update;
-    }));
+    /* 改為 network-first：先嘗試連網取得最新版本，離線或連線失敗時才退回快取。
+       舊版是「快取優先」，會讓家人在你更新網站後，仍看到部署前的舊版 app.js／index.html，
+       且往往要重新整理兩次才會換到新版，這是「家人看到的網站跟我的不一樣」的常見成因之一。 */
+    event.respondWith(fetch(req,{cache:'no-store'}).then(res=>{
+      if(res.ok)caches.open(SHELL_CACHE).then(c=>c.put(req,res.clone()));
+      return res;
+    }).catch(()=>caches.match(req)));
     return;
   }
 
