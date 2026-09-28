@@ -1191,3 +1191,135 @@ body.large-text .sheet{zoom:1.2;}
 body.large-text .remind-banner{zoom:1;}
 
 @media(max-width:360px){.header-tools{gap:4px}.ht-pill{padding:0 9px;font-size:11.5px}.ht-btn{width:38px;height:38px}}
+
+/* =====================================================================
+   v50：視覺整理（標頭、字重、卡片尺寸、工具列、小動物）
+   ===================================================================== */
+/* ---- 標頭：圖片不再被拉長，整體壓縮 ---- */
+.header{padding:calc(8px + env(safe-area-inset-top,0px)) 14px 0!important;border-radius:0 0 22px 22px!important;overflow:hidden;}
+.header-top{gap:6px;align-items:center;}
+.header-status{flex-wrap:nowrap;gap:5px;}
+.header .net-status{padding:3px 8px;}
+.header .cloud-sync-status{max-width:92px;padding:3px 8px;}
+.ht-btn{width:38px;height:38px;font-size:18px;}
+.ht-fav{font-size:21px;}
+.ht-pill{height:38px;padding:0 11px;font-size:12px;font-weight:700;}
+.header-title{padding:8px 2px 0;position:relative;z-index:2;}
+.header .eyebrow{margin:0!important;font-size:10px;letter-spacing:.16em;}
+.header h1{font-size:26px!important;margin:1px 0 6px!important;font-weight:800!important;}
+.header h1 small{font-size:12.5px;font-weight:600;margin-top:2px;}
+.header .dates{font-size:12px;padding:4px 12px;font-weight:600;}
+.header-scene{position:relative;margin:0 -14px;line-height:0;}
+.header-art{display:block!important;width:100%!important;max-width:100%!important;height:auto!important;margin:0!important;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 30%);mask-image:linear-gradient(180deg,transparent 0,#000 30%);}
+.header-scene .stat-row{position:absolute;left:0;right:0;bottom:8px;margin:0!important;padding:0!important;justify-content:center;gap:6px;line-height:1.2;}
+.header .stat{padding:3px 11px;border-radius:10px;background:rgba(255,253,247,.9);}
+.header .stat b{font-size:14px;font-weight:800;}
+.header .stat span{font-size:10px;}
+
+/* ---- 字重與大小：整體放輕 ---- */
+.section-card h3{font-weight:800;}
+.btn{font-weight:700!important;}
+.day-chip .d{font-weight:700!important;}
+.sub-spot-header-content h4{font-size:16px;font-weight:800;}
+body.large-text .view{zoom:1.18;}
+
+/* ---- 日期上方的工具列（文字） ---- */
+.day-tools{display:grid!important;grid-template-columns:repeat(4,1fr);gap:2px;margin:8px 0 2px;padding:3px;background:#f2e8d8;border-radius:13px;}
+.day-tool{border:0!important;background:transparent!important;border-radius:10px!important;min-height:38px!important;padding:0!important;flex-direction:row!important;font:inherit;font-size:13.5px!important;font-weight:700!important;color:#8a6a55!important;box-shadow:none!important;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.day-tool.active{background:#fff!important;color:#b8431f!important;box-shadow:0 1px 4px rgba(120,60,30,.2)!important;}
+
+/* ---- 日期晶片：輕一點 ---- */
+.day-scroll{padding:6px 2px 10px!important;gap:6px!important;}
+.day-chip{border:1.5px solid #efe3cf!important;border-radius:14px!important;padding:6px 10px!important;min-width:54px!important;box-shadow:none!important;background:#fff;}
+.day-chip .m{font-size:10.5px!important;font-weight:500;}
+.day-chip.active{border-color:#d9784a!important;background:#fff1dc!important;transform:none!important;box-shadow:none!important;}
+.day-chip.active .d{color:#b8431f!important;}
+.day-chip.is-today{box-shadow:0 0 0 2px rgba(224,138,76,.28)!important;}
+
+/* ---- 今日亮點 | 食衣住 ---- */
+.spots-seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0 12px;}
+.spots-seg button{min-height:42px;border:1.5px solid #ecdfca;background:#fff;border-radius:12px;font:inherit;font-size:14px;font-weight:700;color:#8a6a55;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;}
+.spots-seg button.on{background:#fff1dc;border-color:#e08a4c;color:#b8431f;}
+.spots-seg em{font-style:normal;font-size:11px;background:rgba(255,255,255,.9);border-radius:999px;padding:1px 8px;color:inherit;}
+.spots-pane{display:none;}
+.spots-pane.active{display:block;}
+
+/* ---- 景點卡片：不再是大方塊，文字有半透明底 ---- */
+.guide-card{margin-bottom:12px!important;border-radius:16px!important;}
+.guide-header{height:148px!important;}
+.guide-header::before{background:linear-gradient(180deg,rgba(var(--scrim,34,22,14),0) 10%,rgba(var(--scrim,34,22,14),.55) 52%,rgba(var(--scrim,34,22,14),.92) 100%)!important;}
+.guide-header-content{padding:10px 12px!important;}
+.guide-header-content .cat-label{margin-bottom:5px!important;font-size:10px!important;padding:2px 8px!important;}
+.guide-header-content h3{font-size:17px!important;font-weight:800!important;margin:0 0 3px!important;text-shadow:0 1px 4px rgba(0,0,0,.6);}
+.guide-header-content p.short-desc{font-size:12.5px!important;opacity:1!important;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7);line-height:1.45!important;}
+.guide-header .chevron{right:12px!important;bottom:12px!important;font-size:15px!important;}
+.guide-header .mark-star.on-cover{top:8px;right:8px;width:34px;height:34px;}
+.photo-pos-btn{top:48px!important;}
+
+/* ---- 展開後的資訊格與按鈕 ---- */
+.info-item{padding:10px 12px!important;}
+.info-item .k{font-size:11.5px!important;font-weight:600!important;}
+.info-item .v{font-size:13.5px!important;font-weight:600!important;line-height:1.6!important;}
+.field-k-row{white-space:nowrap;gap:4px;}
+.field-edit-actions{gap:4px;}
+.field-edit-actions button{width:24px!important;height:24px!important;background:transparent!important;box-shadow:none!important;border:1px solid #e3d5c0!important;font-size:11px!important;}
+.action-row{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px!important;}
+.action-row .btn{flex:none;min-height:44px;padding:8px 10px!important;font-size:13.5px!important;white-space:normal;text-align:center;line-height:1.3;}
+
+/* ---- 票券／交通／路況：標題、說明字級一致 ---- */
+.compact-section-summary{grid-template-columns:minmax(0,1fr) auto!important;padding:16px!important;}
+.compact-section-summary h3{margin:0 0 4px;font-size:15.5px;font-weight:800;color:var(--ink);display:block;}
+.compact-section-summary .sub{margin:0!important;font-size:11.5px;color:var(--ink-soft);line-height:1.5;}
+.compact-section-summary em{font-style:normal;font-size:12px;font-weight:700;color:var(--blue);}
+.compact-section-body{padding:0 16px 16px!important;}
+.voucher-section .voucher-title{font-size:13.5px!important;font-weight:700!important;}
+.voucher-section .voucher-sub{font-size:11.5px!important;}
+
+/* ---- 住宿卡：設施改成整齊的兩欄 ---- */
+.stay-quick-card{flex-wrap:wrap;align-items:center;gap:8px 10px!important;}
+.stay-quick-copy strong{font-weight:700!important;font-size:14px!important;}
+.stay-quick-btns{display:flex!important;gap:6px;align-items:center;flex:none;}
+.stay-quick-nav,.stay-quick-fix{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 14px!important;border:0;border-radius:999px;font:inherit;font-size:13px!important;font-weight:700!important;text-decoration:none;cursor:pointer;}
+.stay-quick-nav{background:#c9583a!important;color:#fff!important;}
+.stay-quick-fix{background:#f2e8d8!important;color:#8a4a22!important;}
+.stay-quick-amen,.amen-row{flex:0 0 100%;display:grid!important;grid-template-columns:1fr 1fr;gap:6px;}
+.stay-quick-amen em{grid-column:1/-1;font-style:normal;font-size:11.5px;font-weight:700;color:var(--ink-soft);}
+.amen-chip{display:flex!important;align-items:center;gap:6px;min-height:34px;padding:0 10px!important;border-radius:10px!important;font-size:12px!important;font-weight:600!important;border:0!important;text-align:left;}
+.amen-chip i{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none;}
+.amen-chip.amen-ask i{background:transparent;border:1.5px solid currentColor;box-sizing:border-box;}
+.amen-chip span{white-space:nowrap;}
+.amen-chip b{margin-left:auto;font-weight:700;white-space:nowrap;}
+.amen-chip.amen-yes{background:#e6f4ea!important;color:#23683d!important;}
+.amen-chip.amen-no{background:#f1efea!important;color:#7a7368!important;}
+.amen-chip.amen-ask{background:#fff6dc!important;color:#8a6a10!important;}
+
+/* ---- MaMa（無 emoji） ---- */
+.mama-btn{border:1.5px solid #d9b98f!important;background:#fff8ec!important;color:#8a4a22!important;font-weight:800!important;letter-spacing:.06em;box-shadow:none!important;}
+
+/* ---- 不期而遇的小動物 ---- */
+#critterLayer{position:fixed;inset:0;pointer-events:none;z-index:9000;overflow:hidden;}
+.critter-peek{position:absolute;pointer-events:auto;line-height:0;transition:transform .8s cubic-bezier(.34,1.56,.64,1);will-change:transform;cursor:pointer;}
+.critter-peek img{height:auto;display:block;-webkit-user-drag:none;user-select:none;filter:drop-shadow(0 3px 5px rgba(90,50,20,.25));}
+.critter-peek.left{left:0;transform:translateX(-108%);}
+.critter-peek.right{right:0;transform:translateX(108%);}
+.critter-peek.right img{transform:scaleX(-1);}
+.critter-peek.left.in{transform:translateX(-26%) rotate(6deg);}
+.critter-peek.right.in{transform:translateX(26%) rotate(-6deg);}
+.critter-peek.in img{animation:cWiggle 1.6s ease-in-out .8s infinite;}
+.critter-peek.hop img{animation:cHop .45s ease-out;}
+.critter-walk{position:absolute;bottom:calc(96px + env(safe-area-inset-bottom,0px));left:0;width:62px;pointer-events:auto;line-height:0;cursor:pointer;}
+.critter-walk.ltr{animation:cWalkL 11s linear forwards;}
+.critter-walk.rtl{animation:cWalkR 11s linear forwards;}
+.critter-walk .cw-flip{display:block;}
+.critter-walk.rtl .cw-flip{transform:scaleX(-1);}
+.critter-walk img{width:62px;height:auto;display:block;animation:cStep .55s ease-in-out infinite;filter:drop-shadow(0 3px 4px rgba(90,50,20,.25));}
+.leaf-bit{position:absolute;width:9px;height:13px;border-radius:70% 0 70% 0;pointer-events:none;animation:cLeaf 1.6s ease-out forwards;}
+.end-note img.bob{animation:cBob 3.4s ease-in-out infinite;transform-origin:50% 100%;}
+@keyframes cWiggle{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(5deg) translateY(-3px)}}
+@keyframes cHop{0%{transform:translateY(0)}40%{transform:translateY(-16px) rotate(-6deg)}100%{transform:translateY(0)}}
+@keyframes cStep{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-5px) rotate(2deg)}}
+@keyframes cWalkL{from{transform:translateX(-80px)}to{transform:translateX(calc(100vw + 20px))}}
+@keyframes cWalkR{from{transform:translateX(calc(100vw + 20px))}to{transform:translateX(-80px)}}
+@keyframes cLeaf{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--dx,0),110px) rotate(var(--dr,180deg))}}
+@keyframes cBob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
+@media (prefers-reduced-motion:reduce){#critterLayer{display:none}.end-note img.bob{animation:none}}

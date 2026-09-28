@@ -19,7 +19,7 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=49">
+<link rel="stylesheet" href="style.css?v=50">
 </head>
 <body class="family-locked">
 <div id="familyGate" class="family-gate" aria-hidden="false">
@@ -66,19 +66,23 @@
       </div>
       <div class="header-tools">
         <button type="button" class="ht-btn ht-fav" id="favCorner" onclick="openMarksPanel('fav')" aria-label="收藏與預約">★<span class="ht-badge" id="favBadge" style="display:none"></span></button>
-        <button type="button" class="ht-pill" id="modeBtn" onclick="toggleUiMode()">🧭 旅行</button>
-        <button type="button" class="ht-pill" id="sizeBtn" onclick="toggleTextSize()">Aa 標準</button>
+        <button type="button" class="ht-pill" id="modeBtn" onclick="toggleUiMode()">旅行</button>
+        <button type="button" class="ht-pill" id="sizeBtn" onclick="toggleTextSize()">標準字</button>
         <button type="button" class="ht-btn" onclick="openToolsSheet()" aria-label="工具與設定">⚙️</button>
       </div>
     </div>
-    <div class="eyebrow">KYOTO · NARA · TANGO, JAPAN</div>
-    <h1>京丹雅行<small>紅葉、古都與海岸的十日慢旅</small></h1>
-    <div class="dates">📅 2026.11.27 出發 – 12.06 抵台・10天9夜</div>
-    <img class="header-art" src="images/header.webp" alt="" width="1500" height="500" decoding="async">
-    <div class="stat-row">
-      <div class="stat"><b>10</b><span>旅行天數</span></div>
-      <div class="stat"><b>6</b><span>住宿地</span></div>
-      <div class="stat"><b id="spotCount">--</b><span>精選推薦</span></div>
+    <div class="header-title">
+      <div class="eyebrow">KYOTO · NARA · TANGO, JAPAN</div>
+      <h1>京丹雅行<small>紅葉、古都與海岸的十日慢旅</small></h1>
+      <div class="dates">2026.11.27 出發 – 12.06 抵台・10天9夜</div>
+    </div>
+    <div class="header-scene">
+      <img class="header-art" src="images/header.webp" alt="" width="1500" height="439" decoding="async">
+      <div class="stat-row">
+        <div class="stat"><b>10</b><span>旅行天數</span></div>
+        <div class="stat"><b>6</b><span>住宿地</span></div>
+        <div class="stat"><b id="spotCount">--</b><span>精選推薦</span></div>
+      </div>
     </div>
   </div>
 
@@ -88,6 +92,7 @@
       <div class="global-search-input-wrap"><span>⌕</span><input id="globalSearchMobile" type="search" placeholder="搜尋全部 10 天行程…" oninput="runGlobalSearch(this.value)"></div>
       <div id="globalSearchResultsMobile" class="global-search-results"></div>
     </div>
+    <div class="day-tools" id="dayTools" role="tablist" aria-label="當日工具"></div>
     <div class="day-scroll" id="dayScroll"></div>
     <div id="dayContent"></div>
   </div>
@@ -143,20 +148,13 @@
 
     <!-- Docs -->
     <details class="section-card compact-section voucher-section">
-      <summary class="compact-section-summary"><span>📁</span><div><strong>行程票券與住宿總匯</strong><small>住宿、航班、租車與預約憑證</small></div><em>展開</em></summary>
+      <summary class="compact-section-summary"><div><h3>行程票券與住宿總匯</h3><div class="sub">住宿、航班、租車與預約憑證</div></div><em>展開</em></summary>
       <div class="compact-section-body"><div class="sub">可上傳憑證截圖，需要時點擊「顯示截圖」。</div><div id="docsListWrap" class="voucher-list"></div></div>
     </details>
     
-    <!-- Live road / driving -->
-    <div class="section-card">
-      <h3>🚧 自駕即時路況與緊急聯絡</h3>
-      <div class="sub">D5–D9 自駕前後使用。連結為官方頁面，內容與判斷規則都可以在編輯模式修改、刪除或新增。</div>
-      <div id="liveRoadWrap"></div>
-    </div>
-
     <!-- Driving -->
     <div class="section-card transport-section">
-      <h3>🚉 交通提醒</h3>
+      <h3>交通提醒</h3>
       <div class="sub">依日期分成大眾交通與自駕兩階段；連結已於 2026/8/4 逐一開啟核對，並優先使用營運單位官方頁面。</div>
       <details class="transport-principles">
         <summary class="transport-principles-head"><span>🎫</span><div><small>4 人慢旅行共通設定</small><h4>票券、叫車與搭乘原則</h4></div><em>展開</em></summary>
@@ -176,6 +174,13 @@
         <article class="transport-card"><div class="transport-day">D8</div><div><h4>天橋立</h4><p>府中側與文珠側只選一岸；出發前查纜車、單軌、吊椅營業與強風停駛公告。若臨時改大眾運輸，可由丹海與丹鐵官網查詢。</p><div class="transport-link-row"><a href="https://www.tankai.jp/trip/" target="_blank" rel="noopener">傘松公園／丹海</a><a href="https://www.viewland.jp/" target="_blank" rel="noopener">View Land</a><a href="https://trains.willer.co.jp/" target="_blank" rel="noopener">京都丹後鐵道</a></div></div></article>
         <article class="transport-card"><div class="transport-day">D10</div><div><h4>京都站 → 關西機場</h4><p>13:15 左右由下鴨神社叫車回飯店，取行李後搭 15:00–15:30 間 HARUKA；19:00 起飛。官網同時可查即時誤點。</p><div class="transport-link-row"><a href="https://www.westjr.co.jp/travel-information/tc/plan-your-trip/routes-schedule/" target="_blank" rel="noopener">HARUKA 時刻・運行</a></div></div></article>
       </div>
+    </div>
+
+    <!-- Live road / driving -->
+    <div class="section-card">
+      <h3>自駕即時路況與緊急聯絡</h3>
+      <div class="sub">D5–D9 自駕前後使用。連結為官方頁面，內容與判斷規則都可以在編輯模式修改、刪除或新增。</div>
+      <div id="liveRoadWrap"></div>
     </div>
   </div>
 
@@ -321,7 +326,7 @@
 
 <input type="file" id="restoreFile" accept="application/json,.json" style="display:none" onchange="restoreBackupFile(event)">
 
-<script src="app.js?v=49"></script>
+<script src="app.js?v=50"></script>
 
 </body>
 </html>
