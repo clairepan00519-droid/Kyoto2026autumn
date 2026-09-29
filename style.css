@@ -1781,3 +1781,26 @@ h3 .h-art{float:right;width:58px;height:auto;margin:-10px 0 -14px 8px;}
 
 /* v56：桌機上 MaMa 頁與詳情頁不要撐滿整個視窗 */
 @media(min-width:700px){.mama-page,.detail-sheet{left:50%!important;right:auto!important;width:min(100%,560px)!important;transform:translateX(-50%);box-shadow:0 0 0 100vmax rgba(20,24,32,.45);}}
+
+/* =====================================================================
+   v59：畫面細節修正
+   ===================================================================== */
+/* A) 行李清單標題旁的小鹿插圖：不再用負邊距造成疊到卡片邊緣，改成同一行內排列 */
+.section-card h3{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.h-art{float:none!important;width:44px!important;height:auto;margin:0 0 0 auto!important;order:2;}
+
+/* F) 標頭插畫：不要被上方裁切遮住，留白多一點再讓圖出現 */
+.header-scene{margin:6px -14px 0!important;}
+.header-art{-webkit-mask-image:none!important;mask-image:none!important;border-radius:14px;}
+
+/* B) 今日天氣與穿搭卡：加一點顏色，不要純白單調 */
+.day-panel{background:linear-gradient(160deg,#fff8ec,#fdeed2)!important;border-color:#f0d9a8!important;}
+.dw-wear{background:linear-gradient(135deg,#fff3df,#ffe6bf)!important;border:1px solid #f0d3ac;position:relative;overflow:hidden;}
+.dw-wear::before{content:'';position:absolute;right:-14px;top:-14px;width:56px;height:56px;background:radial-gradient(circle,#ffd98a 0%,rgba(255,217,138,0) 70%);}
+.dw-wear span{position:relative;z-index:1;}
+.dw-card{background:linear-gradient(165deg,#ffffff,#fff6e6)!important;border-color:#f0d9a8!important;}
+.dp-title{color:#a8451f;}
+
+/* E) 紅葉前線連結：改成整齊的兩欄網格，不再參差不齊 */
+.foliage-links{display:grid!important;grid-template-columns:1fr 1fr;gap:8px!important;margin:10px 0 14px!important;}
+.foliage-links a{min-height:44px;font-size:12.5px!important;white-space:normal;line-height:1.3;}

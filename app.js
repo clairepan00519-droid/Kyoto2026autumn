@@ -1554,7 +1554,7 @@ function transportPlanHTML(dayIdx){
   if(!plan)return `<section class="transport-plan"><div class="tp-head"><div><small>D${days[dayIdx].dayNum}・${days[dayIdx].date}</small><strong>今日交通</strong></div><img src="images/deer-car.webp" alt="" width="64" height="45"></div>${customTransportHTML(dayIdx)}${transportAddBarHTML(dayIdx)}</section>`;
   const routes=(rows,prefix='route')=>`<div class="transport-steps">${(rows||[]).map((r0,i)=>{const segmentKey=`${prefix}-${i}`;const sk=`tp${dayIdx}-${segmentKey}`;if(currentFieldValue(sk,'hidden',null)==='1')return '';const r={from:currentFieldValue(sk,'from',r0.from)||r0.from,to:currentFieldValue(sk,'to',r0.to)||r0.to,mode:currentFieldValue(sk,'mode',r0.mode)||r0.mode,time:currentFieldValue(sk,'time',r0.time)||r0.time,note:currentFieldValue(sk,'note',r0.note)||r0.note};window._tpOrig=window._tpOrig||{};window._tpOrig[sk]=r0;return `<div class="transport-step"><span class="transport-step-no">${i+1}</span><div class="transport-step-main"><div class="transport-points"><strong>${escHtml(r.from)}</strong><span>→</span><strong>${escHtml(r.to)}</strong></div><div class="transport-meta"><b>${escHtml(r.mode)}</b><span>⏱ ${escHtml(r.time)}</span></div><small>${escHtml(r.note)}</small><div class="edit-only tp-step-actions"><button type="button" onclick="editTransportStep('${sk}')">✎ 修改</button><button type="button" onclick="deleteTransportStep('${sk}')">🗑 刪除</button></div>${transportSegmentExtrasHTML(dayIdx,segmentKey)}</div></div>`;}).join('')}</div>`;
   const body=plan.choices?`<div class="transport-choice-list">${plan.choices.map((choice,i)=>`<details class="transport-choice"${i===0?' open':''}><summary>${escHtml(choice.name)}<span>展開路線</span></summary>${routes(choice.routes,`choice-${i}`)}</details>`).join('')}</div>`:plan.drive?`<div class="transport-drive-card"><span>🚗</span><div><strong>今天全程自駕</strong><small>按下方按鈕開啟當日主要地點導航；停車、休息站與道路狀況以當日為準。</small>${transportSegmentExtrasHTML(dayIdx,'drive-0')}</div></div>`:routes(plan.routes);
-  return `<section class="transport-plan"><div class="tp-head"><div><small>D${days[dayIdx].dayNum}・${days[dayIdx].date}</small><strong>今日交通</strong></div><img src="images/deer-car.webp" alt="" width="64" height="45"></div><div class="transport-alert">⚠️ ${escHtml(plan.alert)}</div>${body}${customTransportHTML(dayIdx)}${legacyTransportExtrasHTML(dayIdx)}${transportAddBarHTML(dayIdx)}<div class="transport-actions"><a href="https://www.google.com/maps/dir/?api=1&travelmode=${plan.drive?'driving':'transit'}&destination=${encodeURIComponent(currentFieldValue('day'+dayIdx+'-nav','mapQuery',null)||(days[dayIdx].region+' Japan'))}" target="_blank" rel="noopener">📍 開啟今日導航</a><button type="button" class="edit-only tp-nav-fix" onclick="editSpotField(event,'day${dayIdx}-nav','mapQuery','今日導航目的地（地址、經緯度或關鍵字）')">修正導航</button><button type="button" class="edit-only tp-nav-fix" onclick="restoreTransportSteps(${dayIdx})">↺ 還原本日交通步驟</button></div><p class="transport-source-note">資料整理自《京都交通明細｜4 人慢旅行版》；時間、班次與車資為規劃估算。共通票券與叫車原則已移至「環線 → 交通提醒」。</p></section>`;
+  return `<section class="transport-plan"><div class="tp-head"><div><small>D${days[dayIdx].dayNum}・${days[dayIdx].date}</small><strong>今日交通</strong></div><img src="images/deer-car.webp" alt="" width="64" height="45"></div><div class="transport-alert">⚠️ ${escHtml(plan.alert)}</div>${body}${customTransportHTML(dayIdx)}${legacyTransportExtrasHTML(dayIdx)}${transportAddBarHTML(dayIdx)}<div class="transport-actions"><a href="https://www.google.com/maps/dir/?api=1&travelmode=${plan.drive?'driving':'transit'}&destination=${encodeURIComponent(currentFieldValue('day'+dayIdx+'-nav','mapQuery',null)||(days[dayIdx].region+' Japan'))}" target="_blank" rel="noopener">📍 開啟今日導航</a><button type="button" class="edit-only tp-nav-fix" onclick="editSpotField(event,'day${dayIdx}-nav','mapQuery','今日導航目的地（地址、經緯度或關鍵字）')">修正導航</button><button type="button" class="edit-only tp-nav-fix" onclick="restoreTransportSteps(${dayIdx})">↺ 還原本日交通步驟</button></div></section>`;
 }
 
 function setActiveDay(i) {
@@ -1899,7 +1899,10 @@ function renderDayContent(){
     </div>
   `;
   dayContent.insertAdjacentHTML('beforeend',`<div class="end-mama">${mamaBtnHTML('day'+activeDay,'wide')}<small>放不進任何景點的資訊，都可以記在這裡</small></div>`);
-  dayContent.insertAdjacentHTML('beforeend','<div class="end-note"><img class="bob" src="'+CRITTER_IMGS[Math.floor(Math.random()*CRITTER_IMGS.length)]+'" alt="" loading="lazy"><span>今天也慢慢走，平安玩。</span></div>');
+  {
+    const _ei=Math.floor(Math.random()*CRITTER_IMGS.length);
+    dayContent.insertAdjacentHTML('beforeend','<div class="end-note"><img class="bob" src="'+CRITTER_IMGS[_ei]+'" alt="" loading="lazy"><span>'+escHtml(END_NOTE_QUOTES[_ei%END_NOTE_QUOTES.length])+'</span></div>');
+  }
   restoreOpenSpotCards();
   /* 背景同步重繪時維持目前閱讀位置，避免畫面突然跳到其他地方。 */
   if(Math.abs(window.scrollY-previousScrollY)>2){
@@ -2447,7 +2450,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=58').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=59').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3054,7 +3057,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v58-2026-09-28';
+const APP_VERSION='v59-2026-09-28';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -3625,6 +3628,8 @@ function restoreSurprises(){
 
 /* ---------- 角落的小動物：不常出現，只從左下／右下角邊緣探頭，點了才有小驚喜 ---------- */
 const CRITTER_IMGS=[1,2,3,4,5].map(n=>`images/other-${n}.webp`);
+/* 每張角落插圖配一句不同的話，索引對齊 CRITTER_IMGS（之後加進來的插圖沿用最後一句） */
+const END_NOTE_QUOTES=['今天也慢慢走，平安玩。','累了就停下來，看看眼前的紅葉。','放慢腳步，風景才追得上你。','今天辛苦了，明天繼續慢慢晃。','別趕路，京都的巷子值得多繞一下。'];
 const critter={last:'',timer:null};
 function reducedMotion(){return !!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);}
 function critterLayer(){let l=document.getElementById('critterLayer');if(!l){l=document.createElement('div');l.id='critterLayer';l.setAttribute('aria-hidden','true');document.body.appendChild(l);}return l;}
@@ -4368,7 +4373,7 @@ function deleteCustomTransport(dayIdx,id,skip){
   offerUndo('已刪除交通步驟',()=>{(transportCustomStore[dayIdx]=transportCustomStore[dayIdx]||[]).splice(Math.min(i,(transportCustomStore[dayIdx]||[]).length),0,removed);persistTransportCustom();renderDayContent();});
 }
 function transportAddBarHTML(dayIdx){
-  return `<div class="tp-add edit-only"><button type="button" onclick="addTransportStep(${dayIdx})">＋ 新增交通步驟</button></div><h4 class="tp-sub">補充文字與圖片（時刻表、月台、車票截圖…）</h4>${transportSegmentExtrasHTML(dayIdx,'panel')}`;
+  return `<div class="tp-add edit-only"><button type="button" onclick="addTransportStep(${dayIdx})">＋ 新增交通步驟</button></div>${transportSegmentExtrasHTML(dayIdx,'panel')}`;
 }
 
 /* ---------- 新插圖用在合適的地方 ---------- */
