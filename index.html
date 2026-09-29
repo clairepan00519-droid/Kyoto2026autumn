@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#fdedd5">
+<script>try{if((window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone||/[?&]splash=1/.test(location.search))document.documentElement.classList.add("show-splash");}catch(e){}</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="64x64" href="images/favicon.png">
 <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
@@ -19,9 +20,10 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=54">
+<link rel="stylesheet" href="style.css?v=58">
 </head>
 <body class="family-locked">
+<div id="appSplash" aria-hidden="true"><img class="sp-icon" src="images/icon-512.png" alt=""></div>
 <div id="familyGate" class="family-gate" aria-hidden="false">
   <div class="family-gate-card">
     <img class="family-gate-img" src="images/icon-192.png" alt="京丹雅行" width="84" height="84">
@@ -164,7 +166,7 @@
   <div class="view" id="view-guide">
 
     <div class="section-card">
-      <h3><img class="h-ic" src="images/nav-guide.webp" alt="" width="28" height="28"> 行李打包清單</h3>
+      <h3><img class="h-ic" src="images/nav-guide.webp" alt="" width="28" height="28"> 行李打包清單<img class="h-art" src="images/deer-suitcase.webp" alt="" width="58" height="47"></h3>
       <div class="sub">京都 11 月底至 12 月初早晚偏冷，山區與丹後海岸風更強，建議洋蔥式穿搭。點擊項目可勾選完成。</div>
       <div id="packListWrap"></div>
     </div>
@@ -307,7 +309,7 @@
 
 <input type="file" id="restoreFile" accept="application/json,.json" style="display:none" onchange="restoreBackupFile(event)">
 
-<script src="app.js?v=54"></script>
+<script src="app.js?v=58"></script>
 
 </body>
 </html>
