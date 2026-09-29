@@ -1883,7 +1883,7 @@ function renderDayContent(){
       <div class="region">【Day ${d.dayNum}｜${d.date}】${d.title}</div>
       ${d.gas ? `<div class="gas-info">${d.gas}</div>` : ''}
       ${d.dayDesc ? `<h2>${d.dayDesc}</h2>` : ''}
-      <div class="weather-strip"><div class="ico">${d.weatherIco}</div><div class="txt"><b style="font-family:'Zen Kaku Gothic New', sans-serif; font-size:14px;">${d.enRegion}</b><br><span style="font-size:11.5px; opacity:0.85;">${d.wear}</span></div></div>
+      <div class="weather-strip"><div class="ico">${dayIconSVG(d.weatherIco)}</div><div class="txt"><b style="font-family:'Zen Kaku Gothic New', sans-serif; font-size:14px;">${d.enRegion}</b><br><span style="font-size:11.5px; opacity:0.85;">${d.wear}</span></div></div>
       ${stayQuickHTML}
     </div>
     <div id="day-card-${activeDay}">
@@ -2450,7 +2450,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=59').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=61').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3057,7 +3057,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v59-2026-09-28';
+const APP_VERSION='v61-2026-09-28';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -4381,6 +4381,25 @@ const SURPRISE_ART={tip:ART.search,joke:ART.photo,care:ART.heart};
 (function extendArt(){
   CRITTER_IMGS.push(ART.suitcase,ART.photo,ART.heart,ART.rain,ART.search,ART.car);
 })();
+
+/* 每日「天氣提示條」左側圖示：原本直接顯示系統 emoji（尤其船槳／茶杯等圖示很花俏、跟手繪插畫風格不搭），
+   改成統一風格的線條小圖示，顏色跟其他圖示一致。 */
+const DAY_ICON_PATHS={
+  '\ud83c\udf41':'<path d="M12 2c.8 2 2 3.1 3.6 3.6-1 .9-1.6 1.9-1.8 3 1.7-.3 3-.1 4.2.7-1.4 1-2 2.2-2 3.7 1.7 0 3 .6 4 2-1.6.9-3.1.9-4.6.1.3 1.6 0 3-1 4.3-1-.9-1.6-1.9-1.8-3.1-.6 1.1-.5 2.3.1 3.7-1.7-.2-2.9-1-3.7-2.4-.4 1.4-1.3 2.3-2.8 2.8.2-1.6.9-2.8 2.1-3.7-1.6-.1-2.9.4-4 1.6-.4-1.7.1-3.1 1.4-4.3-1.6-.3-3.1.1-4.4 1.1.2-1.8 1.2-3 3-3.7-1-.9-2.3-1.2-3.9-.9 1-1.4 2.4-2.1 4.2-2C9.8 5.5 10.8 4 12 2z" fill="currentColor" stroke="none"/><path d="M12 11v9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+  '\ud83c\udf42':'<path d="M12 2c.8 2 2 3.1 3.6 3.6-1 .9-1.6 1.9-1.8 3 1.7-.3 3-.1 4.2.7-1.4 1-2 2.2-2 3.7 1.7 0 3 .6 4 2-1.6.9-3.1.9-4.6.1.3 1.6 0 3-1 4.3-1-.9-1.6-1.9-1.8-3.1-.6 1.1-.5 2.3.1 3.7-1.7-.2-2.9-1-3.7-2.4-.4 1.4-1.3 2.3-2.8 2.8.2-1.6.9-2.8 2.1-3.7-1.6-.1-2.9.4-4 1.6-.4-1.7.1-3.1 1.4-4.3-1.6-.3-3.1.1-4.4 1.1.2-1.8 1.2-3 3-3.7-1-.9-2.3-1.2-3.9-.9 1-1.4 2.4-2.1 4.2-2C9.8 5.5 10.8 4 12 2z" fill="currentColor" stroke="none" opacity=".82"/><path d="M12 11v9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+  '\ud83c\udf75':'<path d="M4 9h13v2a6.5 6.5 0 0 1-6.5 6.5H10A6 6 0 0 1 4 11.5V9z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M17 10h1.5a2.3 2.3 0 0 1 0 4.6H17" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 3.5c.6.8.6 1.4 0 2.2M11.3 3.5c.6.8.6 1.4 0 2.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M3.5 19.5h15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  '\ud83d\udea3':'<path d="M4.5 12.5h15l-2.3 4.3a2 2 0 0 1-1.8 1.1H8.6a2 2 0 0 1-1.8-1.1z" fill="currentColor" stroke="none"/><path d="M9.3 12.5V4M9.3 4l2.4 1.5M9.3 4 6.9 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M3 19.3c1.6 1 3.2 1 4.8 0 1.6-1 3.2-1 4.8 0 1.6 1 3.2 1 4.8 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity=".55"/>',
+  '\ud83c\udf0a':'<path d="M2 13.5c1.6 1.4 3.2 1.4 4.8 0 1.6-1.4 3.2-1.4 4.8 0 1.6-1.4 3.2-1.4 4.8 0 1.6-1.4 3.2-1.4 4.8 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M2 17.8c1.6 1.4 3.2 1.4 4.8 0 1.6-1.4 3.2-1.4 4.8 0 1.6-1.4 3.2-1.4 4.8 0 1.6-1.4 3.2-1.4 4.8 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" opacity=".5"/>',
+  '\ud83d\ude97':'<path d="M4 16.5V13l1.6-4.2A2 2 0 0 1 7.5 7.5h9a2 2 0 0 1 1.9 1.3L20 13v3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 13h16" stroke="currentColor" stroke-width="1.6"/><circle cx="7.5" cy="16.5" r="1.6" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="16.5" cy="16.5" r="1.6" fill="none" stroke="currentColor" stroke-width="1.5"/>',
+  '\ud83c\udf09':'<path d="M3 17.5c4-9 14-9 18 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M3 17.5v-9M21 17.5v-9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M6.5 17.5v-6M12 17.5v-7.6M17.5 17.5v-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+  '\u2693':'<circle cx="12" cy="5.2" r="1.7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 7v13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M7 9.5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M5 14c0 3.5 3 6 7 6s7-2.5 7-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  '\u2708\ufe0f':'<path d="M12 2.5c.7 0 1.2.6 1.2 1.4v6l6.8 4v2l-6.8-2v3.8l2 1.6v1.5l-3.2-1-3.2 1v-1.5l2-1.6v-3.8l-6.8 2v-2l6.8-4v-6c0-.8.5-1.4 1.2-1.4z" fill="currentColor" stroke="none"/>'
+};
+function dayIconSVG(emoji){
+  const d=DAY_ICON_PATHS[emoji];
+  if(!d)return escHtml(emoji||'');
+  return `<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">${d}</svg>`;
+}
 
 /* ---- 初次渲染 ---- */
 renderDayChips();

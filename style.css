@@ -1801,6 +1801,24 @@ h3 .h-art{float:right;width:58px;height:auto;margin:-10px 0 -14px 8px;}
 .dw-card{background:linear-gradient(165deg,#ffffff,#fff6e6)!important;border-color:#f0d9a8!important;}
 .dp-title{color:#a8451f;}
 
-/* E) 紅葉前線連結：改成整齊的兩欄網格，不再參差不齊 */
-.foliage-links{display:grid!important;grid-template-columns:1fr 1fr;gap:8px!important;margin:10px 0 14px!important;}
-.foliage-links a{min-height:44px;font-size:12.5px!important;white-space:normal;line-height:1.3;}
+/* E) 紅葉前線連結：改回單欄整排，文字不會被擠到換行，也不會有落單的孤兒按鈕 */
+.foliage-links{display:flex!important;flex-direction:column!important;gap:8px!important;margin:10px 0 14px!important;}
+.foliage-links a{min-height:44px;font-size:13px!important;white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;line-height:1.3;justify-content:center;}
+
+/* =====================================================================
+   v60：日期天氣提示條圖示改線條風格、紅葉地圖卡片美化
+   ===================================================================== */
+.weather-strip{gap:12px!important;}
+.weather-strip .ico{font-size:0!important;flex:none;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;color:#a8451f;}
+.weather-strip .ico svg{width:22px;height:22px;display:block;}
+
+/* 紅葉前線地圖：讓使用者上傳的截圖看起來更像卡片，而不是漂浮的裸圖 */
+.foliage-map-gallery{margin-top:14px;}
+.fm-feature{background:linear-gradient(160deg,#fffaf0,#fff3df)!important;border:1px solid #f0d9a8!important;box-shadow:0 6px 18px -10px rgba(120,70,20,.35);padding:10px!important;}
+.fm-feature>img{border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.08);background:#fff;}
+.fm-row{background:#fff8ec;border-radius:10px;padding:6px 10px!important;margin-top:8px!important;}
+.fm-title{font-weight:800;}
+.fm-feat{background:linear-gradient(135deg,#e2673a,#f0a13a)!important;color:#fff!important;border:0!important;font-weight:800!important;}
+.fm-feat.on{background:#fff!important;color:#b8431f!important;border:1.5px solid #e08a4c!important;}
+.fm-thumb{box-shadow:0 4px 12px -8px rgba(120,70,20,.3);}
+.foliage-upload-btn{display:block;width:100%;margin-top:12px;min-height:46px;border:0;border-radius:999px;background:linear-gradient(135deg,#e2673a,#f0a13a);color:#fff;font:inherit;font-weight:800;font-size:13.5px;cursor:pointer;box-shadow:var(--shadow-sm);}
