@@ -1691,13 +1691,7 @@ body.mode-travel .pm-b{display:none;}
 /* =====================================================================
    v56
    ===================================================================== */
-/* ---- 開啟畫面（安裝成 App 時）：標頭插圖＋網站字體 ---- */
-/* 開啟畫面：純底色，圖示放大置中，像一般 App 的啟動畫面 */
-#appSplash{display:none;position:fixed;inset:0;z-index:2147483000;align-items:center;justify-content:center;background:#fdedd5;opacity:1;transition:opacity .5s ease;}
-.show-splash #appSplash{display:flex;animation:splashSafety .5s 4.5s forwards;}
-#appSplash.hide{opacity:0;pointer-events:none;}
-#appSplash .sp-icon{width:46vw;max-width:260px;min-width:150px;height:auto;border-radius:24%;box-shadow:0 18px 46px -12px rgba(120,60,20,.35);}
-@keyframes splashSafety{to{opacity:0;visibility:hidden;}}
+/* 開場動畫樣式已搬到獨立的 splash.css（見 index.html 的 <link>），這裡不再重複定義。 */
 
 /* ---- 卡片收合：展開後標題列黏在畫面上方，底部也有收合鈕 ---- */
 .guide-card,.sub-spot-card{overflow:clip!important;contain:none!important;}
@@ -1790,7 +1784,7 @@ h3 .h-art{float:right;width:58px;height:auto;margin:-10px 0 -14px 8px;}
 .h-art{float:none!important;width:44px!important;height:auto;margin:0 0 0 auto!important;order:2;}
 
 /* F) 標頭插畫：不要被上方裁切遮住，留白多一點再讓圖出現 */
-.header-scene{margin:6px -14px 0!important;}
+.header-scene{margin:6px 0 0!important;}   /* 不再讓圖片超出內距邊界，避免部分手機（字體/顯示縮放不同）把左右兩側切掉 */
 .header-art{-webkit-mask-image:none!important;mask-image:none!important;border-radius:14px;}
 
 /* B) 今日天氣與穿搭卡：加一點顏色，不要純白單調 */
@@ -1822,3 +1816,7 @@ h3 .h-art{float:right;width:58px;height:auto;margin:-10px 0 -14px 8px;}
 .fm-feat.on{background:#fff!important;color:#b8431f!important;border:1.5px solid #e08a4c!important;}
 .fm-thumb{box-shadow:0 4px 12px -8px rgba(120,70,20,.3);}
 .foliage-upload-btn{display:block;width:100%;margin-top:12px;min-height:46px;border:0;border-radius:999px;background:linear-gradient(135deg,#e2673a,#f0a13a);color:#fff;font:inherit;font-weight:800;font-size:13.5px;cursor:pointer;box-shadow:var(--shadow-sm);}
+
+/* v64：每日交通提示條圖示改用主題插畫（無背景圓框，讓插畫本身呈現） */
+.weather-strip .ico.img-ico{width:58px;height:58px;background:none;border-radius:0;flex:none;}
+.weather-strip .ico.img-ico img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 2px 3px rgba(90,50,20,.18));}

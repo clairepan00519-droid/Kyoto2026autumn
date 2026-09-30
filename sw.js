@@ -1,10 +1,10 @@
 /* 京都・奈良・丹後行程：App Shell、圖片與已瀏覽內容離線快取 */
-const CACHE_VERSION='kyoto-trip-v61-links';
+const CACHE_VERSION='kyoto-trip-v66-splashanim';
 const SHELL_CACHE=`kyoto-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE=`kyoto-runtime-${CACHE_VERSION}`;
 /* 圖片快取獨立於版本：更新網站不會清掉已下載的圖片，也不必重新下載 */
 const IMAGE_CACHE='kyoto-images-persist';
-const SHELL=['./','./index.html','./app.js','./style.css','./manifest.webmanifest','./images/map.webp','./images/header.webp','./images/icon-192.png','./images/apple-touch-icon.png','./images/favicon.png','./images/nav-itinerary.webp','./images/nav-route.webp','./images/nav-guide.webp','./images/nav-weather.webp','./images/nav-food.webp','./images/nav-shopping.webp','./images/nav-lodging.webp','./images/other-1.webp','./images/other-2.webp','./images/other-3.webp','./images/other-4.webp','./images/other-5.webp','./images/deer-lying.webp','./images/deer-suitcase.webp','./images/deer-photo.webp','./images/deer-heart.webp','./images/deer-rain.webp','./images/deer-search.webp','./images/deer-car.webp','./images/deer-sleep.webp','./images/icon-512.png'];
+const SHELL=['./','./index.html','./app.js','./style.css','./manifest.webmanifest','./images/map.webp','./images/header.webp','./images/icon-192.png','./images/apple-touch-icon.png','./images/favicon.png','./images/nav-itinerary.webp','./images/nav-route.webp','./images/nav-guide.webp','./images/nav-weather.webp','./images/nav-food.webp','./images/nav-shopping.webp','./images/nav-lodging.webp','./images/other-1.webp','./images/other-2.webp','./images/other-3.webp','./images/other-4.webp','./images/other-5.webp','./images/deer-lying.webp','./images/deer-suitcase.webp','./images/deer-photo.webp','./images/deer-heart.webp','./images/deer-rain.webp','./images/deer-search.webp','./images/deer-car.webp','./images/deer-sleep.webp','./images/day1-arrival.webp','./images/day2-northern-maples.webp','./images/day3-higashiyama.webp','./images/day4-uji-nara.webp','./images/day5-hozugawa.webp','./images/day6-ayabe.webp','./images/day7-coast.webp','./images/day8-amanohashidate.webp','./images/day9-maizuru.webp','./images/day10-departure.webp','./images/splash-deer-suitcase.webp','./images/splash-deer-map.webp','./images/splash-deer-wakeup.webp','./splash.css','./splash.js','./images/icon-512.png'];
 
 self.addEventListener('install',event=>{
   self.skipWaiting();

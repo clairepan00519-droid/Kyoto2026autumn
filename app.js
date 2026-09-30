@@ -10,15 +10,67 @@ function saveAuthSession(session){
   else localStorage.removeItem(FAMILY_SESSION_KEY);
 }
 function accessToken(){return familyAuthSession?.access_token||'';}
+/* Supabase 的 refresh token 只能用一次。上傳照片時常常會同時觸發好幾個
+   請求（上傳本身＋背景同步／輪詢），如果 token 快過期，每個請求都會各自
+   想換新 token，其中只有第一個換得到，其餘會收到「Invalid Refresh Token:
+   Already Used」。這裡讓所有同時發生的請求共用同一次換新，並在真的撞到
+   「已被用掉」時，先看看是不是別的請求已經換好了，是的話就直接沿用，
+   避免把這個技術性錯誤原封不動地丟給使用者看。 */
+let _refreshInFlight=null;
+function sessionFresh(sess){return !!sess && Number(sess.expires_at||0)*1000>Date.now()+60000;}
 async function refreshAuthSession(){
+  /* 先看本機硬碟（localStorage）有沒有更新版本：同一台裝置可能同時開著好幾個分頁／
+     背景還留著舊分頁的程式在跑，其中一個換到新 token 後會寫進 localStorage，
+     其他分頁若只看自己記憶體裡的舊物件就會白白再換一次，撞上 Supabase「refresh token
+     只能用一次」的限制。所以每次要換之前，先信任 localStorage 目前寫的內容。 */
+  const onDisk=readAuthSession();
+  if(sessionFresh(onDisk)){familyAuthSession=onDisk;return familyAuthSession;}
   if(!familyAuthSession?.refresh_token||!navigator.onLine)return familyAuthSession;
-  const r=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`,{method:'POST',headers:{apikey:SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:familyAuthSession.refresh_token})});
-  const data=await r.json();if(!r.ok)throw new Error(data.error_description||data.msg||'登入已過期');saveAuthSession(data);return familyAuthSession;
+  if(_refreshInFlight)return _refreshInFlight;
+  const rt=familyAuthSession.refresh_token;
+  _refreshInFlight=(async()=>{
+    try{
+      const r=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`,{method:'POST',headers:{apikey:SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})});
+      const data=await r.json();
+      if(!r.ok){
+        const msg=data.error_description||data.msg||'';
+        if(/already used|invalid refresh token/i.test(msg)){
+          /* 「已經用掉了」通常代表別的分頁／背景任務剛好搶先換過。
+             重新讀一次 localStorage（而不只是記憶體裡可能過期的物件），
+             有換到新的就直接沿用，避免把這個技術性錯誤丟給使用者看。 */
+          const latest=readAuthSession();
+          if(sessionFresh(latest)&&latest.refresh_token!==rt){familyAuthSession=latest;return familyAuthSession;}
+          saveAuthSession(null);
+          throw new Error('登入已過期，請重新整理頁面再登入一次。');
+        }
+        throw new Error(msg||'登入已過期');
+      }
+      saveAuthSession(data);
+      return familyAuthSession;
+    }finally{ _refreshInFlight=null; }
+  })();
+  return _refreshInFlight;
 }
-async function ensureAuthToken(){
-  if(!familyAuthSession) familyAuthSession=readAuthSession();
-  if(familyAuthSession && Number(familyAuthSession.expires_at||0)*1000>Date.now()+60000)return familyAuthSession.access_token;
-  await refreshAuthSession();return accessToken();
+async function ensureAuthToken(retry){
+  const onDisk=readAuthSession();
+  if(sessionFresh(onDisk))familyAuthSession=onDisk;
+  else if(!familyAuthSession) familyAuthSession=onDisk;
+  if(sessionFresh(familyAuthSession))return familyAuthSession.access_token;
+  try{
+    await refreshAuthSession();
+    if(sessionFresh(familyAuthSession))return familyAuthSession.access_token;
+    throw new Error('登入已過期，請重新整理頁面再登入一次。');
+  }catch(err){
+    /* 最後一次機會：稍等一下，可能是另一個分頁的換新請求正在路上，等它寫進 localStorage 再看一次。
+       真的還是沒有才把錯誤丟出去。 */
+    if(!retry){
+      await new Promise(res=>setTimeout(res,900));
+      const again=readAuthSession();
+      if(sessionFresh(again)){familyAuthSession=again;return again.access_token;}
+      return ensureAuthToken(true);
+    }
+    throw err;
+  }
 }
 function unlockFamilySite({offline=false}={}){
   document.body.classList.remove('family-locked');
@@ -323,6 +375,14 @@ function normalizeStructuredList(key,value){
 function normalizeSyncValue(key,value){
   return STRUCTURED_LIST_KEYS.has(key)?normalizeStructuredList(key,value):value;
 }
+function reportUploadError(err){
+  const msg=friendlySyncError(err);
+  if(/登入已過期/.test(msg)){
+    if(confirm('⚠️ '+msg+'\n\n這台裝置上的資料都已經存好，不會遺失；重新整理後，請再重新做一次剛剛的操作。要現在重新整理嗎？'))location.reload();
+    return;
+  }
+  alert('⚠️ '+msg+'\n'+String((err&&err.message)||err||''));
+}
 function friendlySyncError(e){
   const msg=String(e&&e.message||e||'未知錯誤');
   if(/Failed to fetch|NetworkError/i.test(msg)) return '無法連上雲端資料庫';
@@ -331,6 +391,7 @@ function friendlySyncError(e){
   if(/Storage 尚未設定|Bucket not found/i.test(msg)) return '圖片雲端空間尚未設定';
   if(/Storage 上傳權限/i.test(msg)) return '圖片雲端上傳權限尚未設定';
   if(/quota|exceed/i.test(msg)) return '本機快取空間不足，但雲端同步仍會繼續';
+  if(/already used|invalid refresh token/i.test(msg)) return '登入資訊過期，請重新整理頁面；剛剛的內容請重新操作一次。';
   if(/JWT|apikey|401|403/i.test(msg)) return 'Supabase 金鑰或權限錯誤';
   return msg.slice(0,80);
 }
@@ -1447,7 +1508,7 @@ async function handleRouteMapUpload(e, dayIdx){
   try{
     const urls=[]; for(const f of files) urls.push(await uploadMediaFile(f,`route-maps/day-${dayIdx}`));
     routeMapStore[dayIdx].push(...urls); persistRouteMaps(); renderDayContent();
-  }catch(err){ alert('⚠️ '+friendlySyncError(err)+'\n'+String(err.message||err)); updateSyncStatus(err); }
+  }catch(err){ reportUploadError(err); updateSyncStatus(err); }
 }
 function removeRouteMap(dayIdx, i){
   if(!routeMapStore[dayIdx]) return;
@@ -1486,7 +1547,7 @@ async function handleTransportImageUpload(e,dayIdx,segmentKey='other'){
     const target=transportExtrasFor(dayIdx).images;
     for(const file of files)target.push({url:await uploadMediaFile(file,`transport/day-${dayIdx}`),segmentKey,title:file.name.replace(/\.[^.]+$/,'')||'交通圖片'});
     persistTransportExtras();renderDayContent();
-  }catch(err){alert('⚠️ '+friendlySyncError(err)+'\n'+String(err.message||err));updateSyncStatus(err);}
+  }catch(err){reportUploadError(err);updateSyncStatus(err);}
 }
 function renameTransportImage(dayIdx,i){
   const image=transportExtrasFor(dayIdx).images[i];if(!image)return;
@@ -1800,7 +1861,7 @@ async function handlePhoto(e, idx){
     const urls=[]; for(const f of files) urls.push(await uploadMediaFile(f,`spot-photos/${idx.replace(/[^a-zA-Z0-9_-]/g,'_')}`));
     photoStore[idx].push(...urls); persistPhotos(); renderDayContent();
     setTimeout(()=>{ const card=document.getElementById('spot-card-'+idx); if(card) card.classList.add('open'); },50);
-  }catch(err){ alert('⚠️ '+friendlySyncError(err)+'\n'+String(err.message||err)); updateSyncStatus(err); }
+  }catch(err){ reportUploadError(err); updateSyncStatus(err); }
 }
 function movePhoto(e, idx, photoIdx, dir) {
   if(e)e.stopPropagation();
@@ -1883,7 +1944,7 @@ function renderDayContent(){
       <div class="region">【Day ${d.dayNum}｜${d.date}】${d.title}</div>
       ${d.gas ? `<div class="gas-info">${d.gas}</div>` : ''}
       ${d.dayDesc ? `<h2>${d.dayDesc}</h2>` : ''}
-      <div class="weather-strip"><div class="ico">${dayIconSVG(d.weatherIco)}</div><div class="txt"><b style="font-family:'Zen Kaku Gothic New', sans-serif; font-size:14px;">${d.enRegion}</b><br><span style="font-size:11.5px; opacity:0.85;">${d.wear}</span></div></div>
+      <div class="weather-strip"><div class="ico${DAY_ICON_IMG[activeDay]!==undefined?' img-ico':''}">${dayIconHTML(activeDay,d.weatherIco)}</div><div class="txt"><b style="font-family:'Zen Kaku Gothic New', sans-serif; font-size:14px;">${d.enRegion}</b><br><span style="font-size:11.5px; opacity:0.85;">${d.wear}</span></div></div>
       ${stayQuickHTML}
     </div>
     <div id="day-card-${activeDay}">
@@ -2261,7 +2322,7 @@ async function handleShopPhoto(e,i){
     const urls=await Promise.all(files.map(f=>uploadMediaFile(f,'shopping')));
     shopData[i].imgs=mergeUniqueUrls(shopData[i].imgs,urls);
     persistShop();renderShopList();
-  }catch(err){alert('⚠️ '+friendlySyncError(err)+'\n'+String(err.message||err));updateSyncStatus(err);}
+  }catch(err){reportUploadError(err);updateSyncStatus(err);}
 }
 function removeShopImg(i, photoIdx){ const imgs = shopImgs(shopData[i]);const removed=imgs.splice(photoIdx,1)[0]; shopData[i].imgs = imgs; shopData[i].img = null; persistShop(); renderShopList();offerUndo('已刪除商品照片',()=>{shopImgs(shopData[i]).splice(photoIdx,0,removed);shopData[i].imgs=shopImgs(shopData[i]);persistShop();renderShopList();}); }
 function toggleShop(i){ shopData[i].checked = !shopData[i].checked; persistShop(); renderShopList(); }
@@ -2317,7 +2378,7 @@ function renderRulesList() {
     </div>
   `;
 }
-async function handleRulePhoto(e,i){const f=e.target.files[0];e.target.value='';if(!f)return;try{rulesData[i].img=await uploadMediaFile(f,'rules');persistRules();renderRulesList();}catch(err){alert('⚠️ '+friendlySyncError(err)+'\n'+String(err.message||err));updateSyncStatus(err);}}
+async function handleRulePhoto(e,i){const f=e.target.files[0];e.target.value='';if(!f)return;try{rulesData[i].img=await uploadMediaFile(f,'rules');persistRules();renderRulesList();}catch(err){reportUploadError(err);updateSyncStatus(err);}}
 function removeRuleImg(i) { const removed=rulesData[i].img;rulesData[i].img = null; persistRules(); renderRulesList();offerUndo('已移除規範附圖',()=>{rulesData[i].img=removed;persistRules();renderRulesList();}); }
 function delRule(i) { const removed=rulesData.splice(i, 1)[0]; persistRules(); renderRulesList();offerUndo('已刪除旅遊規範',()=>{rulesData.splice(i,0,removed);persistRules();renderRulesList();}); }
 function addRuleItem() {
@@ -2384,7 +2445,7 @@ function renderDocsList() {
 }
 function toggleDocConfirmed(i){ docsData[i].confirmed=!docsData[i].confirmed; persistDocs(); renderDocsList(); }
 function handleDocClick(i) { const d = docsData[i]; if(d.img) openAttachModal(d.img); else if(d.link) window.open(d.link, '_blank'); }
-async function handleDocPhoto(e,i){const f=e.target.files[0];e.target.value='';if(!f)return;try{docsData[i].img=await uploadMediaFile(f,'documents');persistDocs();renderDocsList();}catch(err){alert('⚠️ '+friendlySyncError(err)+'\n'+String(err.message||err));updateSyncStatus(err);}}
+async function handleDocPhoto(e,i){const f=e.target.files[0];e.target.value='';if(!f)return;try{docsData[i].img=await uploadMediaFile(f,'documents');persistDocs();renderDocsList();}catch(err){reportUploadError(err);updateSyncStatus(err);}}
 function removeDocImg(i) { const removed=docsData[i].img;docsData[i].img = null; persistDocs(); renderDocsList();offerUndo('已移除憑證截圖',()=>{docsData[i].img=removed;persistDocs();renderDocsList();}); }
 
 
@@ -2450,7 +2511,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=61').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=66').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3057,7 +3118,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v61-2026-09-28';
+const APP_VERSION='v66-2026-09-28';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -4238,12 +4299,16 @@ function toggleSpotDetails(key){
 }
 
 /* ---------- 開啟畫面：用標頭插圖與網站字體（安裝成 App 時才顯示） ---------- */
-(function initAppSplash(){
-  const el=document.getElementById('appSplash');if(!el)return;
-  const hide=()=>{el.classList.add('hide');setTimeout(()=>el.remove(),650);};
-  if(!document.documentElement.classList.contains('show-splash')){el.remove();return;}
-  const t0=Date.now(),minShow=1100;   /* 從畫面開始顯示算起，至少停留約 1 秒，讓人看得到 */
-  const go=()=>{setTimeout(hide,Math.max(0,minShow-(Date.now()-t0)));};
+/* 開場動畫：只在符合 show-splash 條件（安裝成 App 後開啟，或 ?splash=1）時，
+   且這個瀏覽階段（session）還沒播過，才播放；不會擋住頁面本身的資料請求。 */
+(function(){
+  if(!document.documentElement.classList.contains('show-splash'))return;
+  const go=()=>{
+    if(!window.KyotoSplash)return;
+    if(sessionStorage.getItem('kyotoSplashSeen'))return;
+    try{sessionStorage.setItem('kyotoSplashSeen','1');}catch(e){}
+    KyotoSplash.play('random');
+  };
   if(document.readyState==='complete')go();else window.addEventListener('load',go);
 })();
 
@@ -4401,6 +4466,25 @@ function dayIconSVG(emoji){
   return `<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">${d}</svg>`;
 }
 
+/* 每日交通提示條的圖示：改用你提供的主題插畫（依當天路線挑選），沒有對應插畫的日子維持線條小圖示。 */
+const DAY_ICON_IMG={
+  0:'images/day1-arrival.webp',
+  1:'images/day2-northern-maples.webp',
+  2:'images/day3-higashiyama.webp',
+  3:'images/day4-uji-nara.webp',
+  4:'images/day5-hozugawa.webp',
+  5:'images/day6-ayabe.webp',
+  6:'images/day7-coast.webp',
+  7:'images/day8-amanohashidate.webp',
+  8:'images/day9-maizuru.webp',
+  9:'images/day10-departure.webp'
+};
+function dayIconHTML(dayIdx,emoji){
+  const img=DAY_ICON_IMG[dayIdx];
+  if(img)return `<img src="${img}" alt="" loading="lazy">`;
+  return dayIconSVG(emoji);
+}
+
 /* ---- 初次渲染 ---- */
 renderDayChips();
 renderDayContent();
@@ -4425,12 +4509,12 @@ function persistFoliageMaps(){ safeSetItem('kyoto_foliage_maps',foliageMapStore)
 /* (v54 已改寫) */
 async function handleFoliageMapUpload(e){
   const files=[...(e.target.files||[])];
-  for(const f of files){ try{foliageMapStore.push({url:await uploadMediaFile(f,'foliage-maps'),title:f.name.replace(/\.[^.]+$/,'')});}catch(err){alert('⚠️ '+friendlySyncError(err));} }
+  for(const f of files){ try{foliageMapStore.push({url:await uploadMediaFile(f,'foliage-maps'),title:f.name.replace(/\.[^.]+$/,'')});}catch(err){reportUploadError(err);} }
   try{persistFoliageMaps();}catch(err){alert('圖片容量過大，請先刪除舊地圖或改用較小截圖。');}
   e.target.value=''; renderFoliageMaps();
 }
 function editFoliageMap(i){ const next=prompt('修改地圖名稱',foliageMapStore[i].title||''); if(next===null)return; foliageMapStore[i].title=next.trim()||`紅葉地圖 ${i+1}`; persistFoliageMaps(); renderFoliageMaps(); }
-async function replaceFoliageMap(e,i){ const f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f)return; try{foliageMapStore[i].url=await uploadMediaFile(f,'foliage-maps');persistFoliageMaps();renderFoliageMaps();}catch(err){alert('⚠️ '+friendlySyncError(err));} }
+async function replaceFoliageMap(e,i){ const f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f)return; try{foliageMapStore[i].url=await uploadMediaFile(f,'foliage-maps');persistFoliageMaps();renderFoliageMaps();}catch(err){reportUploadError(err);} }
 function removeFoliageMap(i){ if(!confirm('刪除這張紅葉地圖？'))return;const removed=foliageMapStore.splice(i,1)[0];persistFoliageMaps();renderFoliageMaps();offerUndo('已刪除紅葉地圖',()=>{foliageMapStore.splice(i,0,removed);persistFoliageMaps();renderFoliageMaps();});}
 document.addEventListener('DOMContentLoaded',renderFoliageMaps);
 

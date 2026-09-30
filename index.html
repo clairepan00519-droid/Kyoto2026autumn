@@ -20,10 +20,11 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=61">
+<link rel="stylesheet" href="style.css?v=66">
+<link rel="stylesheet" href="splash.css?v=66">
 </head>
 <body class="family-locked">
-<div id="appSplash" aria-hidden="true"><img class="sp-icon" src="images/icon-512.png" alt=""></div>
+
 <div id="familyGate" class="family-gate" aria-hidden="false">
   <div class="family-gate-card">
     <img class="family-gate-img" src="images/icon-192.png" alt="京丹雅行" width="84" height="84">
@@ -309,7 +310,22 @@
 
 <input type="file" id="restoreFile" accept="application/json,.json" style="display:none" onchange="restoreBackupFile(event)">
 
-<script src="app.js?v=61"></script>
+<script src="app.js?v=66"></script>
 
+
+<div id="kyotoSplash" class="splash" hidden aria-label="京丹雅行載入中">
+  <button class="splash__skip" type="button">略過</button>
+  <div class="splash__stage">
+    <div class="splash__sun"></div>
+    <img class="splash__deer splash__deer--travel" src="images/splash-deer-suitcase.webp" alt="小鹿拖著行李出發">
+    <div class="splash__map-wrap">
+      <img class="splash__deer splash__deer--map" src="images/splash-deer-map.webp" alt="小鹿查看旅行地圖">
+    </div>
+    <img class="splash__deer splash__deer--wakeup" src="images/splash-deer-wakeup.webp" alt="小鹿睡醒伸懶腰">
+    <i class="leaf leaf--1"></i><i class="leaf leaf--2"></i><i class="leaf leaf--3"></i><i class="leaf leaf--4"></i>
+    <div class="splash__title"><strong>京丹雅行</strong><span>京都・奈良・京丹後</span></div>
+  </div>
+</div>
+<script src="splash.js?v=66"></script>
 </body>
 </html>

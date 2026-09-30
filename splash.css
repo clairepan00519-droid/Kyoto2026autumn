@@ -1,0 +1,55 @@
+/* 開場動畫：三款小鹿動畫（拖行李／看地圖／睡醒伸懶腰），隨機或指定播放。
+   來源：使用者提供的 splash.css，調整了圖片路徑、安全區與少許尺寸以配合本站。 */
+.splash{position:fixed;inset:0;z-index:2147483000;overflow:hidden;background:radial-gradient(circle at 50% 42%,#fffdf7 0,#fff8e8 52%,#f5e7c3 100%);opacity:1;transition:opacity .32s ease;}
+.splash[hidden]{display:none!important;}
+.splash.is-leaving{opacity:0;pointer-events:none;}
+.splash__skip{position:absolute;z-index:5;top:max(18px,env(safe-area-inset-top,0px));right:18px;padding:9px 16px;border:1px solid #d9b58b;border-radius:999px;background:#fff8e8cc;color:#5c2f21;font:inherit;font-size:13px;font-weight:700;cursor:pointer;}
+.splash__stage{position:absolute;inset:0;display:grid;place-items:center;}
+.splash__sun{position:absolute;width:min(56vw,260px);aspect-ratio:1;border-radius:50%;background:#f4c75426;filter:blur(2px);transform:scale(.5);opacity:0;}
+.splash__deer{position:absolute;width:min(70vw,390px);height:auto;object-fit:contain;will-change:transform,opacity;}
+.splash__deer--travel{opacity:0;transform:translate3d(-80vw,8vh,0) scale(.82);}
+.splash__map-wrap{position:absolute;width:min(78vw,430px);clip-path:inset(0 50% 0 50%);opacity:0;}
+.splash__deer--map{position:relative;width:100%;display:block;}
+.splash__deer--wakeup{opacity:0;width:min(68vw,370px);transform:translateY(10vh) scale(.92);}
+.splash__title{position:absolute;left:20px;right:20px;top:68%;text-align:center;opacity:0;transform:translateY(12px);letter-spacing:.08em;font-family:'Zen Maru Gothic','Noto Sans TC',sans-serif;}
+.splash__title strong{display:block;font-size:clamp(32px,10vw,56px);line-height:1.2;color:#5c2f21;font-weight:900;}
+.splash__title span{display:block;margin-top:8px;font-size:14px;letter-spacing:.22em;color:#855c48;font-weight:700;}
+.leaf{position:absolute;width:23px;height:20px;background:#e98545;clip-path:polygon(50% 0,60% 31%,88% 16%,76% 47%,100% 57%,68% 65%,74% 100%,49% 76%,24% 100%,31% 65%,0 57%,24% 47%,12% 16%,40% 31%);opacity:0;}
+.leaf--1{left:16%;top:18%;background:#d95d3f;}
+.leaf--2{left:72%;top:22%;background:#e7b23c;transform:scale(.75);}
+.leaf--3{left:80%;top:48%;background:#e88343;transform:scale(.88);}
+.leaf--4{left:35%;top:12%;background:#c95239;transform:scale(.62);}
+
+/* 1: 拖行李出發 */
+.splash[data-variant="travel"].is-playing .splash__deer--travel{animation:travel-in 1.15s cubic-bezier(.18,.7,.25,1) forwards;}
+.splash[data-variant="travel"].is-playing .splash__title{animation:title-in .42s 1.05s ease-out forwards;}
+.splash[data-variant="travel"].is-playing .leaf{animation:leaf-drift 1.55s ease-in-out both;}
+.splash[data-variant="travel"] .leaf--2{animation-delay:.16s!important;}
+.splash[data-variant="travel"] .leaf--3{animation-delay:.3s!important;}
+.splash[data-variant="travel"] .leaf--4{animation-delay:.08s!important;}
+@keyframes travel-in{0%{opacity:0;transform:translate3d(-80vw,8vh,0) scale(.82);}15%{opacity:1;}70%{transform:translate3d(0,0,0) scale(1);}84%{transform:translate3d(2vw,-5px,0) rotate(1deg);}100%{opacity:1;transform:translate3d(0,0,0);}}
+
+/* 2: 地圖展開 */
+.splash[data-variant="map"].is-playing .splash__map-wrap{animation:map-open .92s .12s cubic-bezier(.2,.72,.3,1) forwards;}
+.splash[data-variant="map"].is-playing .splash__sun{animation:sun-in .72s .55s ease-out forwards;}
+.splash[data-variant="map"].is-playing .splash__title{animation:title-in .42s 1.08s ease-out forwards;}
+.splash[data-variant="map"].is-playing .leaf--2,.splash[data-variant="map"].is-playing .leaf--3{animation:leaf-drift 1.5s .25s ease-in-out both;}
+@keyframes map-open{0%{opacity:0;clip-path:inset(0 50% 0 50%);transform:scale(.86);}35%{opacity:1;}100%{opacity:1;clip-path:inset(0 0 0 0);transform:scale(1);}}
+@keyframes sun-in{to{opacity:1;transform:scale(1);}}
+
+/* 3: 睡醒伸懶腰 */
+.splash[data-variant="wakeup"].is-playing .splash__deer--wakeup{animation:wake-in 1.05s .08s cubic-bezier(.2,.75,.25,1) forwards;}
+.splash[data-variant="wakeup"].is-playing .leaf--2{left:62%;top:12%;animation:leaf-to-nose 1.18s .25s ease-in forwards;}
+.splash[data-variant="wakeup"].is-playing .splash__title{animation:title-in .42s 1.16s ease-out forwards;}
+@keyframes wake-in{0%{opacity:0;transform:translateY(10vh) scale(.92);}35%{opacity:1;}70%{transform:translateY(0) scale(1.04,.96);}100%{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes leaf-to-nose{0%{opacity:0;transform:translate(0,-18vh) rotate(0);}20%{opacity:1;}100%{opacity:1;transform:translate(-8vw,29vh) rotate(220deg) scale(.75);}}
+
+@keyframes title-in{to{opacity:1;transform:translateY(0);}}
+@keyframes leaf-drift{0%{opacity:0;transform:translate(-10vw,-10vh) rotate(0);}20%{opacity:1;}100%{opacity:.95;transform:translate(12vw,46vh) rotate(270deg);}}
+
+@media (prefers-reduced-motion:reduce){
+  .splash *{animation:none!important;transition:none!important;}
+  .splash__deer--travel{opacity:1;transform:none;}
+  .splash__title{opacity:1;transform:none;}
+  .leaf{display:none;}
+}
