@@ -1785,7 +1785,7 @@ h3 .h-art{float:right;width:58px;height:auto;margin:-10px 0 -14px 8px;}
 
 /* F) 標頭插畫：不要被上方裁切遮住，留白多一點再讓圖出現 */
 .header-scene{margin:6px 0 0!important;}   /* 不再讓圖片超出內距邊界，避免部分手機（字體/顯示縮放不同）把左右兩側切掉 */
-.header-art{-webkit-mask-image:none!important;mask-image:none!important;border-radius:14px;}
+.header-art{-webkit-mask-image:none!important;mask-image:none!important;border-radius:26px!important;box-shadow:0 6px 18px -6px rgba(120,70,20,.32);}
 
 /* B) 今日天氣與穿搭卡：加一點顏色，不要純白單調 */
 .day-panel{background:linear-gradient(160deg,#fff8ec,#fdeed2)!important;border-color:#f0d9a8!important;}
