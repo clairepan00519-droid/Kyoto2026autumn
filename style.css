@@ -1858,15 +1858,6 @@ h3 .h-art{float:right;width:58px;height:auto;margin:-10px 0 -14px 8px;}
 .header-scene,.header-art{display:none!important;}
 @media(max-width:360px){.header.hero{--hero-img-h:300px;}.header.hero .header-title{padding-left:30%!important;}.header.hero h1{font-size:27px!important;}}
 
-
-/* v70：Hero 標題靠右、放大 */
-.header.hero .header-title{padding:10px 0 0 22%!important;}
-.header.hero .eyebrow{font-size:11.5px!important;letter-spacing:.12em;margin-bottom:2px;}
-.header.hero h1{font-size:46px!important;line-height:1.08;margin:2px 0 6px!important;}
-.header.hero h1 small{font-size:15px!important;margin-top:5px;letter-spacing:.04em;}
-@media(max-width:360px){.header.hero h1{font-size:40px!important;}.header.hero h1 small{font-size:13.5px!important;}.header.hero .header-title{padding-left:14%!important;}}
-
-
 /* v71：吃·逛京都卡片文字放大，餐廳名稱與資訊看得清楚 */
 .eatshop-group h3{font-size:19px!important;margin-bottom:10px!important;}
 .eatshop-group h3 small{font-size:13px!important;}
