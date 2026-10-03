@@ -1597,8 +1597,6 @@ function goToToday(){const i=tripTodayIndex();setActiveDay(i>=0?i:0);}
 function renderDayChips(){
   const today=tripTodayIndex();
   dayScroll.innerHTML = `<button class="today-chip" onclick="goToToday()">今日</button>`
-    +`<div class="day-chip special-chip ${activeDay==='eat'?'active':''}" onclick="setActiveDay('eat')"><div class="d"><img class="chip-ic" src="images/nav-food.webp" alt=""></div><div class="m">吃·京都</div></div>`
-    +`<div class="day-chip special-chip ${activeDay==='shop'?'active':''}" onclick="setActiveDay('shop')"><div class="d"><img class="chip-ic" src="images/nav-shopping.webp" alt=""></div><div class="m">逛·京都</div></div>`
     +days.map((d,i)=>`
     <div class="day-chip ${i===activeDay?'active':''} ${i===today?'is-today':''}" data-i="${i}" onclick="setActiveDay(${i})">
       <div class="d">${d.date}</div>
@@ -2511,7 +2509,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=69').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=71').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3118,7 +3116,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v69-2026-09-28';
+const APP_VERSION='v71-2026-09-28';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
