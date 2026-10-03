@@ -1820,3 +1820,10 @@ h3 .h-art{float:right;width:58px;height:auto;margin:-10px 0 -14px 8px;}
 /* v64：每日交通提示條圖示改用主題插畫（無背景圓框，讓插畫本身呈現） */
 .weather-strip .ico.img-ico{width:58px;height:58px;background:none;border-radius:0;flex:none;}
 .weather-strip .ico.img-ico img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 2px 3px rgba(90,50,20,.18));}
+
+/* v68：標頭改成「標題 → 插畫 → 日期」的順序（參考北海道那版），日期置中、與圖片距離拉近 */
+.header-title{padding-bottom:2px!important;}
+.header-title h1{margin-bottom:2px!important;}
+.header-scene{margin-top:4px!important;}
+.header-dates-row{display:flex;justify-content:center;margin:10px 0 2px;}
+.header-dates-row .dates{background:#fff!important;color:#6b3a22!important;font-size:12.5px!important;font-weight:700!important;padding:6px 16px!important;box-shadow:0 3px 10px -4px rgba(122,60,30,.3);}
