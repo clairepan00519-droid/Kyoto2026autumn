@@ -1827,3 +1827,33 @@ h3 .h-art{float:right;width:58px;height:auto;margin:-10px 0 -14px 8px;}
 .header-scene{margin-top:4px!important;}
 .header-dates-row{display:flex;justify-content:center;margin:10px 0 2px;}
 .header-dates-row .dates{background:#fff!important;color:#6b3a22!important;font-size:12.5px!important;font-weight:700!important;padding:6px 16px!important;box-shadow:0 3px 10px -4px rgba(122,60,30,.3);}
+
+
+/* =====================================================================
+   v69：標頭改成「整張背景圖」Hero（不再有獨立圖片框／內框／陰影）
+   手機：圖高固定、獨立 background-position，保留左側小鹿與中段鳥居；
+   文字放在圖片上方的留白區（靠右），日期膠囊在底部中央。
+   ===================================================================== */
+.header.hero{
+  --hero-img-h:326px;
+  --hero-bg:#fbe9d3;
+  position:relative;overflow:hidden;
+  padding:calc(8px + env(safe-area-inset-top,0px)) 14px calc(var(--hero-img-h) - 40px)!important;
+  border-radius:0 0 30px 30px!important;
+  background-color:var(--hero-bg)!important;
+  background-image:
+    linear-gradient(180deg,var(--hero-bg) 0,rgba(251,233,211,0) 84px),
+    url(images/hero-bg.webp)!important;
+  background-repeat:no-repeat,no-repeat!important;
+  background-size:100% var(--hero-img-h),auto var(--hero-img-h)!important;
+  background-position:center bottom,35% bottom!important;   /* 35%：左側小鹿＋中段鳥居同時入鏡 */
+  box-shadow:0 8px 20px -12px rgba(122,60,30,.35);
+}
+.header.hero .header-title{text-align:right;padding:6px 2px 0 36%!important;}
+.header.hero .eyebrow{letter-spacing:.14em;}
+.header.hero h1{font-size:30px!important;margin:2px 0 4px!important;}
+.header.hero h1 small{margin-top:3px;font-size:12.5px;}
+.header.hero .header-dates-row{position:absolute;left:0;right:0;bottom:14px;margin:0;display:flex;justify-content:center;z-index:3;}
+.header.hero .header-dates-row .dates{background:rgba(255,255,255,.92)!important;box-shadow:none!important;}
+.header-scene,.header-art{display:none!important;}
+@media(max-width:360px){.header.hero{--hero-img-h:300px;}.header.hero .header-title{padding-left:30%!important;}.header.hero h1{font-size:27px!important;}}
