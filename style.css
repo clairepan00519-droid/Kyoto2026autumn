@@ -1943,3 +1943,61 @@ body.mode-travel .eatshop-group.empty-area{display:none;}
 .sub2-edit button{min-height:34px;border:0;border-radius:999px;background:#eef3fb;color:var(--blue);font:inherit;font-size:12.5px;font-weight:800;padding:0 12px;cursor:pointer;}
 .sub2-edit button.del{background:#fde4df;color:#c1502f;}
 .subspots-add{width:100%;min-height:44px;border:1.5px dashed #a98bd0;background:#fbf8fe;color:#5b3a82;border-radius:14px;font:inherit;font-size:14px;font-weight:800;cursor:pointer;}
+
+/* =====================================================================
+   v75：吃·逛京都 地圖
+   ===================================================================== */
+.pm-card{margin:0 0 16px;padding:12px;border-radius:22px;background:linear-gradient(160deg,#fffaf0,#fdf0d8);border:1.5px solid #f0d9a8;box-shadow:0 8px 20px -14px rgba(120,70,20,.4);}
+.pm-areas,.pm-opts{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;}
+.pm-areas::-webkit-scrollbar,.pm-opts::-webkit-scrollbar{display:none;}
+.pm-areas button,.pm-opts button{flex:none;min-height:38px;padding:0 14px;border:1.5px solid #ecdfca;background:#fff;color:#8a6a55;border-radius:999px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.pm-areas button.on,.pm-opts button.on{background:#fff1dc;border-color:#e08a4c;color:#b8431f;}
+.pm-opts button.edit-only{border-style:dashed;border-color:#a98bd0;color:#5b3a82;background:#fbf8fe;}
+.pm-wrap{position:relative;border-radius:16px;overflow:hidden;border:1px solid #e6d4b4;margin-top:4px;}
+#placeMap{height:320px;background:#efe9db;}
+.pm-wrap.big #placeMap{height:68vh;}
+.pm-wrap.picking{outline:3px solid #e2673a;}
+.pm-wrap.picking #placeMap{cursor:crosshair;}
+.pm-pickbar{position:absolute;left:8px;right:8px;top:8px;z-index:1000;display:flex;gap:8px;align-items:center;justify-content:space-between;background:#e2673a;color:#fff;border-radius:12px;padding:8px 12px;font-size:13.5px;font-weight:800;box-shadow:0 4px 12px rgba(0,0,0,.25);}
+.pm-pickbar button{border:0;background:#fff;color:#b8431f;border-radius:999px;font:inherit;font-size:13px;font-weight:800;padding:5px 14px;cursor:pointer;flex:none;}
+.pm-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#efe9db;color:#8a6a55;font-size:14px;z-index:900;}
+.pm-legend{display:flex;flex-wrap:wrap;gap:10px;margin:8px 2px 2px;font-size:12px;color:#7a5a42;}
+.pm-legend .lg{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;vertical-align:-1px;}
+.lg.eat{background:#2f8a52}.lg.shop{background:#e2673a}.lg.home{background:#7a4fb0}.lg.approx{background:#fff;border:2px dashed #999;width:10px;height:10px}
+.pm-pin-wrap{background:none!important;border:0!important;}
+.pin{width:38px;height:38px;border-radius:50%;background:#fff;border:3px solid #2f8a52;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(0,0,0,.35);transition:transform .15s;}
+.pin img{width:24px;height:24px;object-fit:contain;display:block;}
+.pin-shop{border-color:#e2673a;}
+.pin.approx{border-style:dashed;opacity:.92;}
+.pin.sel{transform:scale(1.28);box-shadow:0 0 0 4px rgba(226,103,58,.35),0 4px 10px rgba(0,0,0,.4);}
+.pin-home{width:26px;height:26px;border-color:#7a4fb0;background:#7a4fb0;}
+.pin-home span{color:#fff;font-size:12px;font-weight:900;}
+.pm-dist{transform:translate(-50%,-50%);white-space:nowrap;background:#fff;color:#7a3a1a;border:1.5px solid #e0a070;border-radius:999px;padding:1px 8px;font-size:12px;font-weight:800;box-shadow:0 2px 6px rgba(0,0,0,.25);}
+.pm-tip{font-weight:800;font-size:13px;}
+.leaflet-container{font:inherit;}
+.pm-info{margin-top:10px;}
+.pm-hint{margin:6px 2px;font-size:13px;line-height:1.6;color:#7a5a42;}
+.pm-sel{background:#fff;border-radius:16px;padding:12px;border:1px solid #f0d9a8;}
+.pm-sel-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+.pm-sel-top b{font-size:18px;color:var(--ink);}
+.pm-area{font-size:12px;font-weight:700;background:#fff1dc;color:#b8431f;border-radius:999px;padding:1px 10px;}
+.pm-sel-line{margin-top:6px;font-size:13.5px;color:#6b4d38;}
+.pm-sel-line b{font-size:12px;background:#fff1dc;color:#b8431f;border-radius:999px;padding:1px 9px;margin-right:6px;}
+.pm-sel-line.warn{color:#9a6a1a;font-size:13px;}
+.pm-sel-btns{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px;}
+.pm-sel-btns a,.pm-sel-btns button{min-height:38px;display:inline-flex;align-items:center;justify-content:center;padding:0 16px;border:0;border-radius:999px;background:#eef3fb;color:var(--blue);font:inherit;font-size:13.5px;font-weight:800;text-decoration:none;cursor:pointer;}
+.pm-sel-btns a{background:linear-gradient(135deg,#b3261e,#f0803a);color:#fff;}
+.pm-sel-btns button.del{background:#fde4df;color:#c1502f;}
+.pm-sel h5,.pm-unpinned h5{margin:12px 0 6px;font-size:14px;font-weight:900;color:#8a3a22;}
+.pm-row{display:flex;width:100%;justify-content:space-between;align-items:center;gap:10px;min-height:44px;margin-bottom:6px;padding:6px 12px;border:0;border-left:5px solid #2f8a52;border-radius:12px;background:#f5faf4;font:inherit;text-align:left;cursor:pointer;}
+.pm-row.shop{border-left-color:#e2673a;background:#fff4ef;}
+.pm-row .rn{font-weight:800;font-size:14.5px;color:var(--ink);}
+.pm-row .rn em{font-style:normal;font-size:11px;color:#9a6a1a;margin-left:6px;}
+.pm-row .rd{font-size:12.5px;color:#7a5a42;white-space:nowrap;}
+.pm-unpinned{margin-top:10px;}
+.pm-miss{display:flex;flex-wrap:wrap;gap:6px;}
+.pm-miss button{border:1.5px dashed #a98bd0;background:#fbf8fe;color:#5b3a82;border-radius:999px;font:inherit;font-size:13px;font-weight:800;padding:6px 12px;cursor:pointer;display:inline-flex;gap:6px;align-items:center;}
+.pm-miss small{font-size:11px;background:#7a4fb0;color:#fff;border-radius:999px;padding:0 7px;}
+.gall-actions .pmb{background:#eaf4ea!important;color:#23683d!important;}
+.gall-actions .pmb.edit-only{background:#f3ecfa!important;color:#5b3a82!important;}
+.pm-pickbar[hidden],.pm-loading[hidden]{display:none!important;}
