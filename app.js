@@ -681,9 +681,9 @@ const days = [
     S("京の焼肉処 弘","food","京都燒肉晚餐候選。",{tags:["預約"],img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
     S("空蟬亭","food","晚餐候選，依訂位與當日動線安排。",{img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"})
   ]},
-{dayNum:"3",date:"11/29",weekday:"日",region:"東山・紅葉星期日輕量版",enRegion:"Shinnyodo \u2192 Eikando \u2192 Nanzenji",drive:"🚇 市區大眾運輸＋步行",title:"東山有秋",dayDesc:"東山錦繡・古寺與庭園的秋日長卷",wear:"好走鞋＋可穿脫保暖層",weatherIco:"🍁",spots:[
-    S("真如堂","attraction","早起先到，避開較晚抵達的團體人潮。",{tags:["早起"],dur:"約60–90分鐘",fullDesc:"真如堂是這日的第一站；欣賞紅葉與本堂周邊後就往南移動，不在同區反覆折返。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
-    S("永觀堂","attraction","京都代表性紅葉寺院，旺季人多但值得保留。",{tags:["必看"],dur:"約60–90分鐘",fullDesc:"星期日應把永觀堂放在行程核心，接受一定人潮；若排隊過長，就縮短其他加點。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
+{dayNum:"3",date:"11/29",weekday:"日",region:"東山・紅葉星期日輕量版",enRegion:"Eikando \u2192 Nanzenji \u2192 Shinnyodo",drive:"🚇 市區大眾運輸＋步行",title:"東山有秋",dayDesc:"東山錦繡・古寺與庭園的秋日長卷",wear:"好走鞋＋可穿脫保暖層",weatherIco:"🍁",spots:[
+    S("真如堂","attraction","午餐後由岡崎北上，與相鄰的金戒光明寺一起收尾。",{tags:["午後"],dur:"約60分鐘",fullDesc:"真如堂排在午餐之後；欣賞本堂、三重塔與楓林後，沿寺域南側小路步行到金戒光明寺，不必再搭車。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
+    S("永觀堂","attraction","晨間貸切第一站，在開門人潮湧入前慢慢看。",{tags:["必看","晨間貸切"],dur:"約60–90分鐘",fullDesc:"這天以永觀堂晨間貸切開場，在一般開門前的安靜時段參觀，是整天最重要的一站；依預約時間提早 10–15 分抵達山門集合。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
     S("南禪寺","attraction","以三門、水路閣與院內散步收尾。",{dur:"約60分鐘",fullDesc:"南禪寺腹地較開闊，適合在永觀堂後舒緩人潮壓力。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
     S("天授庵／無鄰菴二選一","attraction","依預約、人潮與體力只加一座庭園。",{tags:["機動"],fullDesc:"兩者不必都去。若當天已疲累，直接回岡崎、四條或河原町休息逛街。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"})
   ],moreSpots:[
@@ -766,11 +766,15 @@ const transportPlans = [
     {name:'A 三千院・大原',routes:[{from:'四條站 K09',to:'國際會館 K01',mode:'🚇 地下鐵烏丸線',time:'20–23 分',note:'07:20–07:40 進站'},{from:'國際會館',to:'大原',mode:'🚌 京都巴士 19／特16／特17',time:'25–40 分',note:'目標 08:00 前後發車；約 20–40 分一班'},{from:'大原站',to:'三千院',mode:'🚶 步行',time:'10–15 分',note:'回程較難叫車'},{from:'國際會館',to:'三千院（備案）',mode:'🚕 計程車',time:'25–35 分',note:'約 ¥4,000–5,500／車'}]},
     {name:'B 高雄三寺',routes:[{from:'四條',to:'京都站',mode:'🚇 地下鐵烏丸線',time:'約 4 分',note:'07:00–07:20 離開飯店'},{from:'京都站',to:'栂ノ尾',mode:'🚌 JR 巴士 47／48／49',time:'50–65 分',note:'鎖定 07:20 前後班次，提早 20 分排隊'},{from:'栂ノ尾',to:'槇ノ尾・山城高雄',mode:'🚶 步行／區間巴士',time:'依體力',note:'慢旅只選兩寺'},{from:'山城高雄',to:'京都站',mode:'🚌 JR 巴士 47／47S／48／48S／49',time:'50–70 分',note:'15:00–16:00 候車'}]},
     {name:'C 鞍馬',routes:[{from:'四條烏丸',to:'出町柳',mode:'🚕 計程車',time:'15–30 分',note:'約 ¥2,000–3,000／車'},{from:'出町柳',to:'鞍馬',mode:'🚆 叡山電車鞍馬線',time:'30–35 分',note:'免轉車；日間約 15–20 分一班'},{from:'鞍馬',to:'出町柳',mode:'🚆 叡山電車鞍馬線',time:'30–35 分',note:'鞍馬站難叫車，務必以電車回程'}]}]},
-  {summary:'飯店搭計程車至真如堂，之後一路向南步行，南禪寺再接地下鐵。', alert:'紅葉週日巴士容易擠；真如堂 07:00–07:30 出發最好叫車。', routes:[
-    {from:'飯店',to:'真如堂',mode:'🚕 計程車',time:'25–40 分',note:'約 ¥2,200–3,300／車'},
-    {from:'真如堂',to:'永觀堂',mode:'🚶 步行',time:'15–20 分',note:'住宅區向南，不建議搭車'},
-    {from:'永觀堂',to:'南禪寺',mode:'🚶 步行',time:'10–15 分',note:'沿東山步行'},
-    {from:'南禪寺',to:'新風館',mode:'🚇 東西線',time:'6–8 分＋步行',note:'蹴上 T09 → 烏丸御池 T13；免轉車'}]},
+  {summary:'計程車直達永觀堂晨間貸切；南禪寺、天授庵、無鄰菴與午餐都在步行範圍，午後搭車上真如堂，步行到金戒光明寺。', alert:'晨間貸切請依預約時間提早 10–15 分到山門；清晨巴士少、週日紅葉人潮多，前一晚先用 GO 預約計程車。', routeKey:'v79', routes:[
+    {from:'飯店（烏丸四條）',to:'永觀堂',mode:'🚕 計程車',time:'20–30 分',note:'依晨間貸切集合時間往回推；約 ¥2,500–3,500／車'},
+    {from:'永觀堂',to:'南禪寺',mode:'🚶 步行',time:'約 10 分',note:'沿鹿ヶ谷通往南，平路'},
+    {from:'南禪寺',to:'天授庵',mode:'🚶 步行',time:'2–3 分',note:'就在三門南側'},
+    {from:'天授庵',to:'無鄰菴',mode:'🚶 步行',time:'約 10 分',note:'經南禪寺參道、仁王門通往西'},
+    {from:'無鄰菴',to:'午餐（南禪寺・岡崎）',mode:'🚶 步行',time:'5–10 分',note:'週日熱門店先訂位'},
+    {from:'岡崎',to:'真如堂',mode:'🚕 計程車',time:'約 10 分',note:'上坡約 2 公里，搭車保留體力；約 ¥1,200–1,600'},
+    {from:'真如堂',to:'金戒光明寺',mode:'🚶 步行',time:'5–10 分',note:'寺域南側小路相連，不必搭車'},
+    {from:'金戒光明寺',to:'飯店（烏丸四條）',mode:'🚕 計程車',time:'20–30 分',note:'走到岡崎道或丸太町通較好叫車；約 ¥2,000–2,800'}]},
   {summary:'上午洛北計程車串寺；回飯店取行李後，京都站搭 JR 奈良線至宇治、奈良。', alert:'宇治段優先搭「みやこ路快速」；快速是否直達奈良依當班車確認。', routes:[
     {from:'飯店',to:'詩仙堂',mode:'🚕 計程車',time:'30–45 分',note:'約 ¥3,000–4,300／車'},
     {from:'詩仙堂',to:'圓光寺',mode:'🚶 步行',time:'5–10 分',note:'最順路'},
@@ -816,7 +820,7 @@ const transportGeneralTips = ['全程準備 ICOCA，日常路段直接刷卡最�
     "京洛惜別・銀杏晚楓與歸途"
   ];
   days.forEach((d,i)=>d.title=dayTitles[i]);
-  const routeLabels=['關西機場 → 京都站','大原／高雄／鞍馬・貴船','真如堂 → 永觀堂 → 南禪寺','修學院 → 宇治 → 奈良','奈良 → 龜岡 → 嵐山','龜岡 → 南丹 → 綾部 → 京丹後','京丹後海岸','金剛院 → 天橋立 → 舞鶴','舞鶴 → 京都','京都 → 關西機場'];
+  const routeLabels=['關西機場 → 京都站','大原／高雄／鞍馬・貴船','永觀堂 → 南禪寺 → 無鄰菴 → 真如堂','修學院 → 宇治 → 奈良','奈良 → 龜岡 → 嵐山','龜岡 → 南丹 → 綾部 → 京丹後','京丹後海岸','金剛院 → 天橋立 → 舞鶴','舞鶴 → 京都','京都 → 關西機場'];
   days.forEach((d,i)=>d.enRegion=routeLabels[i]);
 
   const all=()=>days.flatMap(d=>[...d.spots,...d.moreSpots]);
@@ -840,9 +844,14 @@ const transportGeneralTips = ['全程準備 ICOCA，日常路段直接刷卡最�
 
   // 拆分合併景點
   split(2,"天授庵／無鄰菴二選一",[
-    S("天授庵","attraction","南禪寺塔頭，以枯山水與池泉庭園展現截然不同的秋景。",{tags:["與無鄰菴擇一"],dur:"約45–60分鐘",fullDesc:"天授庵緊鄰南禪寺三門，動線最順。前庭以白砂、苔地與幾何石組構成，後庭則有池泉、楓樹與竹林；紅葉旺季空間不大，若入口排隊過長，可把時間留給無鄰菴。"}),
-    S("無鄰菴","attraction","明治時代名園，以東山為借景、琵琶湖疏水為庭園注入流動感。",{tags:["與天授庵擇一","建議預約"],dur:"約45–60分鐘",fullDesc:"無鄰菴的魅力不在密集楓紅，而在草地、溪流、石景和遠方東山共同構成的開闊景深。適合想避開寺院式庭園、慢慢坐看水聲與秋色的人；熱門時段常採預約或分流，出發前先確認。"})
+    S("天授庵","attraction","南禪寺塔頭，以枯山水與池泉庭園展現截然不同的秋景。",{tags:["南禪寺塔頭"],dur:"約45–60分鐘",fullDesc:"天授庵緊鄰南禪寺三門，看完南禪寺就近進入，動線最順。前庭以白砂、苔地與幾何石組構成，後庭則有池泉、楓樹與竹林；紅葉旺季空間不大，入口排隊過長時縮短停留即可。"}),
+    S("無鄰菴","attraction","明治時代名園，以東山為借景、琵琶湖疏水為庭園注入流動感。",{tags:["建議預約"],dur:"約45–60分鐘",fullDesc:"無鄰菴的魅力不在密集楓紅，而在草地、溪流、石景和遠方東山共同構成的開闊景深。從天授庵沿仁王門通往西步行即到，看完就在岡崎一帶午餐；熱門時段常採預約或分流，建議預約午前的時段。"})
   ]);
+  /* v79：11/29 新增午餐與金戒光明寺。加在最後面（不改動既有景點位置，筆記、照片不會錯位），顯示順序見 BUILTIN_ORDER */
+  days[2].spots.push(
+    S("午餐：南禪寺・岡崎一帶","food","看完無鄰菴就近午餐，再搭車北上真如堂。",{main:true,tags:["午餐"],dur:"約60分鐘",mapQuery:"南禅寺 湯豆腐",fullDesc:"南禪寺參道一帶以湯豆腐老店聞名，岡崎則有洋食與咖啡店，從無鄰菴步行 5–10 分即可。11/29 是星期日，熱門店建議先訂位，或 11:00 前入店避開排隊；不想排隊時改在岡崎周邊簡單吃，保留下午體力。"}),
+    S("金戒光明寺","attraction","真如堂南側的「くろ谷さん」，山門、三重塔與墓地坡道可俯瞰京都市街。",{tags:["收尾"],dur:"約45–60分鐘",link:"https://www.kurodani.jp/",linkLabel:"金戒光明寺官方資訊",hours:"境內通常 09:00–16:00；秋季特別公開（御影堂、大方丈、庭園）另有時間與費用，以官網公告為準",fullDesc:"金戒光明寺與真如堂相鄰，步行 5–10 分即到，是這天的最後一站。巨大的山門、阿彌陀堂與三重塔都在坡地上，登上三重塔旁的石階可眺望京都市區與西山。幕末曾是會津藩京都守護職本陣。參觀後由岡崎道一帶叫車回飯店。"})
+  );
   split(3,"詩仙堂・圓光寺・曼殊院三選二",[
     S("詩仙堂","attraction","小巧而層次分明的山居庭園，白砂、杜鵑丘與楓色相互映襯。",{tags:["三選二"],dur:"約45–60分鐘",fullDesc:"詩仙堂由書院望向庭園的框景十分優雅，秋季色彩集中、停留節奏安靜。入口到庭園有些坡度，建議開門前後抵達；若院內已擁擠，不必久候經典空景。"}),
     S("圓光寺","attraction","十牛之庭與額緣庭園是洛北紅葉代表，落葉期也很有韻味。",{tags:["三選二","紅葉重點"],dur:"約60–75分鐘",fullDesc:"圓光寺從書院向外望，可看到楓樹、苔庭與石燈籠形成如畫框般的景致；後方高處還能俯瞰京都。旺季通常需注意預約或入場安排，若當年紅葉狀況最好，可優先保留。"}),
@@ -888,7 +897,7 @@ const transportGeneralTips = ['全程準備 ICOCA，日常路段直接刷卡最�
     "三千院＋大原散步":"三千院位於大原山里，聚碧園與有清園以苔地、杉木、石佛和柔和楓色構成安靜景觀。比市中心紅葉名所更適合慢走；可沿村落小徑、溪流與土產店散步，不必把周邊寺院全部收集。落葉期的苔庭與紅葉地毯仍很漂亮。",
     "高雄：神護寺＋西明寺":"高雄山區氣溫通常低於市區，紅葉進度也較早。神護寺需走較多階梯，寺域開闊、山谷景觀強烈；西明寺規模較小，朱橋與溪谷更有幽靜感。高山寺只有在時間與體力充足時再加，避免三寺全走變成趕路。",
     "鞍馬寺（貴船視體力）":"鞍馬寺沿山勢而建，從仁王門到本殿金堂一路穿過杉林與石階，秋季氣氛清冽。是否翻山到貴船應依路況、天色與膝力決定；濕滑、接近日落或體力不足時原路折返，仍能完整感受鞍馬山林。",
-    "真如堂":"真如堂的三重塔、本堂與楓林相互映襯，是東山北側很有層次的紅葉寺院。清晨先抵達，可先看本堂前與塔周邊，再往永觀堂方向移動；不要為等待完全無人的畫面停留過久。",
+    "真如堂":"真如堂的三重塔、本堂與楓林相互映襯，是東山北側很有層次的紅葉寺院。這天排在午餐之後，從岡崎搭車上來最省力；看完本堂與塔周邊，沿南側小路步行到相鄰的金戒光明寺收尾。",
     "永觀堂":"永觀堂依山勢形成多層伽藍，放生池、多寶塔與長廊串起京都最具代表性的紅葉景觀。旺季人潮難以避免，仍值得保留為當日核心；若入口排隊過長，就縮減額外庭園，而不是犧牲後續休息。",
     "南禪寺":"南禪寺腹地寬廣，三門、法堂與磚造水路閣展現不同時代的建築語彙。從永觀堂步行而來很順，適合放慢速度散步；若時間有限，集中在三門與水路閣，不必逐一進入所有塔頭。",
     "平等院":"平等院鳳凰堂臨阿字池而建，水面倒影與朱紅建築是宇治代表景觀；鳳翔館則可近看雲中供養菩薩與文物。午後至少留一至一個半小時，若館內排隊明顯，先完成庭園環線，再依剩餘時間決定。",
@@ -974,11 +983,11 @@ const transportGeneralTips = ['全程準備 ICOCA，日常路段直接刷卡最�
   const tacticByName={
     '京都站周邊':'Porta、伊勢丹與車站建築都適合抵達日下午慢慢逛，不需要再跨區移動。',
     '東福寺':'只有班機、入境與交通都順利，且仍有足夠入場時間才考慮；否則直接留在京都站。',
-    '真如堂':'清晨先看本堂與三重塔周邊，完成核心區域後就往永觀堂移動，避免為空景久候。',
-    '永觀堂':'旺季入口排隊過長時，縮減天授庵或無鄰菴的停留，不犧牲午后休息時間。',
+    '真如堂':'午後光線柔和，先看本堂與三重塔周邊，再沿南側小路步行到金戒光明寺。',
+    '永觀堂':'晨間貸切請依預約時間提早到山門；結束後沿鹿ヶ谷通往南步行約 10 分到南禪寺。',
     '南禪寺':'時間有限時集中三門、法堂與水路閣，不必逐一收集所有塔頭。',
-    '天授庵':'若入口隊伍明顯過長，可將時間留給無鄰菴或南禪寺本寺。',
-    '無鄰菴':'熱門時段建議事先預約；預約不到時再以天授庵替代。',
+    '天授庵':'就在南禪寺三門旁；入口隊伍過長時縮短停留，準時前往無鄰菴。',
+    '無鄰菴':'建議預約午前時段，看完就在南禪寺・岡崎一帶午餐。',
     '奈良公園・浮見堂・飛火野':'清晨選一至兩處散步即可，利用較安靜的時段避開稍晚抵達的團體人潮。',
     '保津川漂流':'前一晚與當日早晨確認營運；若因雨、風、水位或停航取消，改搭 JR 前往嵐山。',
     '天龍寺':'抵達嵐山後先確認最後入場時間，再決定常寂光寺或寶筐院的停留長度。',
@@ -1330,8 +1339,18 @@ function persistCover(){ safeSetItem('kyoto_covers', coverStore); }
 let customSpotsStore = JSON.parse(localStorage.getItem('kyoto_custom_spots')) || {};
 let hiddenFixedSpotsStore = JSON.parse(localStorage.getItem('kyoto_hidden_fixed_spots')) || {};
 function persistHiddenFixedSpots(){ safeSetItem('kyoto_hidden_fixed_spots', hiddenFixedSpotsStore); }
+/* v79：11/29 改成五處都去，舊版「二選一」時隱藏的景點恢復顯示（只做一次；'_v79' 記號會同步給家人） */
+(function unhideD3ForV79(){
+  try{
+    const h=hiddenFixedSpotsStore[2];
+    if(Array.isArray(h)&&h.includes('_v79'))return;
+    const keep=(Array.isArray(h)?h:[]).filter(k=>!['d2-m0','d2-m1','d2-m2','d2-m3','d2-m4'].includes(k));
+    hiddenFixedSpotsStore[2]=[...keep,'_v79'];
+    setTimeout(persistHiddenFixedSpots,0);
+  }catch(e){}
+})();
 function hideFixedSpot(dayIdx,key){ if(!confirm('要從這一天隱藏此項目嗎？'))return; if(!hiddenFixedSpotsStore[dayIdx])hiddenFixedSpotsStore[dayIdx]=[]; if(!hiddenFixedSpotsStore[dayIdx].includes(key))hiddenFixedSpotsStore[dayIdx].push(key); persistHiddenFixedSpots(); renderDayContent(); updateSpotCount();offerUndo('已隱藏行程項目',()=>{hiddenFixedSpotsStore[dayIdx]=(hiddenFixedSpotsStore[dayIdx]||[]).filter(k=>k!==key);persistHiddenFixedSpots();renderDayContent();updateSpotCount();}); }
-function restoreFixedSpots(dayIdx){ delete hiddenFixedSpotsStore[dayIdx]; persistHiddenFixedSpots(); renderDayContent(); updateSpotCount(); }
+function restoreFixedSpots(dayIdx){ if(dayIdx===2)hiddenFixedSpotsStore[2]=['_v79']; else delete hiddenFixedSpotsStore[dayIdx]; persistHiddenFixedSpots(); renderDayContent(); updateSpotCount(); }
 function persistCustomSpots(){ safeSetItem('kyoto_custom_spots', customSpotsStore); }
 function getCustomSpots(dayIdx){ return customSpotsStore[dayIdx] || []; }
 
@@ -1466,10 +1485,22 @@ function getOrderKey(dayIdx, listType){ return dayIdx + '-' + listType; }
 
 /* (v52 已改寫) */
 
+/* 內建的預設顯示順序（沒有自己調整過順序時使用）。
+   11/29：永觀堂 → 南禪寺 → 天授庵 → 無鄰菴 → 午餐 → 真如堂 → 金戒光明寺 */
+const BUILTIN_ORDER={'2-main':['d2-m1','d2-m2','d2-m3','d2-m4','d2-m5','d2-m0','d2-m6']};
+/* 改版前存的順序不含新加入的景點：視為舊順序、不採用（資料不刪除），改用新的內建順序 */
+const BUILTIN_ORDER_SINCE={'2-main':'d2-m5'};
+function savedOrder(okey){
+  const o=orderStore[okey];
+  if(!o||!o.length)return null;
+  const mark=BUILTIN_ORDER_SINCE[okey];
+  if(mark&&!o.includes(mark))return null;
+  return o;
+}
 function applyOrder(dayIdx, listType, list){
   const okey = getOrderKey(dayIdx, listType);
   const naturalKeys = list.map(o=>o.key);
-  let order = orderStore[okey];
+  let order = savedOrder(okey) || BUILTIN_ORDER[okey];
   if(!order || !order.length) return list;
   order = order.filter(k=>naturalKeys.includes(k));
   naturalKeys.forEach(k=>{ if(!order.includes(k)) order.push(k); });
@@ -1481,8 +1512,8 @@ function moveSpot(dayIdx, listType, key, dir){
   const natural = getNaturalList(dayIdx, listType);
   const naturalKeys = natural.map(o=>o.key);
   const okey = getOrderKey(dayIdx, listType);
-  let order = orderStore[okey];
-  if(!order || !order.length) order = naturalKeys.slice();
+  let order = savedOrder(okey);
+  if(!order) order = (BUILTIN_ORDER[okey]||naturalKeys).slice();
   else {
     order = order.filter(k=>naturalKeys.includes(k));
     naturalKeys.forEach(k=>{ if(!order.includes(k)) order.push(k); });
@@ -1582,16 +1613,23 @@ function removeTransportImage(dayIdx,i){
 }
 function transportSegmentExtrasHTML(dayIdx,segmentKey){
   const data=transportExtrasFor(dayIdx);
-  const notes=data.notes.map((n,i)=>({n,i})).filter(x=>(x.n.segmentKey||'other')===segmentKey);
-  const images=data.images.map((img,i)=>({img,i})).filter(x=>(x.img.segmentKey||'other')===segmentKey);
+  const segOf=k=>isOrphanTransportSeg(dayIdx,k)?'other':(k||'other');
+  const notes=data.notes.map((n,i)=>({n,i})).filter(x=>segOf(x.n.segmentKey)===segmentKey);
+  const images=data.images.map((img,i)=>({img,i})).filter(x=>segOf(x.img.segmentKey)===segmentKey);
   const noteHTML=notes.length?`<div class="transport-extra-notes">${notes.map(({n,i})=>`<article><div><strong>${escHtml(n.title)}</strong>${n.detail?`<p>${escHtml(n.detail)}</p>`:''}</div><div class="transport-extra-actions">${n.location?`<a href="${escAttr(mapsLink(n.location))}" target="_blank" rel="noopener">導航</a>`:''}<button class="edit-only" onclick="removeTransportExtra(${dayIdx},${i})">刪除</button></div></article>`).join('')}</div>`:'';
   const imageHTML=images.length?`<div class="transport-extra-gallery">${images.map(({img,i})=>`<figure><img src="${escAttr(img.url)}" alt="${escAttr(img.title||'交通圖片')}" loading="lazy" onclick="openAttachModal('${escAttr(img.url)}')"><figcaption>${escHtml(img.title||'交通圖片')}</figcaption><div class="edit-only"><button onclick="renameTransportImage(${dayIdx},${i})">改名</button><button onclick="removeTransportImage(${dayIdx},${i})">刪除</button></div></figure>`).join('')}</div>`:'';
   const fieldKey=`${dayIdx}-${segmentKey}`;
   return `<div class="transport-segment-extra">${noteHTML}${imageHTML}<details class="transport-segment-add edit-only"><summary>＋ 補充這一段</summary><div class="transport-extra-form"><input id="transportExtraTitle-${fieldKey}" placeholder="例如：京都站 8 號月台"><textarea id="transportExtraDetail-${fieldKey}" rows="2" placeholder="班次、出口、集合時間或備註"></textarea><input id="transportExtraLocation-${fieldKey}" placeholder="導航位置（可留空）"><div class="transport-segment-buttons"><button onclick="addTransportExtra(${dayIdx},'${segmentKey}')">儲存文字</button><button class="secondary" onclick="document.getElementById('transportExtraFile-${fieldKey}').click()">上傳圖片</button></div></div></details><input id="transportExtraFile-${fieldKey}" type="file" accept="image/*" multiple hidden onchange="handleTransportImageUpload(event,${dayIdx},'${segmentKey}')"></div>`;
 }
+/* 交通步驟改版（routeKey）後，掛在舊步驟上的補充說明／圖片不會不見，改放到「其他舊版交通補充」 */
+function isOrphanTransportSeg(dayIdx,key){
+  const plan=transportPlans[dayIdx];
+  return !!(key&&plan&&plan.routeKey&&/^route-\d+$/.test(key));
+}
 function legacyTransportExtrasHTML(dayIdx){
   const data=transportExtrasFor(dayIdx);
-  if(!data.notes.some(x=>!x.segmentKey)&&!data.images.some(x=>!x.segmentKey))return '';
+  const isOld=x=>!x.segmentKey||isOrphanTransportSeg(dayIdx,x.segmentKey);
+  if(!data.notes.some(isOld)&&!data.images.some(isOld))return '';
   return `<details class="transport-legacy"><summary>其他舊版交通補充</summary>${transportSegmentExtrasHTML(dayIdx,'other')}</details>`;
 }
 
@@ -1637,7 +1675,7 @@ function transportPlanHTML(dayIdx){
   const plan=transportPlans[dayIdx];
   if(!plan)return `<section class="transport-plan"><div class="tp-head"><div><small>D${days[dayIdx].dayNum}・${days[dayIdx].date}</small><strong>今日交通</strong></div><img src="images/deer-car.webp" alt="" width="64" height="45"></div>${customTransportHTML(dayIdx)}${transportAddBarHTML(dayIdx)}</section>`;
   const routes=(rows,prefix='route')=>`<div class="transport-steps">${(rows||[]).map((r0,i)=>{const segmentKey=`${prefix}-${i}`;const sk=`tp${dayIdx}-${segmentKey}`;if(currentFieldValue(sk,'hidden',null)==='1')return '';const r={from:currentFieldValue(sk,'from',r0.from)||r0.from,to:currentFieldValue(sk,'to',r0.to)||r0.to,mode:currentFieldValue(sk,'mode',r0.mode)||r0.mode,time:currentFieldValue(sk,'time',r0.time)||r0.time,note:currentFieldValue(sk,'note',r0.note)||r0.note};window._tpOrig=window._tpOrig||{};window._tpOrig[sk]=r0;return `<div class="transport-step"><span class="transport-step-no">${i+1}</span><div class="transport-step-main"><div class="transport-points"><strong>${escHtml(r.from)}</strong><span>→</span><strong>${escHtml(r.to)}</strong></div><div class="transport-meta"><b>${escHtml(r.mode)}</b><span>⏱ ${escHtml(r.time)}</span></div><small>${escHtml(r.note)}</small><div class="edit-only tp-step-actions"><button type="button" onclick="editTransportStep('${sk}')">✎ 修改</button><button type="button" onclick="deleteTransportStep('${sk}')">🗑 刪除</button></div>${transportSegmentExtrasHTML(dayIdx,segmentKey)}</div></div>`;}).join('')}</div>`;
-  const body=plan.choices?`<div class="transport-choice-list">${plan.choices.map((choice,i)=>`<details class="transport-choice"${i===0?' open':''}><summary>${escHtml(choice.name)}<span>展開路線</span></summary>${routes(choice.routes,`choice-${i}`)}</details>`).join('')}</div>`:plan.drive?`<div class="transport-drive-card"><span>🚗</span><div><strong>今天全程自駕</strong><small>按下方按鈕開啟當日主要地點導航；停車、休息站與道路狀況以當日為準。</small>${transportSegmentExtrasHTML(dayIdx,'drive-0')}</div></div>`:routes(plan.routes);
+  const body=plan.choices?`<div class="transport-choice-list">${plan.choices.map((choice,i)=>`<details class="transport-choice"${i===0?' open':''}><summary>${escHtml(choice.name)}<span>展開路線</span></summary>${routes(choice.routes,`choice-${i}`)}</details>`).join('')}</div>`:plan.drive?`<div class="transport-drive-card"><span>🚗</span><div><strong>今天全程自駕</strong><small>按下方按鈕開啟當日主要地點導航；停車、休息站與道路狀況以當日為準。</small>${transportSegmentExtrasHTML(dayIdx,'drive-0')}</div></div>`:routes(plan.routes,plan.routeKey||'route');
   return `<section class="transport-plan"><div class="tp-head"><div><small>D${days[dayIdx].dayNum}・${days[dayIdx].date}</small><strong>今日交通</strong></div><img src="images/deer-car.webp" alt="" width="64" height="45"></div><div class="transport-alert">⚠️ ${escHtml(plan.alert)}</div>${body}${customTransportHTML(dayIdx)}${legacyTransportExtrasHTML(dayIdx)}${transportAddBarHTML(dayIdx)}<div class="transport-actions"><a href="https://www.google.com/maps/dir/?api=1&travelmode=${plan.drive?'driving':'transit'}&destination=${encodeURIComponent(currentFieldValue('day'+dayIdx+'-nav','mapQuery',null)||(days[dayIdx].region+' Japan'))}" target="_blank" rel="noopener">📍 開啟今日導航</a><button type="button" class="edit-only tp-nav-fix" onclick="editSpotField(event,'day${dayIdx}-nav','mapQuery','今日導航目的地（地址、經緯度或關鍵字）')">修正導航</button><button type="button" class="edit-only tp-nav-fix" onclick="restoreTransportSteps(${dayIdx})">↺ 還原本日交通步驟</button></div></section>`;
 }
 
@@ -1662,7 +1700,7 @@ function allSearchableSpots(){
       const desc=currentFieldValue(key,'desc',spot.desc)||spot.desc||'';
       const full=currentFieldValue(key,'fullDesc',spot.fullDesc)||spot.fullDesc||'';
       const info=currentBuiltInInfo(key,spot.customInfo||'')||'';
-      const listType=MAIN_CATS.includes(spot.cat)?'main':'more';
+      const listType=(spot.main||MAIN_CATS.includes(spot.cat))?'main':'more';
       out.push({dayIdx,key,listType,name,desc,cat:spot.cat,text:[name,desc,full,info,(spot.tags||[]).join(' '),day.region,day.title].join(' ').toLocaleLowerCase('zh-Hant')});
     };
     (day.spots||[]).forEach((spot,i)=>add(spot,`d${dayIdx}-m${i}`));
@@ -2581,7 +2619,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=78').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=79').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -2912,6 +2950,11 @@ function initTransportCards(){
   _transportSeed=parseTransportSeed();
   let stored=null;try{stored=JSON.parse(localStorage.getItem('kyoto_transport_cards'));}catch(e){}
   transportCardsData=Array.isArray(stored)?normalizeStructuredList('kyoto_transport_cards',stored):structuredClone(_transportSeed);
+  /* v79：D3 交通提醒若還是舊版預設文字（沒被改過），換成新的路線說明 */
+  const OLD_D3='以地下鐵東西線加步行串接真如堂、永觀堂與南禪寺；紅葉旺季減少依賴容易塞車的市巴士。';
+  const seedD3=_transportSeed.find(x=>x.day==='D3');
+  const c3=transportCardsData.find(x=>x.day==='D3'&&x.text===OLD_D3);
+  if(c3&&seedD3&&seedD3.text!==OLD_D3){c3.text=seedD3.text;setTimeout(persistTransportCards,0);}
   renderTransportCards();
 }
 function persistTransportCards(){safeSetItem('kyoto_transport_cards',transportCardsData);}
@@ -3190,7 +3233,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v78-2026-10-04';
+const APP_VERSION='v79-2026-10-04';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -3658,7 +3701,7 @@ function eatAreaFor(o){
 function stayGroups(){return allEatAreas().map(a=>({label:a,nav:AREA_ORIGIN[a]||a,dayIdxs:[]}));}
 function collectEatShop(kind){
   const cat=kind==='eat'?'food':'shopping';
-  return collectSpots(s=>s.cat===cat).map(o=>({...o,area:eatAreaFor(o)})).filter(o=>o.area);
+  return collectSpots(s=>s.cat===cat&&!s.main).map(o=>({...o,area:eatAreaFor(o)})).filter(o=>o.area);
 }
 function editEatArea(key){
   const all=collectSpots(()=>true).find(o=>o.key===key);
@@ -3895,7 +3938,7 @@ function getNaturalList(dayIdx, listType){
   const shown = spotsShownOnDay(dayIdx);
   const allFixed = shown.fixed.filter(o=>!hidden.has(o.key));
   const allCustom = shown.custom;
-  const belongs=(o)=> listType==='life' ? (o.spot.life || cats.includes(o.spot.cat)) : (!o.spot.life && cats.includes(o.spot.cat));
+  const belongs=(o)=> listType==='life' ? (!o.spot.main && (o.spot.life || cats.includes(o.spot.cat))) : (o.spot.main || (!o.spot.life && cats.includes(o.spot.cat)));
   let result=allFixed.filter(belongs).concat(allCustom.filter(belongs)).filter(o=>!master.has(o.key));
   if(listType==='life'){
     result=result.concat(plannedEntriesFor(dayIdx));
@@ -4890,8 +4933,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=78';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=78';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=79';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=79';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
