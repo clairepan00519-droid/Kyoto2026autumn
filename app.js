@@ -2025,6 +2025,25 @@ const WMO = {
   95:['⛈️','雷雨'],96:['⛈️','雷雨挾冰雹'],99:['⛈️','強雷雨挾冰雹'],
 };
 function wmoInfo(code){ return WMO[code] || ['🌡️','—']; }
+/* v77：天氣圖示改用小鹿插畫（依天氣代碼、風速與氣溫挑選） */
+function wxIconName(code,temp,wind){
+  code=Number(code);
+  if([95,96,99].includes(code))return 'weather-06-thunderstorm';
+  if([71,73,75,77,85,86].includes(code))return 'weather-07-snow';
+  if([80,81,82].includes(code))return 'weather-05-showers';
+  if([51,53,55,56,57,61,63,65,66,67].includes(code))return 'weather-04-rain';
+  if([45,48].includes(code))return 'weather-08-fog';
+  if(Number(wind)>=30)return 'weather-09-windy';
+  if(temp!=null&&Number(temp)<=3)return 'weather-10-cold';
+  if(code===0||code===1)return 'weather-01-sunny';
+  if(code===2)return 'weather-02-partly-cloudy';
+  if(code===3)return 'weather-03-cloudy';
+  return 'weather-02-partly-cloudy';
+}
+function wxIconHTML(code,temp,wind,cls){
+  const desc=wmoInfo(code)[1];
+  return `<img class="wx-ic ${cls||''}" src="images/${wxIconName(code,temp,wind)}.webp" alt="${escAttr(desc)}" width="72" height="72" loading="lazy">`;
+}
 
 function getDynamicTip(temp, code) {
   let tip = "";
@@ -2182,7 +2201,7 @@ function renderOneLiveCity(k){
     <details class="weather-city-card wc-details" ${isOpen?'open':''} ontoggle="weatherToggle('${k}',this.open)">
       <summary class="weather-primary wc-sum">
         <div class="wc-name"><strong>${CITIES[k].label}</strong>${badgeHtml}</div>
-        <span class="wc-ico">${ico}</span>
+        <span class="wc-ico">${wxIconHTML(cw.weather_code,temp,wind)}</span>
         <div class="wc-temp"><b>${temp}<small>°C</small></b><em>${desc}</em></div>
         <i class="wc-chev" aria-hidden="true">▾</i>
       </summary>
@@ -2562,7 +2581,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=76').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=77').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3171,7 +3190,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v76-2026-10-04';
+const APP_VERSION='v77-2026-10-04';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -3683,7 +3702,7 @@ function dayWeatherPanelHTML(i){
     if(!cw)return `<div class="dw-card"><div class="dw-place">${escHtml(CITIES[k].label)}</div>${sunRow}<div class="dw-empty">尚未取得即時氣象，按下方「更新」。</div>${tenki}</div>`;
     const [ico,desc]=wmoInfo(cw.weather_code),temp=Math.round(cw.temperature_2m);
     const when=e.fetchedAt?new Date(e.fetchedAt).toLocaleString('zh-TW',{hour12:false,month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
-    return `<div class="dw-card"><div class="dw-place">${escHtml(CITIES[k].label)}${e.stale?'<em>快取</em>':''}</div>${sunRow}<div class="dw-main"><span>${ico}</span><b>${temp}°C</b><i>${desc}</i></div><div class="dw-metrics">風 ${cw.wind_speed_10m} km/h　雨量 ${cw.precipitation} mm</div>${when?`<small>目前氣象更新 ${when}</small>`:''}${tenki}</div>`;
+    return `<div class="dw-card"><div class="dw-place">${escHtml(CITIES[k].label)}${e.stale?'<em>快取</em>':''}</div>${sunRow}<div class="dw-main"><span>${wxIconHTML(cw.weather_code,temp,cw.wind_speed_10m)}</span><b>${temp}°C</b><i>${desc}</i></div><div class="dw-metrics">風 ${cw.wind_speed_10m} km/h　雨量 ${cw.precipitation} mm</div>${when?`<small>目前氣象更新 ${when}</small>`:''}${tenki}</div>`;
   }).join('');
   return `<div class="day-panel"><div class="dp-title"><span>今日天氣與穿搭</span></div><div class="dw-wear"><span>建議穿搭：${escHtml(d.wear||'')}</span>${cities.some(k=>{const e=weatherEntryFor(k),c=e&&e.data&&e.data.current&&e.data.current.weather_code;return [51,53,55,56,57,61,63,65,66,67,80,81,82,95,96,99].includes(c);})?'<img class="dw-art" src="images/deer-rain.webp" alt="" width="54" height="69">':''}</div><div class="dw-grid">${cards}</div><button type="button" class="dp-btn" onclick="refreshDayWeather()">更新即時氣象</button><p class="dp-note">日出日落依 ${d.date} 日期計算；氣溫為「現在」的天氣，出發前 2–3 天請再看 tenki.jp 預報。</p><button type="button" class="dp-link" onclick="setTab('weather')">看完整天氣與雨雲圖 ›</button></div>`;
 }
@@ -4182,8 +4201,8 @@ function photoManagerHTML(idx,spot){
   const userCount=list.filter(p=>p.kind==='user').length;
   const tiles=list.map((p,i)=>{
     const isC=p.url===cover,isB=p.url===big;
-    const mv=p.kind==='user'?`<div class="pm-move edit-only">${p.i>0?`<button type="button" onclick="pmAct(event,'${q}',${i},'left')" aria-label="往前">‹</button>`:'<span></span>'}${p.i<userCount-1?`<button type="button" onclick="pmAct(event,'${q}',${i},'right')" aria-label="往後">›</button>`:'<span></span>'}</div>`:'';
-    return `<div class="pm-tile ${isC?'is-cover':''}"><div class="pm-img" data-src="${escAttr(p.url)}" onclick="event.stopPropagation();openAttachModal(this.dataset.src)"><img src="${escAttr(p.url)}"${photoPosAttr(p.url)} alt="" loading="lazy" onerror="imageErrorFallback(this)">${isC?'<span class="pm-b c">封面</span>':''}${isB?'<span class="pm-b b">大圖</span>':''}${p.kind==='orig'?'<span class="pm-b o">原圖</span>':''}${mv}</div><div class="pm-btns edit-only"><button type="button" class="${isC?'on':''}" onclick="pmAct(event,'${q}',${i},'cover')">封面</button><button type="button" class="${isB?'on':''}" onclick="pmAct(event,'${q}',${i},'big')">大圖</button><button type="button" onclick="pmAct(event,'${q}',${i},'pos')">位置</button><button type="button" class="del" onclick="pmAct(event,'${q}',${i},'del')">${p.kind==='orig'?'隱藏':'刪除'}</button></div></div>`;
+    const mv=(p.kind==='user'&&userCount>1)?`<div class="pm-order edit-only">${p.i>0?`<button type="button" onclick="pmAct(event,'${q}',${i},'left')">◀ 往前</button>`:''}${p.i<userCount-1?`<button type="button" onclick="pmAct(event,'${q}',${i},'right')">往後 ▶</button>`:''}</div>`:'';
+    return `<div class="pm-tile ${isC?'is-cover':''}"><div class="pm-img" data-src="${escAttr(p.url)}" onclick="event.stopPropagation();openAttachModal(this.dataset.src)"><img src="${escAttr(p.url)}"${photoPosAttr(p.url)} alt="" loading="lazy" onerror="imageErrorFallback(this)">${isC?'<span class="pm-b c">封面</span>':''}${isB?'<span class="pm-b b">大圖</span>':''}${p.kind==='orig'?'<span class="pm-b o">原圖</span>':''}</div>${mv}<div class="pm-btns edit-only"><button type="button" class="${isC?'on':''}" onclick="pmAct(event,'${q}',${i},'cover')">封面</button><button type="button" class="${isB?'on':''}" onclick="pmAct(event,'${q}',${i},'big')">大圖</button><button type="button" onclick="pmAct(event,'${q}',${i},'pos')">位置</button><button type="button" class="del" onclick="pmAct(event,'${q}',${i},'del')">${p.kind==='orig'?'隱藏':'刪除'}</button></div></div>`;
   }).join('');
   const add=`<button type="button" class="pm-add edit-only" onclick="event.stopPropagation();document.getElementById('file-${escAttr(idx)}').click()">＋ 新增照片</button>`;
   return `<div class="pm" onclick="event.stopPropagation()"><div class="pm-head"><b>照片（${list.length}）</b><span class="pm-hint edit-only">「封面」＝卡片縮圖，「大圖」＝展開後最上方的圖</span>${hidden?`<button type="button" class="pm-restore edit-only" onclick="restoreOrigPhoto(event,'${q}')">還原原圖</button>`:''}</div><div class="pm-grid">${tiles}${add}</div></div>`;
@@ -4865,8 +4884,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=76';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=76';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=77';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=77';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
