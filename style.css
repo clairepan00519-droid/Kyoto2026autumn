@@ -2080,3 +2080,21 @@ body.large-text .search-result-copy small{font-size:13px!important;}
 /* 地圖本身不要被整頁 zoom 放大（避免點選位置偏移）；按鈕與文字仍是大字 */
 body.large-text .pm-wrap{zoom:calc(1/1.18);}
 body.large-text .pm-wrap #placeMap{height:380px;}
+
+/* ===== v77 ===== */
+/* 食衣住卡展開時：縮圖貼齊、不留白邊；標題一行 */
+.sub-spot-card.open>.sub-spot-header.has-thumb{padding:0!important;align-items:stretch!important;}
+.sub-spot-card.open>.sub-spot-header.has-thumb .gh-thumb.sm{flex:0 0 56px!important;width:56px!important;min-height:56px!important;}
+.sub-spot-card.open>.sub-spot-header.has-thumb .sub-spot-header-content{padding:8px 96px 8px 12px!important;}
+.sub-spot-card.open>.sub-spot-header h4{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/* 照片排序：有文字的按鈕，不再是圖上看不懂的圓形箭頭 */
+.pm-order{display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:6px 6px 0;}
+.pm-order button{min-height:34px;border:0;border-radius:8px;background:#fff6dc;color:#8a5a00;font:inherit;font-size:12px;font-weight:800;cursor:pointer;padding:0 2px;white-space:nowrap;}
+.pm-order button:only-child{grid-column:1/-1;}
+/* 小鹿天氣圖示 */
+.wx-ic{display:block;object-fit:contain;}
+.wc-ico .wx-ic{width:62px;height:62px;margin:-8px auto;}
+.weather-city-card.wc-details>summary.wc-sum{grid-template-columns:minmax(0,1fr) 62px 80px 16px!important;gap:6px!important;}
+.dw-main{align-items:center!important;}
+.dw-main span{font-size:0!important;}
+.dw-main .wx-ic{width:76px;height:76px;}
