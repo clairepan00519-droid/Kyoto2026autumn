@@ -2619,7 +2619,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=79').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=80').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3233,7 +3233,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v79-2026-10-04';
+const APP_VERSION='v80-2026-10-04';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -4658,9 +4658,9 @@ function dayIconSVG(emoji){
 
 /* 每日交通提示條的圖示：改用你提供的主題插畫（依當天路線挑選），沒有對應插畫的日子維持線條小圖示。 */
 const DAY_ICON_IMG={
-  0:'images/day1-arrival.webp',
+  0:'images/day3-higashiyama.webp',   /* 飛機＋京都塔：抵達日 */
   1:'images/day2-northern-maples.webp',
-  2:'images/day3-higashiyama.webp',
+  2:'images/day1-arrival.webp',       /* 鳥居＋紅葉：東山 */
   3:'images/day4-uji-nara.webp',
   4:'images/day5-hozugawa.webp',
   5:'images/day6-ayabe.webp',
@@ -4933,8 +4933,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=79';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=79';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=80';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=80';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
