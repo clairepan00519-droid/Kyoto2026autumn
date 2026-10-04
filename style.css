@@ -1894,7 +1894,7 @@ body.mode-travel .eatshop-group.empty-area{display:none;}
 .eatshop-group h3{flex-wrap:wrap;}
 
 /* 副景點標籤 */
-.sub-tag{font-size:11px;font-weight:800;color:#7a4f8a;background:#efe4f6;border-radius:999px;padding:1px 9px;}
+
 
 /* 天氣：分區標題與降雨提醒 */
 .wc-group{margin:16px 2px 8px;font-size:15px;font-weight:900;color:#8a3a22;display:flex;align-items:center;gap:8px;}
@@ -1926,3 +1926,20 @@ body.mode-travel .eatshop-group.empty-area{display:none;}
 .shop-group .pack-item{background:rgba(255,255,255,.85)!important;border:1px solid var(--c1b)!important;}
 .shop-add-row select{border-color:#f0a13a!important;}
 .shop-add-row button{background:linear-gradient(135deg,#e2673a,#f0a13a)!important;color:#fff!important;}
+
+
+/* v74：副景點（卡片展開後） */
+.subspots{margin:12px 0 4px;padding:12px;border-radius:16px;background:linear-gradient(160deg,#f7f1fc,#efe6f8);border:1.5px solid #d9c6ec;}
+.subspots-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;color:#5b3a82;font-size:15px;}
+.subspots-head em{font-style:normal;font-size:12px;font-weight:800;background:#7a4fb0;color:#fff;border-radius:999px;padding:1px 9px;}
+.sub2{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;background:#fff;border-radius:12px;padding:10px 12px;margin-bottom:8px;border:1px solid #e6d9f3;}
+.sub2-main{min-width:0;flex:1;}
+.sub2-main b{font-size:16px;color:var(--ink);}
+.sub2-dur{margin-left:8px;font-size:12px;font-weight:700;color:#7a4fb0;background:#f1e8fa;border-radius:999px;padding:1px 9px;white-space:nowrap;}
+.sub2-main p{margin:6px 0 0;font-size:14px;line-height:1.6;color:#6b4d38;white-space:pre-line;}
+.sub2-acts{display:flex;flex-direction:column;gap:6px;flex:none;align-items:stretch;}
+.sub2-nav{display:flex;align-items:center;justify-content:center;min-height:36px;padding:0 16px;border-radius:999px;background:linear-gradient(135deg,#7a4fb0,#a06ad8);color:#fff!important;font-size:13px;font-weight:800;text-decoration:none;}
+.sub2-edit{display:flex;flex-direction:column;gap:6px;}
+.sub2-edit button{min-height:34px;border:0;border-radius:999px;background:#eef3fb;color:var(--blue);font:inherit;font-size:12.5px;font-weight:800;padding:0 12px;cursor:pointer;}
+.sub2-edit button.del{background:#fde4df;color:#c1502f;}
+.subspots-add{width:100%;min-height:44px;border:1.5px dashed #a98bd0;background:#fbf8fe;color:#5b3a82;border-radius:14px;font:inherit;font-size:14px;font-weight:800;cursor:pointer;}
