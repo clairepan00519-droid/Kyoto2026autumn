@@ -1872,3 +1872,57 @@ h3 .h-art{float:right;width:58px;height:auto;margin:-10px 0 -14px 8px;}
 .gall-actions a,.gall-actions button{font-size:13.5px!important;min-height:40px!important;}
 .gall-actions a.resv{font-size:14px!important;}
 .gall-day{font-size:12px!important;padding:3px 10px!important;}
+
+/* =====================================================================
+   v73
+   ===================================================================== */
+/* 評論與資訊：編輯／刪除按鈕改成清楚的文字按鈕、輸入框加大 */
+.note-actions{gap:6px!important;}
+.note-actions button{width:auto!important;height:auto!important;min-height:36px;padding:0 14px!important;border-radius:999px!important;font-size:13px!important;font-weight:800!important;background:#fff1e8!important;}
+.note-actions button:last-child{background:#fde4df!important;color:#c1502f!important;}
+[id^="note-input-"]{min-height:130px!important;font-size:15px!important;line-height:1.6!important;padding:10px!important;}
+.spot-edit-modal textarea{font-size:15px;line-height:1.65;min-height:48vh;}
+.spot-edit-modal .spot-edit-field input,.spot-edit-modal .spot-edit-field select{font-size:15px;}
+
+/* 吃·逛京都：新增區域 */
+.eatshop-add{display:flex;flex-wrap:wrap;gap:8px;}
+.eatshop-add button:last-child{background:#fff!important;color:#b8431f!important;border:1.5px solid #e08a4c!important;}
+.area-ctl{margin-left:auto;display:inline-flex;gap:6px;}
+.area-ctl button{border:0;border-radius:999px;background:#eef3fb;color:var(--blue);font:inherit;font-size:12px;font-weight:800;padding:5px 12px;cursor:pointer;}
+.area-ctl button.del{background:#fde4df;color:#c1502f;}
+body.mode-travel .eatshop-group.empty-area{display:none;}
+.eatshop-group h3{flex-wrap:wrap;}
+
+/* 副景點標籤 */
+.sub-tag{font-size:11px;font-weight:800;color:#7a4f8a;background:#efe4f6;border-radius:999px;padding:1px 9px;}
+
+/* 天氣：分區標題與降雨提醒 */
+.wc-group{margin:16px 2px 8px;font-size:15px;font-weight:900;color:#8a3a22;display:flex;align-items:center;gap:8px;}
+.wc-group::before{content:'';width:5px;height:16px;border-radius:3px;background:linear-gradient(#e2673a,#f0a13a);}
+.rain-banner{display:flex;gap:10px;align-items:flex-start;margin:0 0 12px;padding:12px 14px;border-radius:16px;background:linear-gradient(135deg,#e6f1ff,#d3e6fb);border:1.5px solid #9cc4ee;color:#16457a;}
+.rain-banner svg{flex:none;margin-top:2px;}
+.rain-banner b{font-size:14.5px;}
+.rain-banner p{margin:4px 0 0;font-size:13.5px;line-height:1.55;}
+.rain-banner ul{margin:4px 0 0;padding-left:18px;font-size:13.5px;line-height:1.6;}
+.rain-banner.trip{background:linear-gradient(135deg,#eef0ff,#dadcf8);border-color:#a9aef0;color:#2f347a;}
+.rain-banner.ok{background:#f1f7f2;border-color:#c5dcc9;color:#2f6a3d;}
+#dayRainSlot .rain-banner{margin:10px 0 0;}
+.wc-rain{display:flex;align-items:center;gap:8px;margin:8px 0;padding:8px 12px;border-radius:12px;background:#f1f5fa;color:#4a6179;font-size:13px;font-weight:700;}
+.wc-rain.on{background:#dcebff;color:#16457a;}
+.wc-rain svg{width:18px;height:18px;flex:none;}
+.day-chip.rainy .m::after{content:'';display:inline-block;width:7px;height:9px;margin-left:4px;background:#4a90d9;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;vertical-align:-1px;}
+
+/* 購物清單：每個分類各有鮮明的顏色 */
+.shop-group{--c1:#eef;--c1b:#dde;--c2:#88a;--cd:#446;border:0!important;background:transparent!important;margin-bottom:10px;}
+.shop-group.shop-supermarket{--c1:#e5f7dc;--c1b:#c2eab0;--c2:#45a653;--cd:#1d6a2a;}
+.shop-group.shop-drugstore{--c1:#e0f0ff;--c1b:#b9dafa;--c2:#3a8ee0;--cd:#164f94;}
+.shop-group.shop-snack{--c1:#fff1d0;--c1b:#ffd88a;--c2:#f09a16;--cd:#8a4f00;}
+.shop-group.shop-icecream{--c1:#ffe3ef;--c1b:#ffbfd8;--c2:#e8509a;--cd:#962060;}
+.shop-group.shop-souvenir{--c1:#ffe4da;--c1b:#ffbfae;--c2:#e5603c;--cd:#9a2d12;}
+.shop-group .checklist-group-head{border:2px solid var(--c2)!important;background:linear-gradient(135deg,var(--c1),var(--c1b))!important;color:var(--cd)!important;border-radius:18px!important;font-size:15px!important;font-weight:900;box-shadow:0 4px 12px -6px var(--c2);}
+.shop-group .checklist-group-head small{background:var(--c2)!important;color:#fff!important;font-size:12px!important;font-weight:800;padding:3px 11px!important;}
+.shop-group .checklist-group-head b{color:var(--cd)!important;}
+.shop-group .checklist-group-body{border-left:5px solid var(--c2);border-radius:0 0 14px 14px;background:linear-gradient(180deg,var(--c1),#fff 70%);margin:6px 0 0 8px;padding:6px 8px;}
+.shop-group .pack-item{background:rgba(255,255,255,.85)!important;border:1px solid var(--c1b)!important;}
+.shop-add-row select{border-color:#f0a13a!important;}
+.shop-add-row button{background:linear-gradient(135deg,#e2673a,#f0a13a)!important;color:#fff!important;}
