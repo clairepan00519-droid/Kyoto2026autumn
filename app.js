@@ -2581,7 +2581,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=77').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=78').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3190,7 +3190,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v77-2026-10-04';
+const APP_VERSION='v78-2026-10-04';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -3922,6 +3922,12 @@ function planTodayQuick(key,dayIdx){eatPlanStore[key]=dayIdx;persistEatPlan();af
 
 /* ---------- 吃·逛京都：畫廊卡片與詳情頁 ---------- */
 /* (v56 已改寫) */
+/* 自己新增的吃逛項目：卡片要用詳情頁上傳的照片當封面，名稱／簡介也以詳情頁修改後的為準 */
+function esCardData(c){
+  const key='es:'+c.id,spot=eatCustomSpot(c);
+  const name=currentFieldValue(key,'name',c.name)||c.name;
+  return {key,name,desc:currentFieldValue(key,'desc',c.note)||c.note,nav:currentFieldValue(key,'mapQuery',null)||c.mapQuery||name,img:spotCoverFor(key,spot)};
+}
 function renderEatShopView(kind){
   const isEat=kind==='eat',word=isEat?'吃':'逛';
   const items=collectEatShop(kind);
@@ -3933,13 +3939,13 @@ function renderEatShopView(kind){
     const emptyArea=!its.length&&!cus.length;
     if(emptyArea&&!isCustomArea(a))return '';
     const cards=its.map(it=>gallCardHTML({...it,kind,walkFrom:(AREA_ORIGIN[a]||a),areaKey:it.key})).join('')
-      +cus.map(c=>gallCardHTML({key:'es:'+c.id,name:c.name,desc:c.note,nav:c.mapQuery||c.name,kind,walkFrom:(AREA_ORIGIN[a]||a),editId:c.id})).join('');
+      +cus.map(c=>gallCardHTML({...esCardData(c),kind,editId:c.id})).join('');
     const qa=jsQuote(a),nAreas=allEatAreas().length;
     const ctl=`<span class="edit-only area-ctl">${gi>0?`<button type="button" onclick="moveEatArea('${qa}',-1)" aria-label="往上移">▲ 上移</button>`:''}${gi<nAreas-1?`<button type="button" onclick="moveEatArea('${qa}',1)" aria-label="往下移">▼ 下移</button>`:''}${isCustomArea(a)?`<button type="button" onclick="renameEatArea('${qa}')">改名</button><button type="button" class="del" onclick="deleteEatArea('${qa}')">刪除</button>`:''}</span>`;
     return `<section class="eatshop-group${emptyArea?' empty-area':''}" id="eatshop-g${gi}"><h3><span>${escHtml(a)}</span><small>${its.length+cus.length} 個</small>${ctl}</h3>${emptyArea?'<div class="dp-empty edit-only">這個區域還沒有項目：按下方「＋ 新增」，或在任一張卡片按「區域」改到這裡。</div>':`<div class="gall-grid">${cards}</div>`}</section>`;
   }).join('');
   const orphan=custom.filter(c=>!used.has(c.id));
-  const orphanHTML=orphan.length?`<section class="eatshop-group"><h3><span>我的收藏（未分區）</span></h3><div class="gall-grid">${orphan.map(c=>gallCardHTML({key:'es:'+c.id,name:c.name,desc:c.note,nav:c.mapQuery||c.name,kind,editId:c.id})).join('')}</div></section>`:'';
+  const orphanHTML=orphan.length?`<section class="eatshop-group"><h3><span>我的收藏（未分區）</span></h3><div class="gall-grid">${orphan.map(c=>gallCardHTML({...esCardData(c),kind,editId:c.id})).join('')}</div></section>`:'';
   const chips=allEatAreas().map((a,gi)=>({a,gi})).filter(({a})=>items.some(it=>it.area===a)||custom.some(c=>c.area===a)).map(({a,gi})=>`<button type="button" onclick="document.getElementById('eatshop-g${gi}')?.scrollIntoView({behavior:'smooth',block:'start'})">${escHtml(a)}</button>`).join('');
   destroyPlaceMap();
   dayContent.innerHTML=`<button type="button" class="eatshop-mapbtn" onclick="setActiveDay('map')"><img src="images/nav-route.webp" alt=""><span><b>打開吃逛地圖</b><small>看位置、距離、吃完順路逛哪裡</small></span><em>›</em></button>${chips?`<div class="eatshop-chips">${chips}</div>`:''}
@@ -3989,7 +3995,7 @@ function closeSpotDetail(){
 /* 每天的「逛吃」分頁：今天已排入 + 已收藏但還沒排入的候選 */
 function dayEatPanelHTML(i){
   const master=[...collectEatShop('eat').map(o=>({...o,kind:'eat'})),...collectEatShop('shop').map(o=>({...o,kind:'shop'}))];
-  const customs=eatShopStore.map(c=>({key:'es:'+c.id,name:c.name,desc:c.note,nav:c.mapQuery||c.name,kind:c.kind,img:'',editId:null}));
+  const customs=eatShopStore.map(c=>({...esCardData(c),kind:c.kind,editId:null}));
   const all=[...master,...customs];
   const planned=all.filter(o=>planOf(o.key)===i);
   const own=collectSpots((s,di,key)=>di===i&&(s.cat==='food'||s.cat==='shopping')&&!isMasterKey(key)&&marksFor(key).fav).map(o=>({...o,kind:o.cat==='shopping'?'shop':'eat'}));
@@ -4884,8 +4890,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=77';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=77';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=78';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=78';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
@@ -4916,7 +4922,7 @@ function placePos(key,name){
 }
 function placeItems(kind){
   const base=collectEatShop(kind).map(o=>({key:o.key,name:o.name,kind,area:o.area,hours:o.hours,desc:o.desc,nav:o.nav,custom:false}));
-  const cus=eatShopStore.filter(c=>c.kind===kind).map(c=>({key:'es:'+c.id,name:c.name,kind,area:c.area||'',hours:'',desc:c.note,nav:c.mapQuery||c.name,custom:true,editId:c.id}));
+  const cus=eatShopStore.filter(c=>c.kind===kind).map(c=>({...esCardData(c),kind,area:c.area||'',hours:currentFieldValue('es:'+c.id,'hours',null)||'',custom:true,editId:c.id}));
   return [...base,...cus].map(o=>{const p=placePos(o.key,o.name);return {...o,pos:p.pos,approx:p.approx};});
 }
 function placeAll(){return [...placeItems('eat'),...placeItems('shop')];}
