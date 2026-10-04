@@ -2001,3 +2001,82 @@ body.mode-travel .eatshop-group.empty-area{display:none;}
 .gall-actions .pmb{background:#eaf4ea!important;color:#23683d!important;}
 .gall-actions .pmb.edit-only{background:#f3ecfa!important;color:#5b3a82!important;}
 .pm-pickbar[hidden],.pm-loading[hidden]{display:none!important;}
+
+/* ===== v76：吃逛地圖獨立晶片、家＝飯店、回到初始畫面 ===== */
+.pm-card .pm-head{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin:0 2px 10px;}
+.pm-card .pm-head b{font-size:19px;font-weight:900;color:var(--ink);}
+.pm-card .pm-head small{font-size:13px;color:#7a5a42;}
+.pm-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;margin-bottom:8px;background:#f3e6cf;border-radius:999px;}
+.pm-seg button{min-height:40px;border:0;border-radius:999px;background:transparent;color:#7a5a42;font:inherit;font-size:14px;font-weight:800;cursor:pointer;padding:0 4px;}
+.pm-seg button.on{background:#fff;color:#b8431f;box-shadow:0 2px 6px rgba(120,70,20,.18);}
+.pm-opts{margin-top:8px;}
+.pm-reset{position:absolute;right:10px;top:10px;z-index:950;min-height:42px;padding:0 14px;border:2px solid #fff;border-radius:999px;background:#7a3a1a;color:#fff;font:inherit;font-size:14px;font-weight:900;box-shadow:0 4px 12px rgba(0,0,0,.3);cursor:pointer;}
+.pm-wrap.picking .pm-reset{display:none;}
+.pin-home{width:40px;height:40px;border:3px solid #fff;background:#7a4fb0;box-shadow:0 0 0 2px #7a4fb0,0 4px 10px rgba(0,0,0,.35);}
+.pin-home span{font-size:17px;}
+.pin-home.sel{transform:scale(1.2);}
+.pm-legend .lg.home{background:#7a4fb0;}
+.pm-close{margin-left:auto;min-height:38px;padding:0 14px;border:0;border-radius:999px;background:#f2e7da;color:#7a3a1a;font:inherit;font-size:14px;font-weight:900;cursor:pointer;flex:none;}
+.pm-sel-top{align-items:center!important;flex-wrap:nowrap!important;}
+.pm-sel-top b{min-width:0;}
+.pm-sel-sub{margin-top:2px;font-size:13px;font-weight:700;color:#b8431f;}
+.pm-home-tag,.pm-sel-homes i,.pm-homebtns i{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;margin-right:6px;border-radius:50%;background:#7a4fb0;color:#fff;font-style:normal;font-size:13px;font-weight:900;vertical-align:2px;flex:none;}
+.pm-sel-homes{display:flex;flex-direction:column;gap:6px;margin-top:8px;padding:8px 10px;border-radius:12px;background:#f6f0fb;}
+.pm-sel-homes span{display:flex;align-items:center;font-size:14px;font-weight:700;color:#4b3270;line-height:1.4;}
+.pm-homebtns{display:flex;flex-direction:column;gap:8px;}
+.pm-homebtns button{display:flex;align-items:center;min-height:46px;padding:0 14px;border:1.5px solid #d9c6ec;border-radius:14px;background:#fbf8fe;color:#4b3270;font:inherit;font-size:15px;font-weight:800;text-align:left;cursor:pointer;}
+.pm-row.home{border-left-color:#7a4fb0;background:#f6f0fb;}
+.eatshop-mapbtn{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 12px;padding:12px 16px;border:1.5px solid #f0d9a8;border-radius:18px;background:linear-gradient(135deg,#fffaf0,#fdf0d8);font:inherit;text-align:left;cursor:pointer;box-shadow:0 6px 16px -12px rgba(120,70,20,.5);}
+.eatshop-mapbtn img{width:40px;height:40px;flex:none;}
+.eatshop-mapbtn span{display:flex;flex-direction:column;flex:1;min-width:0;}
+.eatshop-mapbtn b{font-size:16px;color:var(--ink);}
+.eatshop-mapbtn small{font-size:13px;color:#7a5a42;}
+.eatshop-mapbtn em{font-style:normal;font-size:26px;color:#b8431f;}
+.area-ctl{flex-wrap:wrap;justify-content:flex-end;}
+.area-ctl button{min-height:36px;}
+.move-day-btn{background:#fff6dc;color:#8a5a00;border:none;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;}
+.moved-badge{background:#fff6dc!important;color:#8a5a00!important;}
+/* 副景點照片、旅遊規範多張附圖 */
+.sub2-phs,.rule-phs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+body.mode-travel .sub2-phs.no-img,body.mode-travel .rule-phs.no-img{display:none;}
+.sub2-ph,.rule-ph{position:relative;width:84px;height:84px;border-radius:12px;overflow:hidden;background:#eee;flex:none;}
+.sub2-ph img,.rule-ph img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in;}
+.sub2-ph button,.rule-ph button{position:absolute;top:4px;right:4px;width:30px;height:30px;border:0;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:14px;font-weight:900;cursor:pointer;line-height:1;}
+.sub2-ph-add,.rule-ph-add{display:inline-flex;align-items:center;justify-content:center;min-width:84px;height:84px;padding:0 12px;border:1.5px dashed #a98bd0;border-radius:12px;background:#fbf8fe;color:#5b3a82;font-size:13px;font-weight:800;cursor:pointer;text-align:center;}
+.rule-ph-add{border-color:#ccc;background:#fff;color:var(--ink-soft);}
+
+.sub2-phs.no-img .sub2-ph-add,.rule-phs.no-img .rule-ph-add{height:42px;border-radius:999px;}
+/* 長輩可讀性：旅遊規範文字、景點管理按鈕放大 */
+.rule-item > div > div:first-child{font-size:16px!important;}
+.rule-item > div > div:nth-child(2){font-size:15px!important;line-height:1.7!important;}
+.rule-item .del{min-width:40px;min-height:40px;font-size:16px;}
+.spot-management-bar button{font-size:13.5px!important;padding:8px 12px!important;min-height:40px;border-radius:10px!important;}
+.spot-management-bar .badge{font-size:13px;padding:4px 10px;}
+.pm-row .rn em{white-space:nowrap;}
+
+/* ===== v76：特大字真正放大（整頁 zoom 1.18 之外，再把常用小字拉大；實際顯示主要內文約 18px 以上） ===== */
+body.large-text .full-desc,body.large-text .short-desc{font-size:15.5px!important;line-height:1.7!important;}
+body.large-text .guide-header h3{font-size:18.5px!important;}
+body.large-text .sub-spot-header h4{font-size:17px!important;}
+body.large-text .info-item .v{font-size:15.5px!important;}
+body.large-text .info-item .k{font-size:13px!important;}
+body.large-text .btn,body.large-text .btn-map,body.large-text .btn-photo{font-size:14.5px!important;min-height:44px;}
+body.large-text .transport-step small,body.large-text .transport-meta,body.large-text .transport-alert{font-size:14px!important;line-height:1.6!important;}
+body.large-text .transport-points strong{font-size:15.5px!important;}
+body.large-text .day-chip .d,body.large-text .day-chip .m{font-size:13px!important;}
+body.large-text .bottom-nav .lb{font-size:15px!important;}
+body.large-text .header-tools .ht-pill{font-size:14px!important;}
+body.large-text .gall-body p{font-size:15.5px!important;}
+body.large-text .gall-hours,body.large-text .gall-actions a,body.large-text .gall-actions button{font-size:14.5px!important;}
+body.large-text .pm-row .rn{font-size:15.5px!important;}
+body.large-text .pm-row .rd,body.large-text .pm-hint,body.large-text .pm-sel-line,body.large-text .pm-sel-homes span{font-size:14.5px!important;}
+body.large-text .custom-info-box,body.large-text .built-in-info-text,body.large-text .user-info-list,body.large-text .tip-box,body.large-text .park-box{font-size:15px!important;line-height:1.7!important;}
+body.large-text .sub2-main p{font-size:15.5px!important;}
+body.large-text .pack-item .name{font-size:15.5px!important;}
+body.large-text .weather-day .out,body.large-text .dw-metrics,body.large-text .dw-wear,body.large-text .dp-note,body.large-text .source-note,body.large-text .section-card .sub{font-size:14px!important;line-height:1.65!important;}
+body.large-text .stay-quick-copy strong{font-size:15.5px!important;}
+body.large-text .search-result-copy strong{font-size:15px!important;}
+body.large-text .search-result-copy small{font-size:13px!important;}
+/* 地圖本身不要被整頁 zoom 放大（避免點選位置偏移）；按鈕與文字仍是大字 */
+body.large-text .pm-wrap{zoom:calc(1/1.18);}
+body.large-text .pm-wrap #placeMap{height:380px;}
