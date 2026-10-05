@@ -20,8 +20,8 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=80">
-<link rel="stylesheet" href="splash.css?v=80">
+<link rel="stylesheet" href="style.css?v=82">
+<link rel="stylesheet" href="splash.css?v=82">
 </head>
 <body class="family-locked">
 
@@ -29,11 +29,11 @@
   <div class="family-gate-card">
     <img class="family-gate-img" src="images/icon-192.png" alt="京丹雅行" width="84" height="84">
     <h2>京都・奈良・丹後家庭旅行</h2>
-    <p>請使用在 Supabase Authentication 建立的家人帳號登入。登入後，各裝置會安全共用同一份行程資料。</p>
-    <input id="familyGateEmail" type="email" inputmode="email" autocomplete="username" placeholder="家人 Email">
-    <input id="familyGateInput" type="password" autocomplete="current-password" placeholder="Password">
+    <p>請輸入家人帳號的 Email 和密碼。<br>只要登入一次，這支手機之後打開就會自動進入，全家看到的是同一份行程。</p>
+    <input id="familyGateEmail" type="email" inputmode="email" autocomplete="username" placeholder="Email（例：name@gmail.com）" aria-label="Email">
+    <input id="familyGateInput" type="password" autocomplete="current-password" placeholder="密碼" aria-label="密碼">
     <button id="familyGateButton" type="button">登入行程</button>
-    <button id="offlineGateButton" class="family-offline-button" type="button" hidden>離線查看已下載行程</button>
+    <button id="offlineGateButton" class="family-offline-button" type="button" hidden>先看行程（暫時不同步）</button>
     <div id="familyGateError" class="family-gate-error" role="alert"></div>
   </div>
 </div>
@@ -308,7 +308,7 @@
 
 <input type="file" id="restoreFile" accept="application/json,.json" style="display:none" onchange="restoreBackupFile(event)">
 
-<script src="app.js?v=80"></script>
+<script src="app.js?v=82"></script>
 
 
 <div id="kyotoSplash" class="splash" hidden aria-label="京丹雅行載入中">
@@ -324,6 +324,6 @@
     <div class="splash__title"><strong>京丹雅行</strong><span>京都・奈良・京丹後</span></div>
   </div>
 </div>
-<script src="splash.js?v=80"></script>
+<script src="splash.js?v=82"></script>
 </body>
 </html>

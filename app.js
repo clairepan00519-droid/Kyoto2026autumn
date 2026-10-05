@@ -78,6 +78,15 @@ function unlockFamilySite({offline=false}={}){
   if(gate){ gate.hidden=true; gate.setAttribute('aria-hidden','true'); }
   if(!offline) startFamilyCloud();
 }
+/* 只看模式（登入過期／暫不同步）時的頂端提示 */
+function showReloginBanner(){
+  if(document.getElementById('reloginBanner'))return;
+  const el=document.createElement('div');el.id='reloginBanner';el.className='relogin-banner';
+  el.innerHTML='<span>需要重新登入，才能和家人同步。<br>行程都還在，可以照常看；這段時間的修改會先存在這支手機。</span><button type="button">重新登入</button>';
+  el.querySelector('button').onclick=()=>{const g=document.getElementById('familyGate');if(g){g.hidden=false;g.setAttribute('aria-hidden','false');}const ob=document.getElementById('offlineGateButton');if(ob){ob.hidden=false;ob.textContent='先不要，繼續看行程';ob.onclick=()=>{g.hidden=true;g.setAttribute('aria-hidden','true');};}setTimeout(()=>document.getElementById('familyGateEmail')?.focus(),80);};
+  document.querySelector('.app')?.prepend(el);
+}
+function hideReloginBanner(){document.getElementById('reloginBanner')?.remove();}
 async function submitFamilyGate(){
   const email=document.getElementById('familyGateEmail');
   const input=document.getElementById('familyGateInput');
@@ -90,7 +99,7 @@ async function submitFamilyGate(){
     if(!navigator.onLine)throw new Error('目前離線；若這台裝置曾登入，可使用下方離線查看。');
     const r=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`,{method:'POST',headers:{apikey:SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({email:(email?.value||'').trim(),password:input.value})});
     const data=await r.json();if(!r.ok)throw new Error(data.error_description||data.msg||'Email 或密碼不正確');
-    saveAuthSession(data);unlockFamilySite();input.value='';
+    saveAuthSession(data);hideReloginBanner();unlockFamilySite();input.value='';
   }catch(e){ if(err) err.textContent=String(e.message||e); input.select(); }
   finally{ btn.disabled=false; }
 }
@@ -100,7 +109,8 @@ async function initAuthGate(){
   const btn=document.getElementById('familyGateButton');
   const offlineBtn=document.getElementById('offlineGateButton');
   const trusted=localStorage.getItem(FAMILY_TRUSTED_DEVICE_KEY)==='1';
-  if(offlineBtn){offlineBtn.hidden=!(trusted&&!navigator.onLine);offlineBtn.onclick=()=>unlockFamilySite({offline:true});}
+  /* v81：這支手機只要登入過，就一律提供「先看行程」，不會因為登入過期或網路怪怪的就整個打不開 */
+  if(offlineBtn){offlineBtn.hidden=!trusted;offlineBtn.onclick=()=>{unlockFamilySite({offline:true});if(navigator.onLine)showReloginBanner();};}
   if(btn) btn.addEventListener('click',submitFamilyGate);
   if(input) input.addEventListener('keydown',e=>{ if(e.key==='Enter') submitFamilyGate(); });
   if(familyAuthSession){
@@ -111,6 +121,8 @@ async function initAuthGate(){
       const netFail=e instanceof TypeError||/Failed to fetch|NetworkError|Load failed|network|timeout|Abort/i.test(msg);
       if(netFail&&trusted){unlockFamilySite({offline:true});return;}
       saveAuthSession(null);
+      /* 登入過期：行程資料都還在這支手機上，先讓人照常看行程，頂端提示「重新登入」即可同步 */
+      if(trusted){unlockFamilySite({offline:true});showReloginBanner();return;}
     }
   }
   setTimeout(()=>document.getElementById('familyGateEmail')?.focus(),80);
@@ -1149,9 +1161,12 @@ function offerUndo(message,restore){
   const toast=document.getElementById('undoToast'),text=document.getElementById('undoToastText'),btn=document.getElementById('undoToastButton');
   if(!toast||!text||!btn)return;
   clearTimeout(undoTimer);text.textContent=message;toast.hidden=false;
-  btn.onclick=()=>{clearTimeout(undoTimer);toast.hidden=true;restore();};
-  undoTimer=setTimeout(()=>{toast.hidden=true;},5000);
+  /* 沒有東西可以復原的「提示訊息」不顯示復原鈕；可復原的給 8 秒，長輩來得及按 */
+  btn.hidden=typeof restore!=='function';
+  btn.onclick=()=>{clearTimeout(undoTimer);toast.hidden=true;if(typeof restore==='function')restore();};
+  undoTimer=setTimeout(()=>{toast.hidden=true;},typeof restore==='function'?8000:3500);
 }
+function showToast(message){offerUndo(message,null);}
 function escHtml(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 
 const NOTE_DRAFT_KEY='kyoto_note_drafts_v1';
@@ -1446,11 +1461,15 @@ async function addCustomSpot(dayIdx){
 }
 function delCustomSpot(dayIdx, i){
   if(!customSpotsStore[dayIdx]) return;
-  const removed=customSpotsStore[dayIdx].splice(i,1)[0];
+  /* v81：不再把它從清單「切掉」，只標記為已刪除。
+     自訂景點的筆記、照片、評論、副景點都是用「第幾個」對應的；以前切掉後面的景點會往前補位，
+     導致下一個景點接收到被刪景點的筆記照片（自己的反而不見）。標記刪除就不會錯位，也能完整復原。 */
+  const cur=customSpotsStore[dayIdx][i];if(!cur||cur.deleted)return;
+  customSpotsStore[dayIdx][i]={...cur,deleted:true};
   persistCustomSpots();
   renderDayContent();
   updateSpotCount();
-  offerUndo('已刪除自訂景點',()=>{if(!customSpotsStore[dayIdx])customSpotsStore[dayIdx]=[];customSpotsStore[dayIdx].splice(i,0,removed);persistCustomSpots();renderDayContent();updateSpotCount();});
+  offerUndo('已刪除自訂景點',()=>{const a=customSpotsStore[dayIdx];if(!a||!a[i])return;const r={...a[i]};delete r.deleted;a[i]=r;persistCustomSpots();renderDayContent();updateSpotCount();});
 }
 function toggleEditSpot(idx){
   const el = document.getElementById('spot-edit-'+idx);
@@ -1472,7 +1491,7 @@ function saveSpotEdit(dayIdx, i, idx){
 }
 function updateSpotCount(){
   let total = days.reduce((a,d)=>a+d.spots.length + (d.moreSpots?d.moreSpots.length:0),0);
-  Object.values(customSpotsStore).forEach(arr => total += arr.length);
+  Object.values(customSpotsStore).forEach(arr => total += (Array.isArray(arr)?arr.filter(x=>x&&!x.deleted).length:0));
   document.getElementById('spotCount').textContent = total;
 }
 
@@ -1652,7 +1671,20 @@ function tripTodayIndex(now=new Date()){
   if(y!==2026)return -1;
   return days.findIndex(x=>{const [mm,dd]=x.date.split('/').map(Number);return mm===m&&dd===d;});
 }
-function goToToday(){const i=tripTodayIndex();setActiveDay(i>=0?i:0);}
+function goToToday(){
+  const i=tripTodayIndex();setActiveDay(i>=0?i:0);
+  if(i<0&&typeof showToast==='function'){const now=new Date();showToast(now<new Date(2026,10,27)?'旅程還沒開始，先顯示第 1 天（11/27）':'旅程已結束，顯示第 1 天');}
+}
+/* 旅途中 App 放在背景過夜，隔天打開時自動切到「今天」（使用者正在看別天時不打擾，只在停在昨天時切換） */
+let _lastSeenDate=new Date().toDateString();
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState!=='visible')return;
+  const nowStr=new Date().toDateString();if(nowStr===_lastSeenDate)return;
+  _lastSeenDate=nowStr;
+  const t=tripTodayIndex();if(t<0)return;
+  if(typeof activeDay==='number'&&activeDay===t-1&&!document.getElementById('formModal')){setActiveDay(t);if(typeof showToast==='function')showToast(`早安！已切到今天：D${days[t].dayNum}・${days[t].date}`);}
+  else renderDayChips();
+});
 
 function renderDayChips(){
   const today=tripTodayIndex();
@@ -1674,7 +1706,7 @@ let activeSubTabStore = {}; /* dayIdx -> 'main' | 'transport' | 'more' | 'routem
 function transportPlanHTML(dayIdx){
   const plan=transportPlans[dayIdx];
   if(!plan)return `<section class="transport-plan"><div class="tp-head"><div><small>D${days[dayIdx].dayNum}・${days[dayIdx].date}</small><strong>今日交通</strong></div><img src="images/deer-car.webp" alt="" width="64" height="45"></div>${customTransportHTML(dayIdx)}${transportAddBarHTML(dayIdx)}</section>`;
-  const routes=(rows,prefix='route')=>`<div class="transport-steps">${(rows||[]).map((r0,i)=>{const segmentKey=`${prefix}-${i}`;const sk=`tp${dayIdx}-${segmentKey}`;if(currentFieldValue(sk,'hidden',null)==='1')return '';const r={from:currentFieldValue(sk,'from',r0.from)||r0.from,to:currentFieldValue(sk,'to',r0.to)||r0.to,mode:currentFieldValue(sk,'mode',r0.mode)||r0.mode,time:currentFieldValue(sk,'time',r0.time)||r0.time,note:currentFieldValue(sk,'note',r0.note)||r0.note};window._tpOrig=window._tpOrig||{};window._tpOrig[sk]=r0;return `<div class="transport-step"><span class="transport-step-no">${i+1}</span><div class="transport-step-main"><div class="transport-points"><strong>${escHtml(r.from)}</strong><span>→</span><strong>${escHtml(r.to)}</strong></div><div class="transport-meta"><b>${escHtml(r.mode)}</b><span>⏱ ${escHtml(r.time)}</span></div><small>${escHtml(r.note)}</small><div class="edit-only tp-step-actions"><button type="button" onclick="editTransportStep('${sk}')">✎ 修改</button><button type="button" onclick="deleteTransportStep('${sk}')">🗑 刪除</button></div>${transportSegmentExtrasHTML(dayIdx,segmentKey)}</div></div>`;}).join('')}</div>`;
+  const routes=(rows,prefix='route')=>`<div class="transport-steps">${(rows||[]).map((r0,i)=>{const segmentKey=`${prefix}-${i}`;const sk=`tp${dayIdx}-${segmentKey}`;if(currentFieldValue(sk,'hidden',null)==='1')return '';const r={from:currentFieldValue(sk,'from',r0.from)||r0.from,to:currentFieldValue(sk,'to',r0.to)||r0.to,mode:currentFieldValue(sk,'mode',r0.mode)||r0.mode,time:currentFieldValue(sk,'time',r0.time)||r0.time,note:currentFieldValue(sk,'note',r0.note)||r0.note};window._tpOrig=window._tpOrig||{};window._tpOrig[sk]=r0;return `<div class="transport-step"><span class="transport-step-no">${i+1}</span><div class="transport-step-main"><div class="transport-points"><strong>${escHtml(r.from)}</strong><span>→</span><strong>${escHtml(r.to)}</strong></div><div class="transport-meta"><b>${escHtml(r.mode)}</b><span>⏱ ${escHtml(r.time)}</span></div><small>${escHtml(r.note)}</small>${tpGoButtonsHTML(dayIdx,r)}<div class="edit-only tp-step-actions"><button type="button" onclick="editTransportStep('${sk}')">✎ 修改</button><button type="button" onclick="deleteTransportStep('${sk}')">🗑 刪除</button></div>${transportSegmentExtrasHTML(dayIdx,segmentKey)}</div></div>`;}).join('')}</div>`;
   const body=plan.choices?`<div class="transport-choice-list">${plan.choices.map((choice,i)=>`<details class="transport-choice"${i===0?' open':''}><summary>${escHtml(choice.name)}<span>展開路線</span></summary>${routes(choice.routes,`choice-${i}`)}</details>`).join('')}</div>`:plan.drive?`<div class="transport-drive-card"><span>🚗</span><div><strong>今天全程自駕</strong><small>按下方按鈕開啟當日主要地點導航；停車、休息站與道路狀況以當日為準。</small>${transportSegmentExtrasHTML(dayIdx,'drive-0')}</div></div>`:routes(plan.routes,plan.routeKey||'route');
   return `<section class="transport-plan"><div class="tp-head"><div><small>D${days[dayIdx].dayNum}・${days[dayIdx].date}</small><strong>今日交通</strong></div><img src="images/deer-car.webp" alt="" width="64" height="45"></div><div class="transport-alert">⚠️ ${escHtml(plan.alert)}</div>${body}${customTransportHTML(dayIdx)}${legacyTransportExtrasHTML(dayIdx)}${transportAddBarHTML(dayIdx)}<div class="transport-actions"><a href="https://www.google.com/maps/dir/?api=1&travelmode=${plan.drive?'driving':'transit'}&destination=${encodeURIComponent(currentFieldValue('day'+dayIdx+'-nav','mapQuery',null)||(days[dayIdx].region+' Japan'))}" target="_blank" rel="noopener">📍 開啟今日導航</a><button type="button" class="edit-only tp-nav-fix" onclick="editSpotField(event,'day${dayIdx}-nav','mapQuery','今日導航目的地（地址、經緯度或關鍵字）')">修正導航</button><button type="button" class="edit-only tp-nav-fix" onclick="restoreTransportSteps(${dayIdx})">↺ 還原本日交通步驟</button></div></section>`;
 }
@@ -1705,7 +1737,7 @@ function allSearchableSpots(){
     };
     (day.spots||[]).forEach((spot,i)=>add(spot,`d${dayIdx}-m${i}`));
     (day.moreSpots||[]).forEach((spot,i)=>add(spot,`d${dayIdx}-s${i}`));
-    (customSpotsStore[dayIdx]||[]).forEach((spot,i)=>add(spot,`d${dayIdx}-c${i}`));
+    (customSpotsStore[dayIdx]||[]).forEach((spot,i)=>{if(!spot.deleted)add(spot,`d${dayIdx}-c${i}`);});
     const plan=transportPlans[dayIdx];
     if(plan){
       const routeText=[...(plan.routes||[]),...(plan.choices||[]).flatMap(c=>c.routes||[])].map(r=>[r.from,r.to,r.mode,r.time,r.note].join(' ')).join(' ');
@@ -1969,7 +2001,7 @@ function renderDayContent(){
   const curSubTab = activeSubTabStore[activeDay] || 'main';
   const stayList=dayStays(activeDay);
   const stayBtns=stayList.length?`<span class="stay-quick-btns"><a class="stay-quick-nav" href="${escAttr(mapsLink(stayList[0].nav))}" target="_blank" rel="noopener">導航</a><button class="stay-quick-fix edit-only" type="button" onclick="editSpotField(event,'${stayList[0].key}','mapQuery','導航位置（Google Maps 網址、地址、經緯度或關鍵字）')">修正</button></span>`:'';
-  const stayQuickHTML=stayList.length?`<div class="stay-quick-card"><div class="stay-quick-top"><div class="stay-quick-icon"><img src="images/nav-lodging.webp" alt="" width="34" height="34"></div><div class="stay-quick-copy"><small>今晚住宿</small><strong>${stayList.map(x=>escHtml(x.name)).join('、')}</strong></div></div>${stayList.map((x,i)=>`<div class="stay-quick-amen">${stayList.length>1?`<em>${escHtml(x.name)}</em>`:''}${hotelAmenityChips(x.key)}${i===stayList.length-1?stayBtns:''}</div>`).join('')}</div>`:emptyStayCardHTML(activeDay);
+  const stayQuickHTML=stayList.length?`<div class="stay-quick-card"><div class="stay-quick-top"><div class="stay-quick-icon"><img src="images/nav-lodging.webp" alt="" width="34" height="34"></div><div class="stay-quick-copy"><small>今晚住宿${stayList.some(x=>x.cont)?'（連住第 2 晚）':''}</small><strong>${stayList.map(x=>escHtml(x.name)).join('、')}</strong></div></div>${stayList.map((x,i)=>`<div class="stay-quick-amen">${stayList.length>1?`<em>${escHtml(x.name)}</em>`:''}${hotelAmenityChips(x.key)}${i===stayList.length-1?stayBtns:''}</div>`).join('')}</div>`:emptyStayCardHTML(activeDay);
 
   const mainList = applyOrder(activeDay, 'main', getNaturalList(activeDay, 'main'));
   const lifeList = applyOrder(activeDay, 'life', getNaturalList(activeDay, 'life'));
@@ -2613,13 +2645,13 @@ function updateNetStatus(){
     ? '<span class="net-dot online"></span><span class="net-txt">線上</span>'
     : '<span class="net-dot offline"></span><span class="net-txt">離線</span>';
 }
-window.addEventListener('online', async()=>{ updateNetStatus(); loadLiveWeather(); refreshRainRadar();if(readAuthSession()){familyAuthSession=readAuthSession();try{await ensureAuthToken();startFamilyCloud();}catch(e){updateSyncStatus(e);}} });
+window.addEventListener('online', async()=>{ updateNetStatus(); loadLiveWeather(); refreshRainRadar();if(readAuthSession()){familyAuthSession=readAuthSession();try{await ensureAuthToken();hideReloginBanner();startFamilyCloud();}catch(e){updateSyncStatus(e);if(/登入已過期/.test(String(e&&e.message||e)))showReloginBanner();}} });
 window.addEventListener('offline', updateNetStatus);
 
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=80').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=82').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -2880,9 +2912,14 @@ function dayStays(i){
   const add=(s,key)=>{if(s.cat!=='hotel'||hidden.has(key))return;const name=currentFieldValue(key,'name',s.name)||s.name;out.push({key,name,nav:currentFieldValue(key,'mapQuery',null)||name});};
   (d.spots||[]).forEach((s,j)=>add(s,`d${i}-m${j}`));
   (d.moreSpots||[]).forEach((s,j)=>add(s,`d${i}-s${j}`));
-  (customSpotsStore[i]||[]).forEach((s,j)=>add(s,`d${i}-c${j}`));
+  (customSpotsStore[i]||[]).forEach((s,j)=>{if(!s.deleted)add(s,`d${i}-c${j}`);});
+  /* 連住的第二晚：沿用前一天的同一張住宿卡（設施、筆記共用），例如 11/29 續住 Daiwa Roynet 烏丸四條 */
+  if(!out.length&&STAY_CONTINUE[i]){
+    STAY_CONTINUE[i].forEach(key=>{const sp=spotByKey(key);const di=naturalDayOf(key);if(!sp||(hiddenFixedSpotsStore[di]||[]).includes(key))return;const name=currentFieldValue(key,'name',sp.name)||sp.name;out.push({key,name,nav:currentFieldValue(key,'mapQuery',null)||name,cont:true});});
+  }
   return out;
 }
+const STAY_CONTINUE={2:['d1-s0']};
 
 /* ---------- 10. 照片位置調整 ---------- */
 let photoPosStore=(()=>{try{return JSON.parse(localStorage.getItem('kyoto_photo_pos'))||{};}catch(e){return {};}})();
@@ -3233,7 +3270,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v80-2026-10-04';
+const APP_VERSION='v82-2026-10-05';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -3462,13 +3499,22 @@ function icImg(name,cls='ic-img'){return `<img class="${cls}" src="${NAV_IC[name
 
 /* ---------- 標頭控制 ---------- */
 function currentUiMode(){return document.body.classList.contains('mode-edit')?'edit':'travel';}
-function toggleUiMode(){setUiMode(currentUiMode()==='edit'?'travel':'edit');}
+/* v81：按鈕寫「按了會做什麼」；進入編輯模式先確認一次，避免長輩誤觸後看到一堆刪除鈕 */
+function toggleUiMode(){
+  if(currentUiMode()==='edit'){setUiMode('travel');return;}
+  let asked=false;try{asked=sessionStorage.getItem('kyoto_edit_confirmed')==='1';}catch(e){}
+  if(!asked&&!confirm('要進入「編輯模式」嗎？\n\n編輯模式可以修改、新增、刪除行程內容。\n只想看行程的話，請按「取消」。'))return;
+  try{sessionStorage.setItem('kyoto_edit_confirmed','1');}catch(e){}
+  setUiMode('edit');
+}
 function toggleTextSize(){setTextSize(document.body.classList.contains('large-text')?0:1);}
 function syncHeaderControls(){
   const m=document.getElementById('modeBtn');
-  if(m){const e=currentUiMode()==='edit';m.textContent=e?'編輯模式':'旅行模式';m.classList.toggle('edit',e);m.title=e?'目前是編輯模式，點一下切換成旅行模式':'目前是旅行模式，點一下切換成編輯模式';}
+  if(m){const e=currentUiMode()==='edit';m.textContent=e?'✓ 完成編輯':'✎ 編輯';m.classList.toggle('edit',e);m.title=e?'改完了，回到只看行程的旅行模式':'進入編輯模式，可以修改行程';m.setAttribute('aria-label',m.title);}
   const t=document.getElementById('sizeBtn');
-  if(t){const big=document.body.classList.contains('large-text');t.textContent=big?'特大字':'標準字';t.classList.toggle('on',big);}
+  if(t){const big=document.body.classList.contains('large-text');t.textContent=big?'字縮小':'字放大';t.classList.toggle('on',big);t.setAttribute('aria-label',big?'把字縮回標準大小':'把字放大');}
+  let bar=document.getElementById('editModeBar');
+  if(!bar&&document.querySelector('.app')){bar=document.createElement('div');bar.id='editModeBar';bar.className='edit-mode-bar';bar.innerHTML='<span>✎ 編輯模式中：可以修改、新增、刪除</span><button type="button" onclick="setUiMode(\'travel\')">完成編輯</button>';document.querySelector('.app').prepend(bar);}
 }
 document.addEventListener('DOMContentLoaded',syncHeaderControls);
 
@@ -3514,7 +3560,7 @@ function collectSpots(filterFn){
     };
     (day.spots||[]).forEach((s,i)=>add(s,`d${dayIdx}-m${i}`));
     (day.moreSpots||[]).forEach((s,i)=>add(s,`d${dayIdx}-s${i}`));
-    (customSpotsStore[dayIdx]||[]).forEach((s,i)=>add(s,`d${dayIdx}-c${i}`));
+    (customSpotsStore[dayIdx]||[]).forEach((s,i)=>{if(!s.deleted)add(s,`d${dayIdx}-c${i}`);});
   });
   return out;
 }
@@ -3870,7 +3916,7 @@ function persistEatPlan(){safeSetItem('kyoto_eat_plan',eatPlanStore);}
 function eatCustomSpot(c){return S(c.name,c.kind==='shop'?'shopping':'food',c.note||'',{mapQuery:c.mapQuery||null});}
 function spotByKey(key){
   let m=String(key).match(/^d(\d+)-([msc])(\d+)$/);
-  if(m){const di=Number(m[1]),j=Number(m[3]),d=days[di];if(!d)return null;return m[2]==='m'?d.spots[j]:m[2]==='s'?(d.moreSpots||[])[j]:getCustomSpots(di)[j];}
+  if(m){const di=Number(m[1]),j=Number(m[3]),d=days[di];if(!d)return null;return m[2]==='m'?d.spots[j]:m[2]==='s'?(d.moreSpots||[])[j]:((x=>x&&!x.deleted?x:null)(getCustomSpots(di)[j]));}
   m=String(key).match(/^es:(.+)$/);
   if(m){const c=eatShopStore.find(x=>x.id===m[1]);return c?eatCustomSpot(c):null;}
   return null;
@@ -3912,7 +3958,7 @@ function spotsShownOnDay(dayIdx){
   days.forEach((d,di)=>{
     d.spots.forEach((s,i)=>{const key=`d${di}-m${i}`;if(spotDayOf(key)===dayIdx)fixed.push({spot:s,key,fixedMeta:{dayIdx}});});
     (d.moreSpots||[]).forEach((s,i)=>{const key=`d${di}-s${i}`;if(spotDayOf(key)===dayIdx)fixed.push({spot:s,key,fixedMeta:{dayIdx}});});
-    getCustomSpots(di).forEach((s,i)=>{const key=`d${di}-c${i}`;if(spotDayOf(key)===dayIdx)custom.push({spot:s,key,customMeta:{dayIdx:di,i}});});
+    getCustomSpots(di).forEach((s,i)=>{const key=`d${di}-c${i}`;if(!s.deleted&&spotDayOf(key)===dayIdx)custom.push({spot:s,key,customMeta:{dayIdx:di,i}});});
   });
   return {fixed,custom};
 }
@@ -4627,6 +4673,45 @@ function deleteCustomTransport(dayIdx,id,skip){
   persistTransportCustom();renderDayContent();
   offerUndo('已刪除交通步驟',()=>{(transportCustomStore[dayIdx]=transportCustomStore[dayIdx]||[]).splice(Math.min(i,(transportCustomStore[dayIdx]||[]).length),0,removed);persistTransportCustom();renderDayContent();});
 }
+/* v81：每段交通直接「導航到目的地」；搭計程車的段落多一個「給司機看」大字卡 */
+function tpDestination(dayIdx,toText){
+  const raw=String(toText||'').trim();
+  const core=raw.replace(/[（(][^）)]*[）)]/g,'').trim();
+  if(/飯店|住宿|旅館/.test(core)){
+    const st=dayStays(dayIdx)[0]||(dayIdx>0?dayStays(dayIdx-1)[0]:null);
+    if(st)return {name:st.name,nav:st.nav};
+  }
+  if(!core)return null;
+  const list=[...getNaturalList(dayIdx,'main'),...getNaturalList(dayIdx,'life')];
+  const hit=list.find(o=>{const n=currentFieldValue(o.key,'name',o.spot.name)||o.spot.name;return n===core||n.startsWith(core)||core.startsWith(n);});
+  if(hit){const n=currentFieldValue(hit.key,'name',hit.spot.name)||hit.spot.name;return {name:n,nav:currentFieldValue(hit.key,'mapQuery',null)||hit.spot.mapQuery||n};}
+  return {name:core,nav:core};
+}
+function tpTravelMode(mode){
+  const m=String(mode||'');
+  if(/步行|🚶/.test(m))return 'walking';
+  if(/計程車|自駕|開車|🚕|🚗|🚙/.test(m))return 'driving';
+  return 'transit';
+}
+function tpDirLink(nav,travelmode){
+  const v=String(nav||'').trim();
+  if(/^https?:\/\//i.test(v))return v;
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(/^[-+]?\d/.test(v)?v:v+' Japan')}&travelmode=${travelmode}`;
+}
+function tpGoButtonsHTML(dayIdx,r){
+  const dest=tpDestination(dayIdx,r.to);if(!dest)return '';
+  const tm=tpTravelMode(r.mode);
+  const taxi=/計程車|🚕/.test(String(r.mode||''));
+  return `<div class="tp-go"><a href="${escAttr(tpDirLink(dest.nav,tm))}" target="_blank" rel="noopener">導航到 ${escHtml(dest.name)}</a>${taxi?`<button type="button" data-name="${escAttr(dest.name)}" data-nav="${escAttr(dest.nav)}" onclick="showDriverCard(this.dataset.name,this.dataset.nav)">給司機看</button>`:''}</div>`;
+}
+function showDriverCard(name,nav){
+  document.getElementById('driverCard')?.remove();
+  const el=document.createElement('div');el.id='driverCard';el.className='driver-card';
+  el.innerHTML=`<div class="driver-card-inner"><p class="driver-ja">ここまでお願いします</p><p class="driver-zh">（請載我到這裡）</p><div class="driver-name">${escHtml(name)}</div><a class="driver-map" href="${escAttr(mapsLink(nav))}" target="_blank" rel="noopener">打開地圖給司機看</a><button type="button" class="driver-close">關閉</button></div>`;
+  el.querySelector('.driver-close').onclick=()=>el.remove();
+  el.addEventListener('click',e=>{if(e.target===el)el.remove();});
+  document.body.appendChild(el);
+}
 function transportAddBarHTML(dayIdx){
   return `<div class="tp-add edit-only"><button type="button" onclick="addTransportStep(${dayIdx})">＋ 新增交通步驟</button></div>${transportSegmentExtrasHTML(dayIdx,'panel')}`;
 }
@@ -4933,8 +5018,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=80';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=80';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=82';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=82';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
@@ -4980,17 +5065,17 @@ function destroyPlaceMap(){
 function kindsShown(){return mapUI.show==='eat'?['eat']:mapUI.show==='shop'?['shop']:['eat','shop'];}
 function placeMapHTML(){
   const areas=['全部',...allEatAreas()];
-  if(mapUI.unlocked==null)mapUI.unlocked=!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);
+  if(mapUI.unlocked==null)mapUI.unlocked=true; /* v82：手機也預設可以直接用手指拖曳、兩指縮放 */
   const shows=[['all','美食＋逛街'],['eat','只看美食'],['shop','只看逛街']];
   return `<section class="pm-card"><div class="pm-head"><b>吃逛地圖</b><small>點圖釘看距離；「家」是住的飯店</small></div>
   <div class="pm-seg" role="tablist">${shows.map(([k,l])=>`<button type="button" data-show="${k}" class="${mapUI.show===k?'on':''}" onclick="placeMapShow('${k}')">${l}</button>`).join('')}</div>
   <div class="pm-areas">${areas.map(a=>`<button type="button" data-area="${escAttr(a)}" class="${(mapUI.area||'全部')===a?'on':''}" onclick="placeMapArea('${jsQuote(a)}')">${escHtml(a)}</button>`).join('')}</div>
-  <div class="pm-wrap${mapUI.big?' big':''}"><div id="placeMap"></div><button type="button" class="pm-reset" onclick="placeMapReset()">↺ 回到初始畫面</button><div class="pm-pickbar" id="placePickBar" hidden></div><div class="pm-loading" id="placeMapLoading">地圖載入中…</div></div>
+  <div class="pm-wrap${mapUI.big?' big':''}"><div id="placeMap"></div><button type="button" class="pm-reset" onclick="placeMapReset()">↺ 回到初始畫面</button><button type="button" class="pm-locked" id="pmLocked" onclick="placeMapAct('lock')"${mapUI.unlocked?' hidden':''}>🔒 地圖已鎖定<br><small>點這裡就可以移動地圖</small></button><div class="pm-peek" id="pmPeek" hidden></div><div class="pm-pickbar" id="placePickBar" hidden></div><div class="pm-loading" id="placeMapLoading">地圖載入中…</div></div>
   <div class="pm-opts"><button type="button" data-act="lock" class="${mapUI.unlocked?'on':''}" onclick="placeMapAct('lock')">${lockLabel()}</button><button type="button" data-act="big" onclick="placeMapAct('big')">${mapUI.big?'縮小地圖':'放大地圖'}</button><button type="button" class="edit-only" onclick="placeMapAct('new')">＋ 在地圖上新增地點</button></div>
   <div class="pm-legend"><span><i class="lg eat"></i>美食</span><span><i class="lg shop"></i>逛街</span><span><i class="lg home"></i>家（住的飯店）</span><span><i class="lg approx"></i>約略位置</span></div>
   <div id="placeInfo" class="pm-info"></div><div id="placeUnpinned" class="pm-unpinned edit-only"></div></section>`;
 }
-function lockLabel(){return mapUI.unlocked?'可拖曳地圖（點此鎖定，方便捲動頁面）':'地圖已鎖定（點此才能拖曳、縮放）';}
+function lockLabel(){return mapUI.unlocked?'🔒 鎖定地圖（只想捲動頁面時）':'🔓 解除鎖定，可以移動地圖';}
 function pinIcon(o,sel){
   const img=o.kind==='shop'?NAV_IC.shopping:NAV_IC.food;
   return L.divIcon({className:'pm-pin-wrap',iconSize:[40,40],iconAnchor:[20,20],html:`<div class="pin pin-${o.kind}${o.approx?' approx':''}${sel?' sel':''}"><img src="${img}" alt=""></div>`});
@@ -5011,7 +5096,7 @@ async function initPlaceMap(){
   drawPlaceMap(fit);
   if(mapUI.focusSel&&mapUI.sel){mapUI.focusSel=false;const o=placeByKey(mapUI.sel);if(o&&o.pos)map.setView([o.pos.lat,o.pos.lng],16);}
   map.on('click',e=>{
-    if(!mapUI.pick){if(mapUI.sel){mapUI.sel=null;drawPlaceMap(false);renderPlaceInfo();}return;}
+    if(!mapUI.pick){if(mapUI.sel){placeMapDeselect();}return;}
     const p=mapUI.pick;mapUI.pick=null;
     if(p.type==='set'){setPlacePos(p.key,e.latlng.lat,e.latlng.lng);mapUI.sel=p.key;toast_('已標好位置');placeMapRefresh();}
     else if(p.type==='new'){addEatShopAt(p.kind||null,e.latlng.lat,e.latlng.lng);}
@@ -5019,9 +5104,9 @@ async function initPlaceMap(){
   });
   const ld=document.getElementById('placeMapLoading');if(ld)ld.hidden=true;
   setTimeout(()=>{try{map.invalidateSize();}catch(e){}},120);
-  updatePickBar();renderPlaceInfo();renderUnpinned();
+  updatePickBar();renderPlaceInfo();renderUnpinned();renderPlacePeek();
 }
-function toast_(msg){try{offerUndo(msg,()=>{});}catch(e){}}
+function toast_(msg){try{showToast(msg);}catch(e){}}
 function drawPlaceMap(fit){
   const map=mapUI.map;if(!map||!window.L||!mapUI.layer)return;
   mapUI.layer.clearLayers();
@@ -5051,8 +5136,6 @@ function drawPlaceMap(fit){
   if(sel&&sel.pos){
     nearbyFor(sel).lines.forEach(n=>{
       L.polyline([[sel.pos.lat,sel.pos.lng],[n.o.pos.lat,n.o.pos.lng]],{color:n.o.kind==='shop'?'#d8602f':n.o.kind==='home'?'#7a4fb5':'#2f8a52',weight:3,dashArray:'6 6',opacity:.85}).addTo(mapUI.layer);
-      const mid=[(sel.pos.lat+n.o.pos.lat)/2,(sel.pos.lng+n.o.pos.lng)/2];
-      L.marker(mid,{interactive:false,icon:L.divIcon({className:'pm-pin-wrap',iconSize:[0,0],html:`<div class="pm-dist">${fmtDist(n.m)}</div>`})}).addTo(mapUI.layer);
     });
   }
   if(fit){
@@ -5081,16 +5164,36 @@ function nearbyFor(o){
 function selectPlace(key,fromMap){
   mapUI.sel=key;
   const o=placeByKey(key);
-  drawPlaceMap(false);renderPlaceInfo();
-  if(o&&o.pos&&mapUI.map){try{mapUI.map.panTo([o.pos.lat,o.pos.lng],{animate:true});}catch(e){}}
+  drawPlaceMap(false);renderPlaceInfo();renderPlacePeek();
+  if(o&&o.pos&&mapUI.map){try{
+    /* 把選到的點移到「小卡上方的可見區」中間，不被小卡蓋住 */
+    const map=mapUI.map,host=document.getElementById('placeMap'),card=document.getElementById('pmPeek');
+    let shift=0;
+    if(host&&card&&!card.hidden){const hr=host.getBoundingClientRect(),cr=card.getBoundingClientRect();const scale=host.clientHeight/(hr.height||1);shift=Math.max(0,(hr.bottom-cr.top))*scale/2;}
+    const pt=map.project([o.pos.lat,o.pos.lng],map.getZoom()).add([0,shift]);
+    map.panTo(map.unproject(pt,map.getZoom()),{animate:true});
+  }catch(e){}}
   if(!fromMap){const w=document.querySelector('.pm-card');if(w)w.scrollIntoView({behavior:'smooth',block:'start'});}
 }
 /* 不想看這個點了：回到一開始的全覽畫面 */
 function placeMapReset(){
   mapUI.sel=null;mapUI.area='';mapUI.pick=null;
-  placeMapSyncControls();updatePickBar();drawPlaceMap(true);renderPlaceInfo();
+  placeMapSyncControls();updatePickBar();drawPlaceMap(true);renderPlaceInfo();renderPlacePeek();
 }
-function placeMapDeselect(){mapUI.sel=null;drawPlaceMap(false);renderPlaceInfo();}
+function placeMapDeselect(){mapUI.sel=null;drawPlaceMap(false);renderPlaceInfo();renderPlacePeek();}
+/* v82：點圖釘後，直接在地圖下緣跳出小卡（名稱、最近兩個點與步行時間、導航），不用往下捲才看得到 */
+function renderPlacePeek(){
+  const box=document.getElementById('pmPeek');if(!box)return;
+  const o=mapUI.sel?placeByKey(mapUI.sel):null;
+  if(!o){box.hidden=true;box.innerHTML='';return;}
+  const nb=o.pos?nearbyFor(o):null;
+  const near=nb?nb.groups.flatMap(g=>g.list).sort((a,b)=>a.m-b.m).slice(0,2):[];
+  const q=jsQuote(o.key);
+  box.innerHTML=`<div class="pk-top"><b>${o.home?'<i class="pm-home-tag">家</i>':''}${escHtml(o.name)}</b><button type="button" class="pk-x" onclick="placeMapDeselect()" aria-label="關閉">✕</button></div>
+    ${near.length?`<div class="pk-near">${near.map(n=>`<button type="button" onclick="selectPlace('${jsQuote(n.o.key)}',true)"><span>${escHtml(n.o.name)}</span><em>步行 ${walkMin(n.m)} 分</em></button>`).join('')}</div>`:''}
+    <div class="pk-btns"><a href="${escAttr(mapsLink(o.nav))}" target="_blank" rel="noopener">導航</a>${o.home?'':`<button type="button" onclick="openSpotDetail('${q}')">詳情</button>`}<button type="button" onclick="document.getElementById('placeInfo')?.scrollIntoView({behavior:'smooth',block:'start'})">更多距離 ↓</button></div>`;
+  box.hidden=false;
+}
 function placeMapSyncControls(){
   document.querySelectorAll('.pm-areas button').forEach(b=>b.classList.toggle('on',b.dataset.area===(mapUI.area||'全部')));
   document.querySelectorAll('.pm-seg button').forEach(b=>b.classList.toggle('on',b.dataset.show===mapUI.show));
@@ -5121,7 +5224,7 @@ function renderUnpinned(){
   const miss=kindsShown().flatMap(k=>placeItems(k)).filter(o=>!o.pos);
   box.innerHTML=miss.length?`<h5>還沒標位置（${miss.length}）</h5><div class="pm-miss">${miss.map(o=>`<button type="button" onclick="placePickFor('${jsQuote(o.key)}')">${escHtml(o.name)}<small>標位置</small></button>`).join('')}</div>`:'';
 }
-function placeMapRefresh(){drawPlaceMap(false);renderPlaceInfo();renderUnpinned();}
+function placeMapRefresh(){drawPlaceMap(false);renderPlaceInfo();renderUnpinned();renderPlacePeek();}
 function updatePickBar(){
   const bar=document.getElementById('placePickBar');if(!bar)return;
   const wrap=bar.parentElement;
@@ -5141,13 +5244,13 @@ function placeEditPos(key){
     onSave:v=>{const p=parseLatLng(v.ll);if(!p){alert('看不出座標。請貼「緯度,經度」，或含座標的 Google 地圖完整網址。');return false;}setPlacePos(key,p.lat,p.lng);mapUI.sel=key;renderDayContent();}});
 }
 function placeMapArea(a){mapUI.area=a==='全部'?'':a;placeMapSyncControls();drawPlaceMap(true);}
-function placeMapShow(k){mapUI.show=k;const o=mapUI.sel?placeByKey(mapUI.sel):null;if(o&&!o.home&&!kindsShown().includes(o.kind))mapUI.sel=null;placeMapSyncControls();drawPlaceMap(true);renderPlaceInfo();renderUnpinned();}
+function placeMapShow(k){mapUI.show=k;const o=mapUI.sel?placeByKey(mapUI.sel):null;if(o&&!o.home&&!kindsShown().includes(o.kind))mapUI.sel=null;placeMapSyncControls();drawPlaceMap(true);renderPlaceInfo();renderUnpinned();renderPlacePeek();}
 function placeMapAct(act){
   const map=mapUI.map;
   if(act==='lock'){
     mapUI.unlocked=!mapUI.unlocked;
     if(map)['dragging','touchZoom','doubleClickZoom'].forEach(h=>{try{mapUI.unlocked?map[h].enable():map[h].disable();}catch(e){}});
-    placeMapSyncControls();
+    placeMapSyncControls();const ov=document.getElementById('pmLocked');if(ov)ov.hidden=!!mapUI.unlocked;
   }else if(act==='big'){
     mapUI.big=!mapUI.big;placeMapSyncControls();
     setTimeout(()=>{try{map&&map.invalidateSize();}catch(e){}},260);
