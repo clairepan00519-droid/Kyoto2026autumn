@@ -192,9 +192,9 @@ const SUPABASE_URL = "https://xkahhddatpoxuembeiwl.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrYWhoZGRhdHBveHVlbWJlaXdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NDExNDksImV4cCI6MjEwMDAxNzE0OX0.Jdpxpz7rgyK_OikYkRrVQComDWZiaI4fgf5ZV_SdaII";
 
 const SYNC_META_KEY = 'kyoto_sync_meta_v3';
-const SYNC_KEYS = ['kyoto_notes','kyoto_info_overrides','kyoto_field_overrides','kyoto_photos','kyoto_covers','kyoto_custom_spots','kyoto_order','kyoto_block_order','kyoto_route_maps','kyoto_transport_extras','kyoto_foliage_maps','kyoto_pack','kyoto_shop','kyoto_rules','kyoto_docs','kyoto_hidden_fixed_spots','kyoto_transport_cards','kyoto_eatshop','kyoto_photo_pos','kyoto_marks','kyoto_livelinks','kyoto_mama','kyoto_surprises','kyoto_tips_seen','kyoto_eat_area','kyoto_eat_plan','kyoto_detail_covers','kyoto_hidden_orig','kyoto_transport_custom','kyoto_eat_area_custom','kyoto_sub_spots','kyoto_place_pos','kyoto_spot_day','kyoto_eat_area_order'];
+const SYNC_KEYS = ['kyoto_notes','kyoto_info_overrides','kyoto_field_overrides','kyoto_photos','kyoto_covers','kyoto_custom_spots','kyoto_order','kyoto_block_order','kyoto_route_maps','kyoto_transport_extras','kyoto_foliage_maps','kyoto_pack','kyoto_shop','kyoto_rules','kyoto_docs','kyoto_hidden_fixed_spots','kyoto_transport_cards','kyoto_eatshop','kyoto_photo_pos','kyoto_marks','kyoto_livelinks','kyoto_mama','kyoto_surprises','kyoto_tips_seen','kyoto_eat_area','kyoto_eat_plan','kyoto_detail_covers','kyoto_hidden_orig','kyoto_transport_custom','kyoto_eat_area_custom','kyoto_sub_spots','kyoto_place_pos','kyoto_spot_day','kyoto_eat_area_order','kyoto_todos'];
 const MEDIA_SYNC_KEYS = new Set(['kyoto_photos','kyoto_covers','kyoto_route_maps','kyoto_transport_extras','kyoto_foliage_maps']);
-const STRUCTURED_LIST_KEYS = new Set(['kyoto_shop','kyoto_rules','kyoto_docs','kyoto_transport_cards','kyoto_eatshop','kyoto_livelinks','kyoto_surprises']);
+const STRUCTURED_LIST_KEYS = new Set(['kyoto_shop','kyoto_rules','kyoto_todos','kyoto_docs','kyoto_transport_cards','kyoto_eatshop','kyoto_livelinks','kyoto_surprises']);
 const cloudSync = {enabled:false, starting:false, applyingRemote:false, pending:{}, timer:null, pollTimer:null, lastError:null, ready:false};
 const MEDIA_BUCKET = 'trip-media';
 
@@ -570,7 +570,7 @@ function flushPendingDayRender(){
 }
 function applyStoreUpdate(key,jsonStr){
   let parsed;try{parsed=JSON.parse(jsonStr);}catch(e){return;}
-  switch(key){case'kyoto_notes':notesStore=parsed;break;case'kyoto_info_overrides':infoOverrideStore=parsed||{};break;case'kyoto_field_overrides':fieldOverrideStore=parsed||{};break;case'kyoto_photos':photoStore=parsed;break;case'kyoto_covers':coverStore=parsed;break;case'kyoto_custom_spots':customSpotsStore=parsed;break;case'kyoto_order':orderStore=parsed;break;case'kyoto_block_order':blockOrderStore=parsed;break;case'kyoto_route_maps':routeMapStore=parsed;break;case'kyoto_transport_extras':transportExtrasStore=parsed||{};break;case'kyoto_foliage_maps':foliageMapStore=Array.isArray(parsed)?parsed:[];renderFoliageMaps();return;case'kyoto_pack':packData=migratePackCategoryNames(parsed);window._packLive=packData;if(isPackComposerEditing()){window._packRemoteRenderPending=true;}else{renderPackList();}return;case'kyoto_shop':shopData=normalizeStructuredList('kyoto_shop',parsed);renderShopList();return;case'kyoto_rules':rulesData=normalizeStructuredList('kyoto_rules',parsed);renderRulesList();return;case'kyoto_docs':docsData=mergeDocsWithDefaults(parsed);persistDocs();renderDocsList();return;case'kyoto_transport_cards':transportCardsData=normalizeStructuredList('kyoto_transport_cards',parsed);renderTransportCards();return;case'kyoto_eatshop':eatShopStore=normalizeStructuredList('kyoto_eatshop',parsed);if(typeof activeDay==='string')renderDayContent();return;case'kyoto_photo_pos':photoPosStore=parsed||{};safeRenderDayContent();return;case'kyoto_marks':marksStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};renderMarksBar();safeRenderDayContent();return;case'kyoto_livelinks':liveData=normalizeStructuredList('kyoto_livelinks',parsed);renderLive();return;case'kyoto_surprises':surprisesData=normalizeStructuredList('kyoto_surprises',parsed);renderSurpriseAdmin();return;case'kyoto_tips_seen':tipsSeen=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};return;case'kyoto_place_pos':placePosStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};if(typeof activeDay==='string')safeRenderDayContent();return;case'kyoto_sub_spots':subSpotStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_area_custom':eatAreaCustom=Array.isArray(parsed)?parsed:[];safeRenderDayContent();return;case'kyoto_spot_day':spotDayStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};renderDayChips();safeRenderDayContent();return;case'kyoto_eat_area_order':eatAreaOrder=Array.isArray(parsed)?parsed:[];safeRenderDayContent();return;case'kyoto_transport_custom':transportCustomStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_detail_covers':detailCoverStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_hidden_orig':hiddenOrigStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_plan':eatPlanStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_area':eatAreaStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};if(typeof activeDay==='string')safeRenderDayContent();return;case'kyoto_mama':mamaStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};refreshMamaButtons(null);if(document.getElementById('mamaModal'))renderMamaList();return;case'kyoto_hidden_fixed_spots':hiddenFixedSpotsStore=parsed||{};safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();return;default:return;}
+  switch(key){case'kyoto_notes':notesStore=parsed;break;case'kyoto_info_overrides':infoOverrideStore=parsed||{};break;case'kyoto_field_overrides':fieldOverrideStore=parsed||{};break;case'kyoto_photos':photoStore=parsed;break;case'kyoto_covers':coverStore=parsed;break;case'kyoto_custom_spots':customSpotsStore=parsed;break;case'kyoto_order':orderStore=parsed;break;case'kyoto_block_order':blockOrderStore=parsed;break;case'kyoto_route_maps':routeMapStore=parsed;break;case'kyoto_transport_extras':transportExtrasStore=parsed||{};break;case'kyoto_foliage_maps':foliageMapStore=Array.isArray(parsed)?parsed:[];renderFoliageMaps();return;case'kyoto_pack':packData=migratePackCategoryNames(parsed);window._packLive=packData;if(isPackComposerEditing()){window._packRemoteRenderPending=true;}else{renderPackList();}return;case'kyoto_shop':shopData=normalizeStructuredList('kyoto_shop',parsed);renderShopList();return;case'kyoto_rules':rulesData=normalizeStructuredList('kyoto_rules',parsed);renderRulesList();return;case'kyoto_todos':todoData=normalizeStructuredList('kyoto_todos',parsed);renderTodos();return;case'kyoto_docs':docsData=mergeDocsWithDefaults(parsed);persistDocs();renderDocsList();return;case'kyoto_transport_cards':transportCardsData=normalizeStructuredList('kyoto_transport_cards',parsed);renderTransportCards();return;case'kyoto_eatshop':eatShopStore=normalizeStructuredList('kyoto_eatshop',parsed);if(typeof activeDay==='string')renderDayContent();return;case'kyoto_photo_pos':photoPosStore=parsed||{};safeRenderDayContent();return;case'kyoto_marks':marksStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};renderMarksBar();safeRenderDayContent();return;case'kyoto_livelinks':liveData=normalizeStructuredList('kyoto_livelinks',parsed);renderLive();return;case'kyoto_surprises':surprisesData=normalizeStructuredList('kyoto_surprises',parsed);renderSurpriseAdmin();return;case'kyoto_tips_seen':tipsSeen=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};return;case'kyoto_place_pos':placePosStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};if(typeof activeDay==='string')safeRenderDayContent();return;case'kyoto_sub_spots':subSpotStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_area_custom':eatAreaCustom=Array.isArray(parsed)?parsed:[];safeRenderDayContent();return;case'kyoto_spot_day':spotDayStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};renderDayChips();safeRenderDayContent();return;case'kyoto_eat_area_order':eatAreaOrder=Array.isArray(parsed)?parsed:[];safeRenderDayContent();return;case'kyoto_transport_custom':transportCustomStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_detail_covers':detailCoverStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_hidden_orig':hiddenOrigStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_plan':eatPlanStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_area':eatAreaStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};if(typeof activeDay==='string')safeRenderDayContent();return;case'kyoto_mama':mamaStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};refreshMamaButtons(null);if(document.getElementById('mamaModal'))renderMamaList();return;case'kyoto_hidden_fixed_spots':hiddenFixedSpotsStore=parsed||{};safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();return;default:return;}
   safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();
 }
 function scheduleCloudPush(key,valueObj){
@@ -2467,6 +2467,102 @@ const defaultRulesData = [
 let rulesData = normalizeStructuredList('kyoto_rules', JSON.parse(localStorage.getItem('kyoto_rules')) || defaultRulesData);
 function persistRules(){ safeSetItem('kyoto_rules', rulesData); }
 
+/* ============ v85：出發前待辦（全家共用，誰勾的會顯示名字） ============ */
+const TODO_SEED=[
+  {id:'todo-vjw',text:'每個人填好 Visit Japan Web（入境與海關資料），截圖 QR Code',due:'2026-11-20'},
+  {id:'todo-insurance',text:'保旅遊平安險＋旅遊不便險',due:'2026-11-13'},
+  {id:'todo-license',text:'開車的人到監理站辦「駕照日文譯本」，和台灣駕照一起帶',due:'2026-11-06'},
+  {id:'todo-car',text:'確認租車：12/1 奈良取車、12/5 京都還車；冬季胎、保險、取車地點與時間',due:'2026-11-13'},
+  {id:'todo-eikando',text:'永觀堂晨間貸切：確認預約、集合時間與地點（改到「給司機看」卡片上）',due:'2026-11-13'},
+  {id:'todo-murinan',text:'預約無鄰菴 11/29 午前時段',due:'2026-11-15'},
+  {id:'todo-lunch1129',text:'11/29（週日）南禪寺・岡崎午餐訂位',due:'2026-11-20'},
+  {id:'todo-dinner',text:'晚餐訂位：京都天ぷら天天天、京の焼肉処 弘（標「預約」的店）',due:'2026-11-13'},
+  {id:'todo-hozu',text:'預約保津川漂流（12/1），記下停航時的改搭方式',due:'2026-11-13'},
+  {id:'todo-haruka',text:'買 KIX⇄京都 HARUKA 優惠票，準備 ICOCA',due:'2026-11-20'},
+  {id:'todo-sim',text:'買網卡／eSIM，或開通漫遊',due:'2026-11-20'},
+  {id:'todo-yen',text:'換日幣（小額現金：寺院門票、小店）',due:'2026-11-20'},
+  {id:'todo-go',text:'手機下載 GO Taxi，綁好信用卡',due:'2026-11-20'},
+  {id:'todo-login',text:'每位家人都用自己的手機登入這個網站一次，並在 ⚙️ 下載離線圖片',due:'2026-11-24'},
+  {id:'todo-hotel',text:'確認每間飯店的入住時間、行李寄放與早晚餐',due:'2026-11-20'},
+  {id:'todo-flight',text:'確認航班時間，線上報到',due:'2026-11-26'},
+  {id:'todo-foliage',text:'看紅葉與天氣預報，決定 11/28 去大原、高雄還是鞍馬',due:'2026-11-25'},
+  {id:'todo-taxi1129',text:'11/28 晚上用 GO 預約 11/29 早上到永觀堂的計程車',due:'2026-11-28'}
+].map(t=>({...t,done:false,note:''}));
+let todoData=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_todos'));return Array.isArray(v)?normalizeStructuredList('kyoto_todos',v):structuredClone(TODO_SEED);}catch(e){return structuredClone(TODO_SEED);}})();
+function persistTodos(){safeSetItem('kyoto_todos',todoData);}
+function todoWho(){
+  try{const e=(familyAuthSession&&familyAuthSession.email)||(readAuthSession()&&readAuthSession().email)||'';return e?e.split('@')[0]:'';}catch(e){return '';}
+}
+function todoDaysLeft(due){
+  if(!due)return null;const m=String(due).match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!m)return null;
+  const d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));const t=new Date();t.setHours(0,0,0,0);
+  return Math.round((d-t)/86400000);
+}
+function todoDueHTML(due,done){
+  const n=todoDaysLeft(due);if(n==null)return '';
+  const m=due.slice(5).replace('-','/').replace(/^0/,'');
+  if(done)return `<span class="td-due">${m}</span>`;
+  const cls=n<0?'late':n<=3?'soon':'';
+  const txt=n<0?`${m}・已過 ${-n} 天`:n===0?`${m}・今天`:`${m}・還有 ${n} 天`;
+  return `<span class="td-due ${cls}">${txt}</span>`;
+}
+function todoSorted(){
+  const key=t=>t.due||'9999-99-99';
+  return todoData.map((t,i)=>({t,i})).sort((a,b)=>(a.t.done-b.t.done)||key(a.t).localeCompare(key(b.t))||(a.i-b.i));
+}
+function renderTodos(){
+  const wrap=document.getElementById('todoListWrap');
+  const left=todoData.filter(t=>!t.done).length,total=todoData.length;
+  if(wrap){
+    const rows=todoSorted();
+    const row=({t})=>`<div class="td-item${t.done?' done':''}"><label class="td-check"><input type="checkbox" ${t.done?'checked':''} onchange="toggleTodo('${jsQuote(t.id)}',this.checked)"><span class="td-box" aria-hidden="true"></span></label><div class="td-main"><div class="td-text">${escHtml(t.text)}</div>${t.note?`<div class="td-note">${brText(t.note)}</div>`:''}<div class="td-meta">${todoDueHTML(t.due,t.done)}${t.done&&t.doneBy?`<span class="td-by">✓ ${escHtml(t.doneBy)} 完成</span>`:''}</div></div><div class="td-acts edit-only"><button type="button" onclick="editTodo('${jsQuote(t.id)}')">修改</button><button type="button" class="del" onclick="deleteTodo('${jsQuote(t.id)}')">刪除</button></div></div>`;
+    const undone=rows.filter(x=>!x.t.done),done=rows.filter(x=>x.t.done);
+    wrap.innerHTML=`<div class="td-progress"><div class="td-bar"><i style="width:${total?Math.round((total-left)/total*100):0}%"></i></div><b>${left?`還有 ${left} 項`:'全部完成 🎉'}</b><small>已完成 ${total-left} / ${total}</small></div>
+      <div class="td-list">${undone.map(row).join('')||'<div class="empty compact">都完成了！</div>'}</div>
+      ${done.length?`<details class="td-done"><summary>已完成（${done.length}）</summary>${done.map(row).join('')}</details>`:''}
+      <button type="button" class="td-add" onclick="addTodo()">＋ 新增待辦</button>`;
+  }
+  renderTodoBanner();
+}
+function toggleTodo(id,checked){
+  const t=todoData.find(x=>x.id===id);if(!t)return;
+  t.done=!!checked;if(checked){t.doneBy=todoWho();t.doneAt=new Date().toISOString();}else{delete t.doneBy;delete t.doneAt;}
+  persistTodos();renderTodos();
+}
+function todoFields(t){return [
+  {id:'text',label:'要做什麼',type:'textarea',rows:2,value:t.text||'',placeholder:'例：預約保津川漂流'},
+  {id:'due',label:'最晚哪天前完成（選填）',type:'date',value:t.due||''},
+  {id:'note',label:'備註（選填：預約編號、網址、誰負責…）',type:'textarea',rows:3,value:t.note||''}];}
+function addTodo(){
+  openFormModal({title:'新增出發前待辦',fields:todoFields({}),saveText:'新增',onSave:v=>{
+    if(!v.text){alert('請輸入要做什麼');return false;}
+    todoData.push({id:newItemId('todo'),text:v.text,due:v.due,note:v.note,done:false});persistTodos();renderTodos();}});
+}
+function editTodo(id){
+  const t=todoData.find(x=>x.id===id);if(!t)return;
+  openFormModal({title:'修改待辦',fields:todoFields(t),saveText:'儲存',onSave:v=>{
+    if(!v.text){alert('內容不能是空的');return false;}
+    Object.assign(t,{text:v.text,due:v.due,note:v.note});persistTodos();renderTodos();},onDelete:()=>deleteTodo(id,true)});
+}
+function deleteTodo(id,skipConfirm){
+  const i=todoData.findIndex(x=>x.id===id);if(i<0)return;
+  if(!skipConfirm&&!confirm(`刪除待辦「${todoData[i].text}」？（8 秒內可復原）`))return;
+  const removed=todoData.splice(i,1)[0];persistTodos();renderTodos();
+  offerUndo('已刪除待辦',()=>{todoData.splice(Math.min(i,todoData.length),0,removed);persistTodos();renderTodos();});
+}
+/* 行程頁頂端：出發前才顯示「出發前待辦還有幾項」，點了直接跳到清單 */
+function renderTodoBanner(){
+  const host=document.getElementById('view-itinerary');if(!host)return;
+  let el=document.getElementById('todoBanner');
+  const left=todoData.filter(t=>!t.done);
+  const beforeTrip=new Date()<new Date(2026,10,27);
+  if(!beforeTrip||!left.length){el?.remove();return;}
+  const late=left.filter(t=>{const n=todoDaysLeft(t.due);return n!=null&&n<=3;}).length;
+  if(!el){el=document.createElement('button');el.type='button';el.id='todoBanner';el.className='todo-banner';el.onclick=goToTodos;host.prepend(el);}
+  el.innerHTML=`<span class="tb-ic">✅</span><span class="tb-txt"><b>出發前待辦還有 ${left.length} 項</b>${late?`<small>${late} 項快到期或已過期</small>`:'<small>點這裡查看、勾選</small>'}</span><em>›</em>`;
+}
+function goToTodos(){setTab('guide');setTimeout(()=>document.getElementById('todoSection')?.scrollIntoView({behavior:'smooth',block:'start'}),80);}
+
 function renderRulesList() {
   const wrap = document.getElementById('rulesListWrap');
   if(!wrap) return;
@@ -2651,7 +2747,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=84').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=85').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -2827,6 +2923,7 @@ function openFormModal({title,fields,onSave,onDelete,saveText='儲存'}){
     let input;
     if(f.type==='textarea') input=`<textarea data-f="${f.id}" rows="${f.rows||3}" placeholder="${escAttr(f.placeholder||'')}">${escHtml(f.value||'')}</textarea>`;
     else if(f.type==='file') input=`<input type="file" data-f="${f.id}" accept="image/*">`;
+    else if(f.type==='date') input=`<input type="date" data-f="${f.id}" value="${escAttr(f.value||'')}">`;
     else if(f.type==='files') input=`<input type="file" data-f="${f.id}" data-multi="1" accept="image/*" multiple>`;
     else if(f.type==='select') input=`<select data-f="${f.id}">${f.options.map(o=>`<option value="${escAttr(o.value)}" ${o.value===f.value?'selected':''}>${escHtml(o.label)}</option>`).join('')}</select>`;
     else input=`<input type="text" data-f="${f.id}" value="${escAttr(f.value||'')}" placeholder="${escAttr(f.placeholder||'')}">`;
@@ -3270,7 +3367,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v84-2026-10-05';
+const APP_VERSION='v85-2026-10-05';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -5086,8 +5183,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=84';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=84';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=85';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=85';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
@@ -5354,6 +5451,7 @@ renderShopList();
 
 /* ============ 頁面初始化 ============ */
 renderRulesList();
+renderTodos();
 renderDocsList();
 updateNetStatus();
 simplifyMetServiceButton();
