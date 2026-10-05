@@ -1706,7 +1706,7 @@ let activeSubTabStore = {}; /* dayIdx -> 'main' | 'transport' | 'more' | 'routem
 function transportPlanHTML(dayIdx){
   const plan=transportPlans[dayIdx];
   if(!plan)return `<section class="transport-plan"><div class="tp-head"><div><small>D${days[dayIdx].dayNum}・${days[dayIdx].date}</small><strong>今日交通</strong></div><img src="images/deer-car.webp" alt="" width="64" height="45"></div>${customTransportHTML(dayIdx)}${transportAddBarHTML(dayIdx)}</section>`;
-  const routes=(rows,prefix='route')=>`<div class="transport-steps">${(rows||[]).map((r0,i)=>{const segmentKey=`${prefix}-${i}`;const sk=`tp${dayIdx}-${segmentKey}`;if(currentFieldValue(sk,'hidden',null)==='1')return '';const r={from:currentFieldValue(sk,'from',r0.from)||r0.from,to:currentFieldValue(sk,'to',r0.to)||r0.to,mode:currentFieldValue(sk,'mode',r0.mode)||r0.mode,time:currentFieldValue(sk,'time',r0.time)||r0.time,note:currentFieldValue(sk,'note',r0.note)||r0.note};window._tpOrig=window._tpOrig||{};window._tpOrig[sk]=r0;return `<div class="transport-step"><span class="transport-step-no">${i+1}</span><div class="transport-step-main"><div class="transport-points"><strong>${escHtml(r.from)}</strong><span>→</span><strong>${escHtml(r.to)}</strong></div><div class="transport-meta"><b>${escHtml(r.mode)}</b><span>⏱ ${escHtml(r.time)}</span></div><small>${escHtml(r.note)}</small>${tpGoButtonsHTML(dayIdx,r)}<div class="edit-only tp-step-actions"><button type="button" onclick="editTransportStep('${sk}')">✎ 修改</button><button type="button" onclick="deleteTransportStep('${sk}')">🗑 刪除</button></div>${transportSegmentExtrasHTML(dayIdx,segmentKey)}</div></div>`;}).join('')}</div>`;
+  const routes=(rows,prefix='route')=>`<div class="transport-steps">${(rows||[]).map((r0,i)=>{const segmentKey=`${prefix}-${i}`;const sk=`tp${dayIdx}-${segmentKey}`;if(currentFieldValue(sk,'hidden',null)==='1')return '';const r={from:currentFieldValue(sk,'from',r0.from)||r0.from,to:currentFieldValue(sk,'to',r0.to)||r0.to,mode:currentFieldValue(sk,'mode',r0.mode)||r0.mode,time:currentFieldValue(sk,'time',r0.time)||r0.time,note:currentFieldValue(sk,'note',r0.note)||r0.note};window._tpOrig=window._tpOrig||{};window._tpOrig[sk]=r0;return `<div class="transport-step"><span class="transport-step-no">${i+1}</span><div class="transport-step-main"><div class="transport-points"><strong>${escHtml(r.from)}</strong><span>→</span><strong>${escHtml(r.to)}</strong></div><div class="transport-meta"><b>${escHtml(r.mode)}</b><span>⏱ ${escHtml(r.time)}</span></div><small>${escHtml(r.note)}</small>${tpGoButtonsHTML(dayIdx,r,i===(rows||[]).length-1)}<div class="edit-only tp-step-actions"><button type="button" onclick="editTransportStep('${sk}')">✎ 修改</button><button type="button" onclick="deleteTransportStep('${sk}')">🗑 刪除</button></div>${transportSegmentExtrasHTML(dayIdx,segmentKey)}</div></div>`;}).join('')}</div>`;
   const body=plan.choices?`<div class="transport-choice-list">${plan.choices.map((choice,i)=>`<details class="transport-choice"${i===0?' open':''}><summary>${escHtml(choice.name)}<span>展開路線</span></summary>${routes(choice.routes,`choice-${i}`)}</details>`).join('')}</div>`:plan.drive?`<div class="transport-drive-card"><span>🚗</span><div><strong>今天全程自駕</strong><small>按下方按鈕開啟當日主要地點導航；停車、休息站與道路狀況以當日為準。</small>${transportSegmentExtrasHTML(dayIdx,'drive-0')}</div></div>`:routes(plan.routes,plan.routeKey||'route');
   return `<section class="transport-plan"><div class="tp-head"><div><small>D${days[dayIdx].dayNum}・${days[dayIdx].date}</small><strong>今日交通</strong></div><img src="images/deer-car.webp" alt="" width="64" height="45"></div><div class="transport-alert">⚠️ ${escHtml(plan.alert)}</div>${body}${customTransportHTML(dayIdx)}${legacyTransportExtrasHTML(dayIdx)}${transportAddBarHTML(dayIdx)}<div class="transport-actions"><a href="https://www.google.com/maps/dir/?api=1&travelmode=${plan.drive?'driving':'transit'}&destination=${encodeURIComponent(currentFieldValue('day'+dayIdx+'-nav','mapQuery',null)||(days[dayIdx].region+' Japan'))}" target="_blank" rel="noopener">📍 開啟今日導航</a><button type="button" class="edit-only tp-nav-fix" onclick="editSpotField(event,'day${dayIdx}-nav','mapQuery','今日導航目的地（地址、經緯度或關鍵字）')">修正導航</button><button type="button" class="edit-only tp-nav-fix" onclick="restoreTransportSteps(${dayIdx})">↺ 還原本日交通步驟</button></div></section>`;
 }
@@ -2000,7 +2000,7 @@ function renderDayContent(){
   const d = days[activeDay];
   const curSubTab = activeSubTabStore[activeDay] || 'main';
   const stayList=dayStays(activeDay);
-  const stayBtns=stayList.length?`<span class="stay-quick-btns"><a class="stay-quick-nav" href="${escAttr(mapsLink(stayList[0].nav))}" target="_blank" rel="noopener">導航</a><button class="stay-quick-fix edit-only" type="button" onclick="editSpotField(event,'${stayList[0].key}','mapQuery','導航位置（Google Maps 網址、地址、經緯度或關鍵字）')">修正</button></span>`:'';
+  const stayBtns=stayList.length?`<span class="stay-quick-btns"><a class="stay-quick-nav" href="${escAttr(mapsLink(stayList[0].nav))}" target="_blank" rel="noopener">導航</a><button class="stay-quick-driver" type="button" data-name="${escAttr(stayList[0].name)}" data-nav="${escAttr(stayList[0].nav)}" onclick="showDriverCard(this.dataset.name,this.dataset.nav)">給司機看</button><button class="stay-quick-fix edit-only" type="button" onclick="editSpotField(event,'${stayList[0].key}','mapQuery','導航位置（Google Maps 網址、地址、經緯度或關鍵字）')">修正</button></span>`:'';
   const stayQuickHTML=stayList.length?`<div class="stay-quick-card"><div class="stay-quick-top"><div class="stay-quick-icon"><img src="images/nav-lodging.webp" alt="" width="34" height="34"></div><div class="stay-quick-copy"><small>今晚住宿${stayList.some(x=>x.cont)?'（連住第 2 晚）':''}</small><strong>${stayList.map(x=>escHtml(x.name)).join('、')}</strong></div></div>${stayList.map((x,i)=>`<div class="stay-quick-amen">${stayList.length>1?`<em>${escHtml(x.name)}</em>`:''}${hotelAmenityChips(x.key)}${i===stayList.length-1?stayBtns:''}</div>`).join('')}</div>`:emptyStayCardHTML(activeDay);
 
   const mainList = applyOrder(activeDay, 'main', getNaturalList(activeDay, 'main'));
@@ -2651,7 +2651,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=82').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=83').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3270,7 +3270,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v82-2026-10-05';
+const APP_VERSION='v83-2026-10-05';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -4674,11 +4674,13 @@ function deleteCustomTransport(dayIdx,id,skip){
   offerUndo('已刪除交通步驟',()=>{(transportCustomStore[dayIdx]=transportCustomStore[dayIdx]||[]).splice(Math.min(i,(transportCustomStore[dayIdx]||[]).length),0,removed);persistTransportCustom();renderDayContent();});
 }
 /* v81：每段交通直接「導航到目的地」；搭計程車的段落多一個「給司機看」大字卡 */
-function tpDestination(dayIdx,toText){
+function tpDestination(dayIdx,toText,isLast){
   const raw=String(toText||'').trim();
   const core=raw.replace(/[（(][^）)]*[）)]/g,'').trim();
   if(/飯店|住宿|旅館/.test(core)){
-    const st=dayStays(dayIdx)[0]||(dayIdx>0?dayStays(dayIdx-1)[0]:null);
+    /* 一天最後一段「回飯店」＝今晚住的；白天中途「回飯店」（例如回去拿行李）＝昨晚住的那間 */
+    const tonight=dayStays(dayIdx)[0],lastNight=dayIdx>0?dayStays(dayIdx-1)[0]:null;
+    const st=isLast?(tonight||lastNight):(lastNight||tonight);
     if(st)return {name:st.name,nav:st.nav};
   }
   if(!core)return null;
@@ -4698,19 +4700,60 @@ function tpDirLink(nav,travelmode){
   if(/^https?:\/\//i.test(v))return v;
   return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(/^[-+]?\d/.test(v)?v:v+' Japan')}&travelmode=${travelmode}`;
 }
-function tpGoButtonsHTML(dayIdx,r){
-  const dest=tpDestination(dayIdx,r.to);if(!dest)return '';
+function tpGoButtonsHTML(dayIdx,r,isLast){
+  const dest=tpDestination(dayIdx,r.to,isLast);if(!dest)return '';
   const tm=tpTravelMode(r.mode);
   const taxi=/計程車|🚕/.test(String(r.mode||''));
   return `<div class="tp-go"><a href="${escAttr(tpDirLink(dest.nav,tm))}" target="_blank" rel="noopener">導航到 ${escHtml(dest.name)}</a>${taxi?`<button type="button" data-name="${escAttr(dest.name)}" data-nav="${escAttr(dest.nav)}" onclick="showDriverCard(this.dataset.name,this.dataset.nav)">給司機看</button>`:''}</div>`;
 }
+/* v83：給司機看的日文資料（日文名稱、地址、在哪裡下車）。可在編輯模式修改，修改會同步給家人。
+   地址只放有確認過的；不確定的就不寫，避免讓司機開錯地方。 */
+const DRIVER_INFO={
+  '永觀堂':{ja:'永観堂（禅林寺）',drop:'鹿ヶ谷通り沿いの総門の前で降ろしてください。',dropZh:'在鹿ヶ谷通旁的總門（正門）前下車。晨間貸切的集合地點以預約通知為準。'},
+  '真如堂':{ja:'真如堂（真正極楽寺）',drop:'できるだけ真如堂の門の近くまでお願いします。',dropZh:'上坡路段，請司機盡量開到寺門口附近。'},
+  '金戒光明寺':{ja:'金戒光明寺（くろ谷さん）'},
+  '三千院＋大原散步':{ja:'三千院（大原）',drop:'三千院の参道入口（大原バス停の近く）までお願いします。',dropZh:'到三千院參道入口（大原巴士站附近），之後步行上去。'},
+  '出町柳':{ja:'出町柳駅（叡山電車）',drop:'叡山電車の出町柳駅の前で降ろしてください。',dropZh:'在叡山電車出町柳站前下車。'},
+  '詩仙堂':{ja:'詩仙堂（一乗寺）',drop:'詩仙堂の入口の近くまでお願いします。道が狭ければ手前で大丈夫です。',dropZh:'到詩仙堂入口附近；巷子太窄的話在前面下車也可以。'},
+  '京都站':{ja:'京都駅 八条口',drop:'京都駅の八条口（新幹線側）で降ろしてください。',dropZh:'在京都站八條口（新幹線那一側）下車，離 JR 奈良線月台較近。'},
+  '西本願寺':{ja:'西本願寺',drop:'堀川通り沿いの御影堂門の前で降ろしてください。',dropZh:'在堀川通旁的御影堂門前下車。'},
+  '京都御苑':{ja:'京都御苑 堺町御門',drop:'丸太町通り側の堺町御門の前でお願いします。',dropZh:'在丸太町通那一側的堺町御門前下車。'},
+  '下鴨神社＋糺之森':{ja:'下鴨神社（賀茂御祖神社）',drop:'糺の森の南側、表参道の入口でお願いします。',dropZh:'在糺之森南側、表參道入口下車。'},
+  'Daiwa Roynet Hotel 烏丸四條':{ja:'ダイワロイネットホテル京都四条烏丸',addr:'京都市下京区烏丸通仏光寺下る大政所町678',drop:'ホテルの正面入口までお願いします。',dropZh:'到飯店正門口。'},
+  'Richmond Hotel 京都站':{ja:'リッチモンドホテル プレミア京都駅前',addr:'京都市下京区北不動堂町565-3',drop:'ホテルの正面入口までお願いします。',dropZh:'到飯店正門口。'},
+  'Daiwa Roynet Hotel 奈良':{ja:'ダイワロイネットホテル奈良',drop:'JR奈良駅の近くです。ホテルの正面入口までお願いします。',dropZh:'在 JR 奈良站附近，到飯店正門口。'}
+};
+const DRIVER_FIELDS=['ja','addr','drop','dropZh'];
+function driverInfo(name){
+  const base=DRIVER_INFO[name]||{};const key='drv:'+name,out={};
+  DRIVER_FIELDS.forEach(f=>{const v=currentFieldValue(key,f,base[f]||null);if(v)out[f]=v;});
+  return out;
+}
 function showDriverCard(name,nav){
   document.getElementById('driverCard')?.remove();
+  const info=driverInfo(name);
   const el=document.createElement('div');el.id='driverCard';el.className='driver-card';
-  el.innerHTML=`<div class="driver-card-inner"><p class="driver-ja">ここまでお願いします</p><p class="driver-zh">（請載我到這裡）</p><div class="driver-name">${escHtml(name)}</div><a class="driver-map" href="${escAttr(mapsLink(nav))}" target="_blank" rel="noopener">打開地圖給司機看</a><button type="button" class="driver-close">關閉</button></div>`;
+  el.innerHTML=`<div class="driver-card-inner">
+    <p class="driver-ja">ここまでお願いします</p><p class="driver-zh">（請載我到這裡）</p>
+    <div class="driver-name${String(info.ja||name).length>12?' long':''}">${escHtml(info.ja||name)}</div>${info.ja&&info.ja!==name?`<div class="driver-name-zh">${escHtml(name)}</div>`:''}
+    ${info.addr?`<div class="driver-addr"><small>住所</small>${escHtml(info.addr)}</div>`:''}
+    ${info.drop?`<div class="driver-drop"><small>降りる場所</small><b>${escHtml(info.drop)}</b>${info.dropZh?`<span>${escHtml(info.dropZh)}</span>`:''}</div>`:''}
+    <a class="driver-map" href="${escAttr(mapsLink(nav))}" target="_blank" rel="noopener">打開地圖給司機看</a>
+    <button type="button" class="driver-edit edit-only">修改日文名稱／下車地點</button>
+    <button type="button" class="driver-close">關閉</button></div>`;
   el.querySelector('.driver-close').onclick=()=>el.remove();
+  el.querySelector('.driver-edit').onclick=()=>{el.remove();editDriverInfo(name,nav);};
   el.addEventListener('click',e=>{if(e.target===el)el.remove();});
   document.body.appendChild(el);
+}
+function editDriverInfo(name,nav){
+  const info=driverInfo(name),key='drv:'+name;
+  openFormModal({title:'給司機看：'+name,fields:[
+    {id:'ja',label:'日文名稱（司機看的大字）',value:info.ja||'',placeholder:'例：永観堂（禅林寺）'},
+    {id:'addr',label:'日文地址（選填）',value:info.addr||''},
+    {id:'drop',label:'在哪裡下車（日文，給司機看）',type:'textarea',rows:2,value:info.drop||'',placeholder:'例：総門の前で降ろしてください。'},
+    {id:'dropZh',label:'在哪裡下車（中文，給自己看）',type:'textarea',rows:2,value:info.dropZh||''}],saveText:'儲存',
+    onSave:v=>{DRIVER_FIELDS.forEach(f=>{const fk=fieldOverrideKey(key,f);if(v[f])fieldOverrideStore[fk]=v[f];else fieldOverrideStore[fk]='';});persistFieldOverrides();showDriverCard(name,nav);}});
 }
 function transportAddBarHTML(dayIdx){
   return `<div class="tp-add edit-only"><button type="button" onclick="addTransportStep(${dayIdx})">＋ 新增交通步驟</button></div>${transportSegmentExtrasHTML(dayIdx,'panel')}`;
@@ -5018,8 +5061,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=82';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=82';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=83';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=83';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
