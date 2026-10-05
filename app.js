@@ -2651,7 +2651,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=81').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=82').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3270,7 +3270,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v81-2026-10-05';
+const APP_VERSION='v82-2026-10-05';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -5018,8 +5018,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=81';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=81';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=82';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=82';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
@@ -5065,17 +5065,17 @@ function destroyPlaceMap(){
 function kindsShown(){return mapUI.show==='eat'?['eat']:mapUI.show==='shop'?['shop']:['eat','shop'];}
 function placeMapHTML(){
   const areas=['全部',...allEatAreas()];
-  if(mapUI.unlocked==null)mapUI.unlocked=!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);
+  if(mapUI.unlocked==null)mapUI.unlocked=true; /* v82：手機也預設可以直接用手指拖曳、兩指縮放 */
   const shows=[['all','美食＋逛街'],['eat','只看美食'],['shop','只看逛街']];
   return `<section class="pm-card"><div class="pm-head"><b>吃逛地圖</b><small>點圖釘看距離；「家」是住的飯店</small></div>
   <div class="pm-seg" role="tablist">${shows.map(([k,l])=>`<button type="button" data-show="${k}" class="${mapUI.show===k?'on':''}" onclick="placeMapShow('${k}')">${l}</button>`).join('')}</div>
   <div class="pm-areas">${areas.map(a=>`<button type="button" data-area="${escAttr(a)}" class="${(mapUI.area||'全部')===a?'on':''}" onclick="placeMapArea('${jsQuote(a)}')">${escHtml(a)}</button>`).join('')}</div>
-  <div class="pm-wrap${mapUI.big?' big':''}"><div id="placeMap"></div><button type="button" class="pm-reset" onclick="placeMapReset()">↺ 回到初始畫面</button><div class="pm-pickbar" id="placePickBar" hidden></div><div class="pm-loading" id="placeMapLoading">地圖載入中…</div></div>
+  <div class="pm-wrap${mapUI.big?' big':''}"><div id="placeMap"></div><button type="button" class="pm-reset" onclick="placeMapReset()">↺ 回到初始畫面</button><button type="button" class="pm-locked" id="pmLocked" onclick="placeMapAct('lock')"${mapUI.unlocked?' hidden':''}>🔒 地圖已鎖定<br><small>點這裡就可以移動地圖</small></button><div class="pm-peek" id="pmPeek" hidden></div><div class="pm-pickbar" id="placePickBar" hidden></div><div class="pm-loading" id="placeMapLoading">地圖載入中…</div></div>
   <div class="pm-opts"><button type="button" data-act="lock" class="${mapUI.unlocked?'on':''}" onclick="placeMapAct('lock')">${lockLabel()}</button><button type="button" data-act="big" onclick="placeMapAct('big')">${mapUI.big?'縮小地圖':'放大地圖'}</button><button type="button" class="edit-only" onclick="placeMapAct('new')">＋ 在地圖上新增地點</button></div>
   <div class="pm-legend"><span><i class="lg eat"></i>美食</span><span><i class="lg shop"></i>逛街</span><span><i class="lg home"></i>家（住的飯店）</span><span><i class="lg approx"></i>約略位置</span></div>
   <div id="placeInfo" class="pm-info"></div><div id="placeUnpinned" class="pm-unpinned edit-only"></div></section>`;
 }
-function lockLabel(){return mapUI.unlocked?'可拖曳地圖（點此鎖定，方便捲動頁面）':'地圖已鎖定（點此才能拖曳、縮放）';}
+function lockLabel(){return mapUI.unlocked?'🔒 鎖定地圖（只想捲動頁面時）':'🔓 解除鎖定，可以移動地圖';}
 function pinIcon(o,sel){
   const img=o.kind==='shop'?NAV_IC.shopping:NAV_IC.food;
   return L.divIcon({className:'pm-pin-wrap',iconSize:[40,40],iconAnchor:[20,20],html:`<div class="pin pin-${o.kind}${o.approx?' approx':''}${sel?' sel':''}"><img src="${img}" alt=""></div>`});
@@ -5096,7 +5096,7 @@ async function initPlaceMap(){
   drawPlaceMap(fit);
   if(mapUI.focusSel&&mapUI.sel){mapUI.focusSel=false;const o=placeByKey(mapUI.sel);if(o&&o.pos)map.setView([o.pos.lat,o.pos.lng],16);}
   map.on('click',e=>{
-    if(!mapUI.pick){if(mapUI.sel){mapUI.sel=null;drawPlaceMap(false);renderPlaceInfo();}return;}
+    if(!mapUI.pick){if(mapUI.sel){placeMapDeselect();}return;}
     const p=mapUI.pick;mapUI.pick=null;
     if(p.type==='set'){setPlacePos(p.key,e.latlng.lat,e.latlng.lng);mapUI.sel=p.key;toast_('已標好位置');placeMapRefresh();}
     else if(p.type==='new'){addEatShopAt(p.kind||null,e.latlng.lat,e.latlng.lng);}
@@ -5104,7 +5104,7 @@ async function initPlaceMap(){
   });
   const ld=document.getElementById('placeMapLoading');if(ld)ld.hidden=true;
   setTimeout(()=>{try{map.invalidateSize();}catch(e){}},120);
-  updatePickBar();renderPlaceInfo();renderUnpinned();
+  updatePickBar();renderPlaceInfo();renderUnpinned();renderPlacePeek();
 }
 function toast_(msg){try{showToast(msg);}catch(e){}}
 function drawPlaceMap(fit){
@@ -5136,8 +5136,6 @@ function drawPlaceMap(fit){
   if(sel&&sel.pos){
     nearbyFor(sel).lines.forEach(n=>{
       L.polyline([[sel.pos.lat,sel.pos.lng],[n.o.pos.lat,n.o.pos.lng]],{color:n.o.kind==='shop'?'#d8602f':n.o.kind==='home'?'#7a4fb5':'#2f8a52',weight:3,dashArray:'6 6',opacity:.85}).addTo(mapUI.layer);
-      const mid=[(sel.pos.lat+n.o.pos.lat)/2,(sel.pos.lng+n.o.pos.lng)/2];
-      L.marker(mid,{interactive:false,icon:L.divIcon({className:'pm-pin-wrap',iconSize:[0,0],html:`<div class="pm-dist">${fmtDist(n.m)}</div>`})}).addTo(mapUI.layer);
     });
   }
   if(fit){
@@ -5166,16 +5164,36 @@ function nearbyFor(o){
 function selectPlace(key,fromMap){
   mapUI.sel=key;
   const o=placeByKey(key);
-  drawPlaceMap(false);renderPlaceInfo();
-  if(o&&o.pos&&mapUI.map){try{mapUI.map.panTo([o.pos.lat,o.pos.lng],{animate:true});}catch(e){}}
+  drawPlaceMap(false);renderPlaceInfo();renderPlacePeek();
+  if(o&&o.pos&&mapUI.map){try{
+    /* 把選到的點移到「小卡上方的可見區」中間，不被小卡蓋住 */
+    const map=mapUI.map,host=document.getElementById('placeMap'),card=document.getElementById('pmPeek');
+    let shift=0;
+    if(host&&card&&!card.hidden){const hr=host.getBoundingClientRect(),cr=card.getBoundingClientRect();const scale=host.clientHeight/(hr.height||1);shift=Math.max(0,(hr.bottom-cr.top))*scale/2;}
+    const pt=map.project([o.pos.lat,o.pos.lng],map.getZoom()).add([0,shift]);
+    map.panTo(map.unproject(pt,map.getZoom()),{animate:true});
+  }catch(e){}}
   if(!fromMap){const w=document.querySelector('.pm-card');if(w)w.scrollIntoView({behavior:'smooth',block:'start'});}
 }
 /* 不想看這個點了：回到一開始的全覽畫面 */
 function placeMapReset(){
   mapUI.sel=null;mapUI.area='';mapUI.pick=null;
-  placeMapSyncControls();updatePickBar();drawPlaceMap(true);renderPlaceInfo();
+  placeMapSyncControls();updatePickBar();drawPlaceMap(true);renderPlaceInfo();renderPlacePeek();
 }
-function placeMapDeselect(){mapUI.sel=null;drawPlaceMap(false);renderPlaceInfo();}
+function placeMapDeselect(){mapUI.sel=null;drawPlaceMap(false);renderPlaceInfo();renderPlacePeek();}
+/* v82：點圖釘後，直接在地圖下緣跳出小卡（名稱、最近兩個點與步行時間、導航），不用往下捲才看得到 */
+function renderPlacePeek(){
+  const box=document.getElementById('pmPeek');if(!box)return;
+  const o=mapUI.sel?placeByKey(mapUI.sel):null;
+  if(!o){box.hidden=true;box.innerHTML='';return;}
+  const nb=o.pos?nearbyFor(o):null;
+  const near=nb?nb.groups.flatMap(g=>g.list).sort((a,b)=>a.m-b.m).slice(0,2):[];
+  const q=jsQuote(o.key);
+  box.innerHTML=`<div class="pk-top"><b>${o.home?'<i class="pm-home-tag">家</i>':''}${escHtml(o.name)}</b><button type="button" class="pk-x" onclick="placeMapDeselect()" aria-label="關閉">✕</button></div>
+    ${near.length?`<div class="pk-near">${near.map(n=>`<button type="button" onclick="selectPlace('${jsQuote(n.o.key)}',true)"><span>${escHtml(n.o.name)}</span><em>步行 ${walkMin(n.m)} 分</em></button>`).join('')}</div>`:''}
+    <div class="pk-btns"><a href="${escAttr(mapsLink(o.nav))}" target="_blank" rel="noopener">導航</a>${o.home?'':`<button type="button" onclick="openSpotDetail('${q}')">詳情</button>`}<button type="button" onclick="document.getElementById('placeInfo')?.scrollIntoView({behavior:'smooth',block:'start'})">更多距離 ↓</button></div>`;
+  box.hidden=false;
+}
 function placeMapSyncControls(){
   document.querySelectorAll('.pm-areas button').forEach(b=>b.classList.toggle('on',b.dataset.area===(mapUI.area||'全部')));
   document.querySelectorAll('.pm-seg button').forEach(b=>b.classList.toggle('on',b.dataset.show===mapUI.show));
@@ -5206,7 +5224,7 @@ function renderUnpinned(){
   const miss=kindsShown().flatMap(k=>placeItems(k)).filter(o=>!o.pos);
   box.innerHTML=miss.length?`<h5>還沒標位置（${miss.length}）</h5><div class="pm-miss">${miss.map(o=>`<button type="button" onclick="placePickFor('${jsQuote(o.key)}')">${escHtml(o.name)}<small>標位置</small></button>`).join('')}</div>`:'';
 }
-function placeMapRefresh(){drawPlaceMap(false);renderPlaceInfo();renderUnpinned();}
+function placeMapRefresh(){drawPlaceMap(false);renderPlaceInfo();renderUnpinned();renderPlacePeek();}
 function updatePickBar(){
   const bar=document.getElementById('placePickBar');if(!bar)return;
   const wrap=bar.parentElement;
@@ -5226,13 +5244,13 @@ function placeEditPos(key){
     onSave:v=>{const p=parseLatLng(v.ll);if(!p){alert('看不出座標。請貼「緯度,經度」，或含座標的 Google 地圖完整網址。');return false;}setPlacePos(key,p.lat,p.lng);mapUI.sel=key;renderDayContent();}});
 }
 function placeMapArea(a){mapUI.area=a==='全部'?'':a;placeMapSyncControls();drawPlaceMap(true);}
-function placeMapShow(k){mapUI.show=k;const o=mapUI.sel?placeByKey(mapUI.sel):null;if(o&&!o.home&&!kindsShown().includes(o.kind))mapUI.sel=null;placeMapSyncControls();drawPlaceMap(true);renderPlaceInfo();renderUnpinned();}
+function placeMapShow(k){mapUI.show=k;const o=mapUI.sel?placeByKey(mapUI.sel):null;if(o&&!o.home&&!kindsShown().includes(o.kind))mapUI.sel=null;placeMapSyncControls();drawPlaceMap(true);renderPlaceInfo();renderUnpinned();renderPlacePeek();}
 function placeMapAct(act){
   const map=mapUI.map;
   if(act==='lock'){
     mapUI.unlocked=!mapUI.unlocked;
     if(map)['dragging','touchZoom','doubleClickZoom'].forEach(h=>{try{mapUI.unlocked?map[h].enable():map[h].disable();}catch(e){}});
-    placeMapSyncControls();
+    placeMapSyncControls();const ov=document.getElementById('pmLocked');if(ov)ov.hidden=!!mapUI.unlocked;
   }else if(act==='big'){
     mapUI.big=!mapUI.big;placeMapSyncControls();
     setTimeout(()=>{try{map&&map.invalidateSize();}catch(e){}},260);
