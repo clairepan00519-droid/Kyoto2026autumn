@@ -1912,7 +1912,7 @@ function spotCardHTML(spot, key, isMainSpot, customMeta, orderInfo, fixedMeta){
     </div>` : '';
 
   if (!isMainSpot) {
-    return `<div class="sub-spot-card sub-spot-${spot.cat || 'other'}" id="spot-card-${idx}"><div class="sub-spot-header${coverUrl?' has-thumb':''}" onclick="toggleSpotDetails('${idx}')">${coverUrl?`<div class="gh-thumb sm">${coverImgHTML('guide-cover-img',coverUrl)}</div>`:''}<div class="sub-spot-header-content"><h4>${safeName} ${statusChipHTML(idx)}</h4><p class="short-desc">${safeDesc}</p>${miniStripHTML}</div>${favBtnHTML(idx,"inline")}<div class="chevron">▼</div></div><div class="sub-spot-details-wrap"><div class="sub-spot-details" onclick="event.stopPropagation()">${photoViewerHTML(idx,spot)}${customBar}${editSpotAreaHTML}<p class="full-desc">${safeFullDesc}</p>${marksBoxHTML(idx)}${spot.recDishes ? `<div class="dish-tag">🍲 必點推薦：${escHtml(spot.recDishes)}</div>` : ''}${reorderableBlocksHTML}<div class="action-row" style="margin-top:10px;"><a class="btn btn-map" href="${escAttr(mapsLink(navQuery))}" target="_blank" rel="noopener">導航</a><button class="btn btn-photo edit-only" onclick="event.stopPropagation(); editSpotField(event,'${idx}','mapQuery','導航位置（Google Maps 網址、地址、經緯度或關鍵字；留空＝用景點名稱）')">修正導航</button>${spot.link ? `<a class="btn btn-photo" href="${escAttr(spot.link)}" target="_blank" rel="noopener">${escHtml(spot.linkLabel)}</a>` : ''}<button class="btn btn-photo" onclick="document.getElementById('file-${idx}').click()">上傳照片</button>${resvButtonsHTML(idx,spot)}${mamaBtnHTML(idx)}</div><input type="file" accept="image/*" id="file-${idx}" style="display:none" multiple onchange="handlePhoto(event, '${idx}')">${subSpotsHTML(idx)}${pStrip}${collapseBtnHTML(idx)}</div></div></div>`;
+    return `<div class="sub-spot-card sub-spot-${spot.cat || 'other'}" id="spot-card-${idx}"><div class="sub-spot-header${coverUrl?' has-thumb':''}" onclick="toggleSpotDetails('${idx}')">${coverUrl?`<div class="gh-thumb sm">${coverImgHTML('guide-cover-img',coverUrl)}</div>`:''}<div class="sub-spot-header-content"><h4>${safeName} ${statusChipHTML(idx)}</h4><p class="short-desc">${safeDesc}</p>${miniStripHTML}</div>${favBtnHTML(idx,"inline")}<div class="chevron">▼</div></div><div class="sub-spot-details-wrap"><div class="sub-spot-details" onclick="event.stopPropagation()">${photoViewerHTML(idx,spot)}${customBar}${editSpotAreaHTML}<p class="full-desc">${safeFullDesc}</p>${marksBoxHTML(idx)}${spot.recDishes ? `<div class="dish-tag">🍲 必點推薦：${escHtml(spot.recDishes)}</div>` : ''}${reorderableBlocksHTML}<div class="action-row" style="margin-top:10px;"><a class="btn btn-map" href="${escAttr(mapsLink(navQuery))}" target="_blank" rel="noopener">導航</a><button class="btn btn-photo edit-only" onclick="event.stopPropagation(); editSpotField(event,'${idx}','mapQuery','導航位置（Google Maps 網址、地址、經緯度或關鍵字；留空＝用景點名稱）')">修正導航</button>${spot.link ? `<a class="btn btn-photo" href="${escAttr(spot.link)}" target="_blank" rel="noopener">${escHtml(spot.linkLabel)}</a>` : ''}<button class="btn btn-photo" onclick="document.getElementById('file-${idx}').click()">上傳照片</button>${resvButtonsHTML(idx,spot)}${mamaBtnHTML(idx)}${(typeof eatAreaStore!=='undefined'&&eatAreaStore[idx]==='none'&&(spot.cat==='food'||spot.cat==='shopping'))?`<button class="btn btn-photo" onclick="event.stopPropagation();restoreEatShopItem('${idx}')">加回${spot.cat==='food'?'吃':'逛'}·京都</button>`:''}</div><input type="file" accept="image/*" id="file-${idx}" style="display:none" multiple onchange="handlePhoto(event, '${idx}')">${subSpotsHTML(idx)}${pStrip}${collapseBtnHTML(idx)}</div></div></div>`;
   }
 
   return `<div class="guide-card" id="spot-card-${idx}"><div class="guide-header" style="--scrim:${CAT_SCRIM[spot.cat]||'34,22,14'}" onclick="toggleSpotDetails('${idx}')"><div class="gh-thumb"><img class="guide-cover-img" src="${escAttr(bg)}"${photoPosAttr(bg)} alt="" loading="lazy" onerror="imageErrorFallback(this)"><button class="photo-pos-btn edit-only" type="button" data-src="${escAttr(bg)}" onclick="openPhotoPosEditor(event,this)">調整位置</button></div><div class="guide-header-content"><div class="gh-meta"><span class="cat-label ${c.cls}">${c.emoji} ${c.label}</span>${statusChipHTML(idx)}</div><h3>${safeName}</h3><p class="short-desc">${safeDesc}</p></div>${favBtnHTML(idx,"on-cover")}<div class="chevron">▼</div></div><div class="guide-details-wrap"><div class="guide-details" onclick="event.stopPropagation()">${photoViewerHTML(idx,spot)}${customBar}${editSpotAreaHTML}<p class="full-desc">${safeFullDesc}</p>${marksBoxHTML(idx)}${reorderableBlocksHTML}${spot.tip?`<div class="tip-box"><b>📸 拍照與自駕小解密：</b>${escHtml(spot.tip)}</div>`:''}${spot.docMap?`<div class="tip-box" style="background: linear-gradient(120deg,#e8f8ee,#fff); border-color:#D0F4FC; color:#22513f;"><b>🗺️ 官方步道地圖與狀態：</b><a href="${escAttr(spot.docMap)}" target="_blank" rel="noopener" style="color:var(--blue); font-weight:700; text-decoration:underline;">點此開啟</a></div>`:''}${spot.park?`<div class="park-box"><b>🅿️ 停車＆自駕補給：</b>${escHtml(spot.park)}</div>`:''}<div class="action-row" style="margin-top:10px;"><a class="btn btn-map" href="${escAttr(mapsLink(navQuery))}" target="_blank" rel="noopener">導航導出</a><button class="btn btn-photo edit-only" onclick="event.stopPropagation(); editSpotField(event,'${idx}','mapQuery','導航位置（Google Maps 網址、地址、經緯度或關鍵字；留空＝用景點名稱）')">修正導航</button>${spot.link ? `<a class="btn btn-photo" href="${escAttr(spot.link)}" target="_blank" rel="noopener">${escHtml(spot.linkLabel)}</a>` : ''}<button class="btn btn-photo" onclick="document.getElementById('file-${idx}').click()">上傳照片</button>${resvButtonsHTML(idx,spot)}${mamaBtnHTML(idx)}</div><input type="file" accept="image/*" id="file-${idx}" style="display:none" multiple onchange="handlePhoto(event, '${idx}')">${subSpotsHTML(idx)}${pStrip}${collapseBtnHTML(idx)}</div></div></div>`;
@@ -2651,7 +2651,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=83').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=84').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3270,7 +3270,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v83-2026-10-05';
+const APP_VERSION='v84-2026-10-05';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -3753,7 +3753,31 @@ function editEatArea(key){
   const all=collectSpots(()=>true).find(o=>o.key===key);
   const cur=eatAreaStore[key]||(all?(eatAreaFor(all)||'none'):'none');
   openFormModal({title:'調整區域：'+(all?all.name:key),fields:[{id:'area',label:'放在哪個區域',type:'select',value:cur,options:[...allEatAreas().map(a=>({value:a,label:a})),{value:'none',label:'（不列入吃逛京都）'}]}],
-    onSave:v=>{eatAreaStore[key]=v.area;persistEatArea();safeRenderDayContent();}});
+    onSave:v=>{
+      const had=Object.prototype.hasOwnProperty.call(eatAreaStore,key),prev=eatAreaStore[key];
+      eatAreaStore[key]=v.area;persistEatArea();safeRenderDayContent();
+      if(v.area==='none')offerUndo(`已把「${all?all.name:key}」移出吃逛京都（可在頁面最下方「已移出的店家」加回）`,()=>{if(had)eatAreaStore[key]=prev;else delete eatAreaStore[key];persistEatArea();safeRenderDayContent();});
+    }});
+}
+/* v84：被設成「不列入吃逛京都」的內建店家，可以再加回來 */
+function removedEatShop(kind){
+  const cat=kind==='eat'?'food':'shopping';
+  return collectSpots(s=>s.cat===cat&&!s.main).filter(o=>eatAreaStore[o.key]==='none');
+}
+function restoreEatShopItem(key){
+  const o=collectSpots(()=>true).find(x=>x.key===key);if(!o)return;
+  const natural=EAT_NAME_AREA[o.name]||EAT_DAY_AREA[o.dayIdx]||null;
+  if(natural){
+    delete eatAreaStore[key];persistEatArea();safeRenderDayContent();
+    offerUndo(`已把「${o.name}」加回 ${natural}`,()=>{eatAreaStore[key]='none';persistEatArea();safeRenderDayContent();});
+  }else{
+    openFormModal({title:'加回吃逛京都：'+o.name,fields:[{id:'area',label:'放在哪個區域',type:'select',value:allEatAreas()[0],options:allEatAreas().map(a=>({value:a,label:a}))}],saveText:'加回',
+      onSave:v=>{eatAreaStore[key]=v.area;persistEatArea();safeRenderDayContent();showToast(`已把「${o.name}」加回 ${v.area}`);}});
+  }
+}
+function removedEatShopHTML(kind){
+  const list=removedEatShop(kind);if(!list.length)return '';
+  return `<details class="eatshop-removed"><summary>已移出${kind==='eat'?'吃':'逛'}·京都的店家（${list.length}）<em>點開可加回</em></summary>${list.map(o=>`<div class="er-row"><div><b>${escHtml(o.name)}</b><small>原本在 D${days[o.dayIdx].dayNum}・${days[o.dayIdx].date}</small></div><button type="button" onclick="restoreEatShopItem('${jsQuote(o.key)}')">加回</button></div>`).join('')}</details>`;
 }
 /* (v52 已改寫) */
 /* (v52 已改寫) */
@@ -4040,6 +4064,7 @@ function renderEatShopView(kind){
   dayContent.innerHTML=`<button type="button" class="eatshop-mapbtn" onclick="setActiveDay('map')"><img src="images/nav-route.webp" alt=""><span><b>打開吃逛地圖</b><small>看位置、距離、吃完順路逛哪裡</small></span><em>›</em></button>${chips?`<div class="eatshop-chips">${chips}</div>`:''}
     ${sections||emptyArtHTML('目前沒有候選項目。')}${orphanHTML}
     <div class="edit-only eatshop-add"><button type="button" onclick="addEatShop('${kind}')">＋ 新增我的${isEat?'私房餐廳':'逛街地點'}</button><button type="button" onclick="addEatArea()">＋ 新增區域</button></div>
+    ${removedEatShopHTML(kind)}
     <div class="end-mama">${mamaBtnHTML('list-'+kind,'wide')}<small>放不進任何店家的資訊，記在這裡</small></div>`;
 }
 /* v76：吃逛地圖獨立成一個晶片，不用再從吃·京都滑很久 */
@@ -5061,8 +5086,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=83';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=83';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=84';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=84';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
