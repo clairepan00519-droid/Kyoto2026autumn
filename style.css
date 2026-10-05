@@ -2172,3 +2172,13 @@ body.large-text .pk-near button:nth-child(n+2){display:none;}
 body.mode-travel .driver-edit{display:none;}
 .stay-quick-driver{min-height:30px;padding:0 14px;border:1.5px solid #f0c46a;border-radius:999px;background:#fff6dc;color:#8a5a00;font:inherit;font-size:13px;font-weight:900;cursor:pointer;}
 .driver-name.long{font-size:28px!important;}
+
+/* v84：已移出吃逛京都的店家 */
+.eatshop-removed{margin:6px 0 14px;border:1.5px dashed #e0c9a4;border-radius:16px;background:#fffaf0;padding:4px 12px;}
+.eatshop-removed summary{min-height:48px;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:900;color:#8a4a22;cursor:pointer;}
+.eatshop-removed summary em{margin-left:auto;font-style:normal;font-size:13px;font-weight:700;color:#a07a55;}
+.er-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px dashed #ecdcc2;}
+.er-row div{flex:1;min-width:0;}
+.er-row b{display:block;font-size:16px;color:var(--ink);}
+.er-row small{font-size:13px;color:#8a6a55;}
+.er-row button{flex:none;min-height:44px;padding:0 18px;border:0;border-radius:999px;background:#b8431f;color:#fff;font:inherit;font-size:15px;font-weight:900;cursor:pointer;}
