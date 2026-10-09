@@ -794,11 +794,14 @@ const transportPlans = [
     {from:'飯店',to:'京都站',mode:'🚕 計程車',time:'10–20 分',note:'約 ¥1,200–2,000；有行李推薦'},
     {from:'京都站',to:'宇治',mode:'🚆 JR 奈良線',time:'17–20 分',note:'普通車約 25–30 分'},
     {from:'宇治',to:'奈良',mode:'🚆 JR 奈良線',time:'35–50 分',note:'依車次銜接'}]},
-  {summary:'Route Inn 步行到乘船場，漂流抵嵐山；回程由嵯峨嵐山搭 JR 回龜岡。', alert:'漂流約 2 小時，秋末注意保暖；天候不佳直接改搭 JR。', routes:[
-    {from:'Route Inn',to:'保津川乘船場',mode:'🚶 步行',time:'約 10 分',note:'飯店／龜岡站北側出發'},
-    {from:'龜岡',to:'嵐山',mode:'🚣 保津川漂流',time:'約 2 小時',note:'天候不佳改搭 JR'},
-    {from:'嵐山下船處',to:'天龍寺',mode:'🚶 步行',time:'10–20 分',note:'核心區塞車，步行較快'},
-    {from:'嵯峨嵐山',to:'龜岡',mode:'🚆 JR 嵯峨野線',time:'8–12 分',note:'免轉車；約 15–20 分一班'}]},
+  {summary:'清晨奈良公園散步 → 退房取車 → 開車約 1.5 小時到龜岡，車停飯店 → 步行搭保津川漂流到嵐山 → 傍晚搭 JR 回龜岡。', alert:'時間以保津川預約班次往回推（冬季班次較少，以官網為準）。取車時順便租 ETC 卡，並請店員把導航目的地設成 Route Inn 龜岡。', routeKey:'v86', routes:[
+    {from:'飯店（奈良）',to:'奈良公園',mode:'🚶 步行',time:'20–30 分',note:'建議 06:45–07:00 出門，散步一至兩處（浮見堂、飛火野）；也可搭計程車約 5–10 分'},
+    {from:'奈良公園',to:'飯店（退房後去取車）',mode:'🚕 計程車／步行',time:'約 1 小時（含退房、取車手續）',note:'建議 08:30 前回飯店退房；09:00 取車，確認冬季胎、ETC 卡與保險'},
+    {from:'奈良取車點',to:'Route Inn 龜岡',mode:'🚗 自駕',time:'約 1 小時 15 分–1 小時 45 分',note:'約 70 km，大多走高速，依導航；建議 09:30 出發、約 11:00 抵達。到飯店先停車、寄行李（入住前停車請先跟飯店確認）'},
+    {from:'Route Inn 龜岡',to:'保津川乘船場',mode:'🚶 步行',time:'約 10 分',note:'抵達後預留 30 分報到；建議預約 12:00 前後的船班'},
+    {from:'龜岡',to:'嵐山',mode:'🚣 保津川漂流',time:'約 2 小時',note:'天候不佳改搭 JR 嵯峨野線（龜岡 → 嵯峨嵐山 8–12 分）'},
+    {from:'嵐山下船處',to:'天龍寺',mode:'🚶 步行',time:'10–20 分',note:'約 14:00 下船；核心區塞車，步行較快'},
+    {from:'嵯峨嵐山',to:'Route Inn 龜岡',mode:'🚆 JR 嵯峨野線',time:'8–12 分＋步行',note:'建議 16:30–17:00 回程，龜岡站下車走回飯店；免轉車，約 15–20 分一班'}]},
   {summary:'自駕日｜龜岡 → 南丹 → 綾部 → 京丹後，約 150 km。', alert:'PDF 未指定逐段班次；以導航即時路況為準，山路放慢並保留 15:00 入住緩衝。',drive:true},
   {summary:'自駕日｜京丹後海岸短距離移動，依風勢選立岩或琴引濱。', alert:'海岸強風或大雨時縮短戶外停留，改走道之驛＋咖啡雨備。',drive:true},
   {summary:'自駕日｜京丹後 → 金剛院 → 天橋立 → 西舞鶴，約 100–130 km。', alert:'天橋立只選一岸；強風可能影響纜車、單軌與吊椅。',drive:true},
@@ -2747,7 +2750,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=85').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=86').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3367,7 +3370,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v85-2026-10-05';
+const APP_VERSION='v86-2026-10-09';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -4823,6 +4826,7 @@ function tpDirLink(nav,travelmode){
   return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(/^[-+]?\d/.test(v)?v:v+' Japan')}&travelmode=${travelmode}`;
 }
 function tpGoButtonsHTML(dayIdx,r,isLast){
+  if(/漂流|🚣|遊船/.test(String(r.mode||'')))return ''; /* 坐船本身就是交通，不需要導航 */
   const dest=tpDestination(dayIdx,r.to,isLast);if(!dest)return '';
   const tm=tpTravelMode(r.mode);
   const taxi=/計程車|🚕/.test(String(r.mode||''));
@@ -5183,8 +5187,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=85';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=85';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=86';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=86';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
