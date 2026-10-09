@@ -802,11 +802,26 @@ const transportPlans = [
     {from:'龜岡',to:'嵐山',mode:'🚣 保津川漂流',time:'約 2 小時',note:'天候不佳改搭 JR 嵯峨野線（龜岡 → 嵯峨嵐山 8–12 分）'},
     {from:'嵐山下船處',to:'天龍寺',mode:'🚶 步行',time:'10–20 分',note:'約 14:00 下船；核心區塞車，步行較快'},
     {from:'嵯峨嵐山',to:'Route Inn 龜岡',mode:'🚆 JR 嵯峨野線',time:'8–12 分＋步行',note:'建議 16:30–17:00 回程，龜岡站下車走回飯店；免轉車，約 15–20 分一班'}]},
-  {summary:'自駕日｜龜岡 → 南丹 → 綾部 → 京丹後，約 150 km。', alert:'PDF 未指定逐段班次；以導航即時路況為準，山路放慢並保留 15:00 入住緩衝。',drive:true},
-  {summary:'自駕日｜京丹後海岸短距離移動，依風勢選立岩或琴引濱。', alert:'海岸強風或大雨時縮短戶外停留，改走道之驛＋咖啡雨備。',drive:true},
-  {summary:'自駕日｜京丹後 → 金剛院 → 天橋立 → 西舞鶴，約 100–130 km。', alert:'天橋立只選一岸；強風可能影響纜車、單軌與吊椅。',drive:true},
-  {summary:'舞鶴自駕回京都還車，假日與京都市區塞車需多留緩衝。', alert:'車程至少約 2 小時；還車後有行李可搭短程計程車到飯店。', routes:[
-    {from:'舞鶴',to:'京都還車點',mode:'🚗 自駕',time:'2 小時以上',note:'預留假日及市區塞車'},
+  {summary:'自駕日｜龜岡 → 南丹 → 綾部 → 京丹後，約 150 km；建議 09:00 出發、15:00 前後到旅館。', alert:'車程為估算，以導航即時路況為準；山路與海岸路放慢。12 月天黑早（約 16:45），山路盡量在天黑前走完。', drive:true, routeKey:'v87', routes:[
+    {from:'Route Inn 龜岡',to:'玉寶山 龍穩寺',mode:'🚗 自駕',time:'約 30–45 分',note:'建議 09:00 出發，約 09:40 抵達，參觀約 1 小時'},
+    {from:'玉寶山 龍穩寺',to:'大本本部 梅松苑',mode:'🚗 自駕',time:'約 50–70 分',note:'約 10:45 出發，11:45 前後抵達綾部，參觀約 1 小時'},
+    {from:'大本本部 梅松苑',to:'綾部站周邊（午餐）',mode:'🚗 自駕',time:'約 5–10 分',note:'12:45–13:30 午餐，選好停車的店'},
+    {from:'綾部',to:'シーサイド佐竹',mode:'🚗 自駕',time:'約 1 小時 15 分–1 小時 45 分',note:'13:30 出發，約 15:00 抵達入住；途中可在休息站上廁所'}]},
+  {summary:'自駕日｜京丹後海岸短距離移動，每段 10–30 分；15:00 到下一間旅館。', alert:'車程為估算，以導航即時路況為準；山路與海岸路放慢。強風或大雨時縮短海岸停留，改走道之驛＋咖啡雨備；琴引濱看時間與天氣再決定。', drive:true, routeKey:'v87', routes:[
+    {from:'シーサイド佐竹',to:'立岩（後ヶ濱海岸）',mode:'🚗 自駕',time:'約 15–30 分',note:'10:00 退房出發，海岸停留約 1 小時'},
+    {from:'立岩',to:'道之驛 てんきてんき丹後',mode:'🚗 自駕',time:'約 5 分',note:'11:30 前後休息、買伴手禮'},
+    {from:'道之驛',to:'間人／網野（午餐）',mode:'🚗 自駕',time:'約 10–30 分',note:'12:00–13:00 午餐，依位置選順路的店'},
+    {from:'午餐',to:'琴引濱',mode:'🚗 自駕',time:'約 10–25 分',note:'13:30–14:30 海灘散步、咖啡（可省略）'},
+    {from:'琴引濱',to:'HOTEL＆湖邸 艸花',mode:'🚗 自駕',time:'約 10–30 分',note:'15:00 入住，這天把旅館當作行程'}]},
+  {summary:'自駕日｜京丹後 → 金剛院 → 天橋立 → 西舞鶴，約 130 km；建議 09:00 出發、16:30 前到飯店。', alert:'車程為估算，以導航即時路況為準；山路與海岸路放慢。天橋立只選一岸；強風可能影響纜車、單軌與吊椅。', drive:true, routeKey:'v87', routes:[
+    {from:'HOTEL＆湖邸 艸花',to:'金剛院',mode:'🚗 自駕',time:'約 1 小時 15 分–1 小時 30 分',note:'09:00 退房出發，約 10:20 抵達，參觀約 1 小時'},
+    {from:'金剛院',to:'天橋立',nav:'天橋立 京都府宮津市',mode:'🚗 自駕',time:'約 50–60 分',note:'11:30 出發，12:30 前後抵達；先午餐，再依選的岸搭纜車或吊椅'},
+    {from:'天橋立',to:'Route Inn 西舞鶴',mode:'🚗 自駕',time:'約 40–50 分',note:'15:30 前離開，約 16:15 入住；晚餐在西舞鶴'}]},
+  {summary:'早上舞鶴三站（市場早午餐 → 五老天空塔 → 紅磚公園），13:00 出發回京都還車。', alert:'車程為估算，以導航即時路況為準；山路與海岸路放慢。回京都車程至少約 2 小時，京都市區傍晚塞車；還車前記得加滿油。', drive:true, routeKey:'v87', routes:[
+    {from:'Route Inn 西舞鶴',to:'舞鶴港とれとれセンター',mode:'🚗 自駕',time:'約 5–10 分',note:'08:30 前後抵達，海鮮早午餐'},
+    {from:'とれとれセンター',to:'五老天空塔',mode:'🚗 自駕',time:'約 20–25 分',note:'約 10:00 抵達，展望約 45 分'},
+    {from:'五老天空塔',to:'舞鶴紅磚公園',mode:'🚗 自駕',time:'約 15 分',note:'約 11:00–12:30 散步'},
+    {from:'舞鶴',to:'京都還車點',mode:'🚗 自駕',time:'約 2 小時以上',note:'13:00 出發，約 15:00–15:30 還車；預留市區塞車'},
     {from:'京都站周邊還車點',to:'Richmond Hotel',mode:'🚶／🚕',time:'5–15 分',note:'計程車約 ¥700–1,300'}]},
   {summary:'市區三段計程車最省力；13:15 左右由下鴨神社叫車回飯店，京都站搭 HARUKA。', alert:'建議搭 15:00–15:30 間 HARUKA；19:00 起飛，勿再追加遠距景點。', routes:[
     {from:'飯店',to:'西本願寺',mode:'🚶／🚕',time:'步行 15–20 分',note:'計程車約 ¥700–1,100'},
@@ -1646,7 +1661,7 @@ function transportSegmentExtrasHTML(dayIdx,segmentKey){
 /* 交通步驟改版（routeKey）後，掛在舊步驟上的補充說明／圖片不會不見，改放到「其他舊版交通補充」 */
 function isOrphanTransportSeg(dayIdx,key){
   const plan=transportPlans[dayIdx];
-  return !!(key&&plan&&plan.routeKey&&/^route-\d+$/.test(key));
+  return !!(key&&plan&&plan.routeKey&&/^(route-\d+|drive-0)$/.test(key));
 }
 function legacyTransportExtrasHTML(dayIdx){
   const data=transportExtrasFor(dayIdx);
@@ -1709,8 +1724,8 @@ let activeSubTabStore = {}; /* dayIdx -> 'main' | 'transport' | 'more' | 'routem
 function transportPlanHTML(dayIdx){
   const plan=transportPlans[dayIdx];
   if(!plan)return `<section class="transport-plan"><div class="tp-head"><div><small>D${days[dayIdx].dayNum}・${days[dayIdx].date}</small><strong>今日交通</strong></div><img src="images/deer-car.webp" alt="" width="64" height="45"></div>${customTransportHTML(dayIdx)}${transportAddBarHTML(dayIdx)}</section>`;
-  const routes=(rows,prefix='route')=>`<div class="transport-steps">${(rows||[]).map((r0,i)=>{const segmentKey=`${prefix}-${i}`;const sk=`tp${dayIdx}-${segmentKey}`;if(currentFieldValue(sk,'hidden',null)==='1')return '';const r={from:currentFieldValue(sk,'from',r0.from)||r0.from,to:currentFieldValue(sk,'to',r0.to)||r0.to,mode:currentFieldValue(sk,'mode',r0.mode)||r0.mode,time:currentFieldValue(sk,'time',r0.time)||r0.time,note:currentFieldValue(sk,'note',r0.note)||r0.note};window._tpOrig=window._tpOrig||{};window._tpOrig[sk]=r0;return `<div class="transport-step"><span class="transport-step-no">${i+1}</span><div class="transport-step-main"><div class="transport-points"><strong>${escHtml(r.from)}</strong><span>→</span><strong>${escHtml(r.to)}</strong></div><div class="transport-meta"><b>${escHtml(r.mode)}</b><span>⏱ ${escHtml(r.time)}</span></div><small>${escHtml(r.note)}</small>${tpGoButtonsHTML(dayIdx,r,i===(rows||[]).length-1)}<div class="edit-only tp-step-actions"><button type="button" onclick="editTransportStep('${sk}')">✎ 修改</button><button type="button" onclick="deleteTransportStep('${sk}')">🗑 刪除</button></div>${transportSegmentExtrasHTML(dayIdx,segmentKey)}</div></div>`;}).join('')}</div>`;
-  const body=plan.choices?`<div class="transport-choice-list">${plan.choices.map((choice,i)=>`<details class="transport-choice"${i===0?' open':''}><summary>${escHtml(choice.name)}<span>展開路線</span></summary>${routes(choice.routes,`choice-${i}`)}</details>`).join('')}</div>`:plan.drive?`<div class="transport-drive-card"><span>🚗</span><div><strong>今天全程自駕</strong><small>按下方按鈕開啟當日主要地點導航；停車、休息站與道路狀況以當日為準。</small>${transportSegmentExtrasHTML(dayIdx,'drive-0')}</div></div>`:routes(plan.routes,plan.routeKey||'route');
+  const routes=(rows,prefix='route')=>`<div class="transport-steps">${(rows||[]).map((r0,i)=>{const segmentKey=`${prefix}-${i}`;const sk=`tp${dayIdx}-${segmentKey}`;if(currentFieldValue(sk,'hidden',null)==='1')return '';const r={from:currentFieldValue(sk,'from',r0.from)||r0.from,to:currentFieldValue(sk,'to',r0.to)||r0.to,mode:currentFieldValue(sk,'mode',r0.mode)||r0.mode,time:currentFieldValue(sk,'time',r0.time)||r0.time,note:currentFieldValue(sk,'note',r0.note)||r0.note,nav:currentFieldValue(sk,'to',null)?null:(r0.nav||null)};window._tpOrig=window._tpOrig||{};window._tpOrig[sk]=r0;return `<div class="transport-step"><span class="transport-step-no">${i+1}</span><div class="transport-step-main"><div class="transport-points"><strong>${escHtml(r.from)}</strong><span>→</span><strong>${escHtml(r.to)}</strong></div><div class="transport-meta"><b>${escHtml(r.mode)}</b><span>⏱ ${escHtml(r.time)}</span></div><small>${escHtml(r.note)}</small>${tpGoButtonsHTML(dayIdx,r,i===(rows||[]).length-1)}<div class="edit-only tp-step-actions"><button type="button" onclick="editTransportStep('${sk}')">✎ 修改</button><button type="button" onclick="deleteTransportStep('${sk}')">🗑 刪除</button></div>${transportSegmentExtrasHTML(dayIdx,segmentKey)}</div></div>`;}).join('')}</div>`;
+  const body=plan.choices?`<div class="transport-choice-list">${plan.choices.map((choice,i)=>`<details class="transport-choice"${i===0?' open':''}><summary>${escHtml(choice.name)}<span>展開路線</span></summary>${routes(choice.routes,`choice-${i}`)}</details>`).join('')}</div>`:(plan.drive&&!plan.routes)?`<div class="transport-drive-card"><span>🚗</span><div><strong>今天全程自駕</strong><small>按下方按鈕開啟當日主要地點導航；停車、休息站與道路狀況以當日為準。</small>${transportSegmentExtrasHTML(dayIdx,'drive-0')}</div></div>`:routes(plan.routes,plan.routeKey||'route');
   return `<section class="transport-plan"><div class="tp-head"><div><small>D${days[dayIdx].dayNum}・${days[dayIdx].date}</small><strong>今日交通</strong></div><img src="images/deer-car.webp" alt="" width="64" height="45"></div><div class="transport-alert">⚠️ ${escHtml(plan.alert)}</div>${body}${customTransportHTML(dayIdx)}${legacyTransportExtrasHTML(dayIdx)}${transportAddBarHTML(dayIdx)}<div class="transport-actions"><a href="https://www.google.com/maps/dir/?api=1&travelmode=${plan.drive?'driving':'transit'}&destination=${encodeURIComponent(currentFieldValue('day'+dayIdx+'-nav','mapQuery',null)||(days[dayIdx].region+' Japan'))}" target="_blank" rel="noopener">📍 開啟今日導航</a><button type="button" class="edit-only tp-nav-fix" onclick="editSpotField(event,'day${dayIdx}-nav','mapQuery','今日導航目的地（地址、經緯度或關鍵字）')">修正導航</button><button type="button" class="edit-only tp-nav-fix" onclick="restoreTransportSteps(${dayIdx})">↺ 還原本日交通步驟</button></div></section>`;
 }
 
@@ -2750,7 +2765,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=86').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=87').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3370,7 +3385,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v86-2026-10-09';
+const APP_VERSION='v87-2026-10-09';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -4808,7 +4823,7 @@ function tpDestination(dayIdx,toText,isLast){
     const st=isLast?(tonight||lastNight):(lastNight||tonight);
     if(st)return {name:st.name,nav:st.nav};
   }
-  if(!core)return null;
+  if(!core||/還車點|取車點/.test(core))return null;
   const list=[...getNaturalList(dayIdx,'main'),...getNaturalList(dayIdx,'life')];
   const hit=list.find(o=>{const n=currentFieldValue(o.key,'name',o.spot.name)||o.spot.name;return n===core||n.startsWith(core)||core.startsWith(n);});
   if(hit){const n=currentFieldValue(hit.key,'name',hit.spot.name)||hit.spot.name;return {name:n,nav:currentFieldValue(hit.key,'mapQuery',null)||hit.spot.mapQuery||n};}
@@ -4827,7 +4842,7 @@ function tpDirLink(nav,travelmode){
 }
 function tpGoButtonsHTML(dayIdx,r,isLast){
   if(/漂流|🚣|遊船/.test(String(r.mode||'')))return ''; /* 坐船本身就是交通，不需要導航 */
-  const dest=tpDestination(dayIdx,r.to,isLast);if(!dest)return '';
+  const dest=r.nav?{name:String(r.to).replace(/[（(][^）)]*[）)]/g,'').trim(),nav:r.nav}:tpDestination(dayIdx,r.to,isLast);if(!dest)return '';
   const tm=tpTravelMode(r.mode);
   const taxi=/計程車|🚕/.test(String(r.mode||''));
   return `<div class="tp-go"><a href="${escAttr(tpDirLink(dest.nav,tm))}" target="_blank" rel="noopener">導航到 ${escHtml(dest.name)}</a>${taxi?`<button type="button" data-name="${escAttr(dest.name)}" data-nav="${escAttr(dest.nav)}" onclick="showDriverCard(this.dataset.name,this.dataset.nav)">給司機看</button>`:''}</div>`;
@@ -5187,8 +5202,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=86';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=86';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=87';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=87';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
