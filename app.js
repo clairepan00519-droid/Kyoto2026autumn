@@ -682,10 +682,11 @@ const days = [
     S("名代とんかつ かつくら","food","適合抵達日快速且有飽足感的炸豬排。",{img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
     S("京都鶏白湯そば 純","food","京都站周邊快速麵食備案。",{img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"})
   ]},
-{dayNum:"2",date:"11/28",weekday:"六",region:"紅葉機動日・只選一區",enRegion:"Ohara / Takao / Kurama",drive:"🚌 依紅葉與天氣選一條路線",title:"楓信未定",dayDesc:"山里錦秋・三境擇一的紅葉物語",wear:"山區加圍巾、手套、厚襪與防風外套",weatherIco:"🍂",spots:[
-    S("三千院＋大原散步","attraction","適合想看苔庭、落葉與安靜村落的低至中強度版本。",{tags:["方案A","最悠閒"],dur:"半日至一日",fullDesc:"大原路線步調最慢，適合紅葉已進入落葉期或前一日移動疲累時選擇。可圍繞三千院與村落散步，不必塞滿寺院。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
-    S("高雄：神護寺＋西明寺","attraction","紅葉密度高，但階梯與移動強度較高。",{tags:["方案B","紅葉密度"],dur:"約5–7小時",fullDesc:"以神護寺與西明寺為主，高山寺只在時間與體力充足時加入。若紅葉仍在見頃，這條路線最有季節感。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
-    S("鞍馬寺（貴船視體力）","activity","晴朗時適合山林散步；是否翻山至貴船現場決定。",{tags:["方案C","山林"],dur:"約4–7小時",fullDesc:"不預設一定完成鞍馬到貴船的完整健行。路況濕滑、天色轉暗或體力不足時，原路折返即可。",img:"https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&w=1200&q=82"})
+{dayNum:"2",date:"11/28",weekday:"六",region:"紅葉機動日・四選一",enRegion:"Ohara / Takao / Kurama / Oharano",drive:"🚌 依紅葉與天氣選一條路線",title:"楓信未定",dayDesc:"山里錦秋・四境擇一的紅葉物語",wear:"山區加圍巾、手套、厚襪與防風外套",weatherIco:"🍂",spots:[
+    S("大原：三千院＋寶泉院＋寂光院","attraction","苔庭、額緣庭園配抹茶，再散步到寂光院；坡度中等。",{tags:["方案A","最推薦"],dur:"08:00–17:00",fullDesc:"三千院（聚碧園、有清園、童地藏）→ 寶泉院額緣庭園喝抹茶 → 實光院 → 午餐湯豆腐或味噌鍋 → 沿鄉間小路到寂光院。整體步調慢、景點集中，最適合全家。寶泉院、實光院可視體力只選一間。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
+    S("高雄：神護寺＋西明寺＋高山寺","attraction","紅葉密度最高，但神護寺有約 350 階石階。",{tags:["方案B","紅葉密度"],dur:"07:45–17:00",fullDesc:"市巴士 8 號到高雄 → 神護寺（金堂、山門石階）→ 沿清瀧川到西明寺（指月橋）→ 河邊午餐 → 栂尾高山寺（石水院）。紅葉見頃時最有季節感；腿力不夠時高山寺可以省略。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
+    S("鞍馬寺＋貴船神社","activity","翻過木之根道到貴船，山路最多、體力需求最高。",{tags:["方案C","山林"],dur:"08:00–17:30",fullDesc:"叡山電車到鞍馬 → 鞍馬寺本殿金堂、金剛床 → 木之根道、奧之院魔王殿下到貴船（約 1.5 小時山路）→ 午餐 → 貴船神社本宮、結社、奧宮。下雨濕滑或體力不足時，不要翻山：鞍馬寺看完原路回車站，搭電車到貴船口再上貴船。",img:"https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&w=1200&q=82"}),
+    S("大原野：勝持寺＋大原野神社＋正法寺","attraction","西山的安靜紅葉，人潮最少；巴士班次很少。",{tags:["方案D","人少"],dur:"08:30–16:30",fullDesc:"阪急到東向日轉巴士到南春日町 → 勝持寺（花之寺）紅葉庭園 → 大原野神社（紅葉參道、鹿神使、鯉澤池）→ 午餐或茶屋 → 正法寺（庭園與遠山景觀）。週六也相對清幽；巴士約 1 小時 1–2 班，錯過就搭計程車。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"})
   ],moreSpots:[
     S("Daiwa Roynet Hotel 烏丸四條","hotel","連住兩晚，方便回飯店休息與逛烏丸、河原町。",{img:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=82"}),
     S("新風館＋LE LABO","shopping","晚間回市區後的輕鬆逛街組合。",{img:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=82"}),
@@ -776,10 +777,11 @@ const transportPlans = [
     {from:'京都站',to:'Richmond Hotel 京都站',mode:'🚶 步行',time:'5–10 分',note:'寄放行李或入住，休息到傍晚'},
     {from:'飯店',to:'東福寺',mode:'🚕 計程車',time:'10–15 分',note:'17:00 前後出發，行李箱留在飯店；接待地點在東福寺「草坂門」前，工作人員會在那裡等。約 ¥1,500–2,200。也可搭 JR 奈良線或京阪到東福寺站，步行約 10 分'},
     {from:'東福寺',to:'飯店（京都站周邊晚餐）',mode:'🚕 計程車',time:'10–15 分',note:'參觀到 19:30（最晚 19:00 入場）；結束後在京都站周邊晚餐再回飯店'}]},
-  {summary:'三千院／高雄／鞍馬三選一；先選方案，再照同色路線走。', alert:'山區回程班次較疏，15:00–16:00 開始回程最安心。', choices:[
-    {name:'A 三千院・大原',routes:[{from:'四條站 K09',to:'國際會館 K01',mode:'🚇 地下鐵烏丸線',time:'20–23 分',note:'07:20–07:40 進站'},{from:'國際會館',to:'大原',mode:'🚌 京都巴士 19／特16／特17',time:'25–40 分',note:'目標 08:00 前後發車；約 20–40 分一班'},{from:'大原站',to:'三千院',mode:'🚶 步行',time:'10–15 分',note:'回程較難叫車'},{from:'國際會館',to:'三千院（備案）',mode:'🚕 計程車',time:'25–35 分',note:'約 ¥4,000–5,500／車'}]},
-    {name:'B 高雄三寺',routes:[{from:'四條',to:'京都站',mode:'🚇 地下鐵烏丸線',time:'約 4 分',note:'07:00–07:20 離開飯店'},{from:'京都站',to:'栂ノ尾',mode:'🚌 JR 巴士 47／48／49',time:'50–65 分',note:'鎖定 07:20 前後班次，提早 20 分排隊'},{from:'栂ノ尾',to:'槇ノ尾・山城高雄',mode:'🚶 步行／區間巴士',time:'依體力',note:'慢旅只選兩寺'},{from:'山城高雄',to:'京都站',mode:'🚌 JR 巴士 47／47S／48／48S／49',time:'50–70 分',note:'15:00–16:00 候車'}]},
-    {name:'C 鞍馬',routes:[{from:'四條烏丸',to:'出町柳',mode:'🚕 計程車',time:'15–30 分',note:'約 ¥2,000–3,000／車'},{from:'出町柳',to:'鞍馬',mode:'🚆 叡山電車鞍馬線',time:'30–35 分',note:'免轉車；日間約 15–20 分一班'},{from:'鞍馬',to:'出町柳',mode:'🚆 叡山電車鞍馬線',time:'30–35 分',note:'鞍馬站難叫車，務必以電車回程'}]}]},
+  {summary:'大原／高雄／鞍馬・貴船／大原野四選一；在「今日時間表」選好方案，這裡會自動展開那條路線。', alert:'11/28 是週六紅葉旺季，山區巴士班次少又擠：提早出門，15:00–15:30 開始回程最安心。', choices:[
+    {name:'A 大原（三千院・寶泉院・寂光院）',plan:'A',routes:[{from:'四條站 K09',to:'國際會館 K01',mode:'🚇 地下鐵烏丸線',time:'20–23 分',note:'08:00 出發'},{from:'國際會館',to:'大原',mode:'🚌 京都巴士 19 號',time:'25–40 分',note:'約 20–40 分一班；週六排隊人多，提早到站'},{from:'大原站',to:'三千院',mode:'🚶 步行',time:'10–15 分',note:'沿參道慢慢走上坡；寂光院在巴士站另一側，約 15–20 分'},{from:'國際會館',to:'三千院（備案）',mode:'🚕 計程車',time:'25–35 分',note:'巴士排太長時；約 ¥4,000–5,500／車。回程 15:40 搭巴士，約 17:00 回市區'}]},
+    {name:'B 高雄（神護寺・西明寺・高山寺）',plan:'B',key:'choice-1-v96',routes:[{from:'四條烏丸',to:'高雄（山城高雄）',mode:'🚌 市巴士 8 號',time:'約 60 分',note:'07:45 搭車；班次少，先查時刻表。也可從京都站搭 JR 巴士（班次較多）'},{from:'山城高雄',to:'神護寺',mode:'🚶 步行',time:'15–20 分',note:'先下到清瀧川再爬約 350 階石階，慢慢走'},{from:'神護寺',to:'西明寺 → 高山寺',mode:'🚶 步行',time:'各約 15–30 分',note:'沿清瀧川散步到西明寺，午餐後再走到栂尾高山寺'},{from:'栂ノ尾',to:'京都市區',mode:'🚌 JR 巴士／市巴士 8 號',time:'50–70 分',note:'15:30 前後候車，約 17:00 回到市區'}]},
+    {name:'C 鞍馬・貴船',plan:'C',key:'choice-2-v96',routes:[{from:'四條烏丸',to:'出町柳',mode:'🚕 計程車／京阪電車',time:'15–30 分',note:'08:00 出發；計程車約 ¥2,000–3,000／車，或走到祇園四條搭京阪'},{from:'出町柳',to:'鞍馬',mode:'🚆 叡山電車鞍馬線',time:'30–35 分',note:'免轉車；約 09:15 到鞍馬'},{from:'鞍馬寺',to:'貴船',mode:'🚶 山路（木之根道）',time:'約 1.5 小時',note:'上下坡多、樹根多，下雨或腿力不夠時改原路回鞍馬站搭車到貴船口'},{from:'貴船',to:'貴船口站',mode:'🚶 步行／🚌 京都巴士 33',time:'約 30 分／5 分',note:'15:00 往回走；巴士約 20–30 分一班'},{from:'貴船口',to:'出町柳 → 四條烏丸',mode:'🚆 叡山電車＋🚕',time:'約 60–90 分',note:'約 16:00 搭車，17:30 前後回飯店'}]},
+    {name:'D 大原野（勝持寺・大原野神社・正法寺）',plan:'D',routes:[{from:'烏丸站',to:'東向日站',mode:'🚆 阪急京都線',time:'約 15 分',note:'08:30 出發；準急或普通車（特急不停東向日）'},{from:'東向日',to:'南春日町',mode:'🚌 阪急巴士',time:'約 20 分',note:'班次很少（約 1 小時 1–2 班），先查好時刻；錯過就搭計程車約 15 分'},{from:'南春日町',to:'勝持寺',mode:'🚶 步行',time:'約 20 分',note:'緩上坡；大原野神社、正法寺都在附近步行範圍'},{from:'南春日町',to:'東向日 → 烏丸',mode:'🚌 阪急巴士＋🚆 阪急',time:'約 60–90 分',note:'15:00 前後搭巴士，約 16:30 回市區'}]}]},
   {summary:'計程車直達永觀堂晨間貸切；南禪寺、天授庵、無鄰菴與午餐都在步行範圍，午後搭車上真如堂，步行到金戒光明寺。', alert:'永觀堂晨間貸切 08:00 開始、最晚 08:30 入場，遲到不能進！建議 07:20 從飯店出發，到「永觀堂會館」前集合。清晨巴士少、週日紅葉人潮多，前一晚先用 GO 預約計程車。', routeKey:'v79', routes:[
     {from:'飯店（烏丸四條）',to:'永觀堂',mode:'🚕 計程車',time:'20–30 分',note:'建議 07:20 出發、07:45–07:50 到「永觀堂會館」前（工作人員在那裡等）；08:00 開始，最晚 08:30 入場，開始後人多可能要排隊。約 ¥2,500–3,500／車'},
     {from:'永觀堂',to:'南禪寺',mode:'🚶 步行',time:'約 10 分',note:'想看堂內與秋季寺寶展的話，待到 09:00 後再出發（約 09:45）；沿鹿ヶ谷通往南，平路'},
@@ -1662,6 +1664,7 @@ function transportSegmentExtrasHTML(dayIdx,segmentKey){
 /* 交通步驟改版（routeKey）後，掛在舊步驟上的補充說明／圖片不會不見，改放到「其他舊版交通補充」 */
 function isOrphanTransportSeg(dayIdx,key){
   const plan=transportPlans[dayIdx];
+  if(key&&plan&&plan.choices){const m=/^choice-(\d+)-\d+$/.exec(key);if(m&&plan.choices[+m[1]]&&plan.choices[+m[1]].key)return true;}
   return !!(key&&plan&&plan.routeKey&&/^(route-\d+|drive-0)$/.test(key));
 }
 function legacyTransportExtrasHTML(dayIdx){
@@ -1726,7 +1729,7 @@ function transportPlanHTML(dayIdx){
   const plan=transportPlans[dayIdx];
   if(!plan)return `<section class="transport-plan"><div class="tp-head"><div><small>D${days[dayIdx].dayNum}・${days[dayIdx].date}</small><strong>今日交通</strong></div><img src="images/deer-car.webp" alt="" width="64" height="45"></div>${customTransportHTML(dayIdx)}${transportAddBarHTML(dayIdx)}</section>`;
   const routes=(rows,prefix='route')=>`<div class="transport-steps">${(rows||[]).map((r0,i)=>{const segmentKey=`${prefix}-${i}`;const sk=`tp${dayIdx}-${segmentKey}`;if(currentFieldValue(sk,'hidden',null)==='1')return '';const r={from:currentFieldValue(sk,'from',r0.from)||r0.from,to:currentFieldValue(sk,'to',r0.to)||r0.to,mode:currentFieldValue(sk,'mode',r0.mode)||r0.mode,time:currentFieldValue(sk,'time',r0.time)||r0.time,note:currentFieldValue(sk,'note',r0.note)||r0.note,nav:currentFieldValue(sk,'to',null)?null:(r0.nav||null)};window._tpOrig=window._tpOrig||{};window._tpOrig[sk]=r0;return `<div class="transport-step"><span class="transport-step-no">${i+1}</span><div class="transport-step-main"><div class="transport-points"><strong>${escHtml(r.from)}</strong><span>→</span><strong>${escHtml(r.to)}</strong></div><div class="transport-meta"><b>${escHtml(r.mode)}</b><span>⏱ ${escHtml(r.time)}</span></div><small>${escHtml(r.note)}</small>${tpGoButtonsHTML(dayIdx,r,i===(rows||[]).length-1)}<div class="edit-only tp-step-actions"><button type="button" onclick="editTransportStep('${sk}')">✎ 修改</button><button type="button" onclick="deleteTransportStep('${sk}')">🗑 刪除</button></div>${transportSegmentExtrasHTML(dayIdx,segmentKey)}</div></div>`;}).join('')}</div>`;
-  const body=plan.choices?`<div class="transport-choice-list">${plan.choices.map((choice,i)=>`<details class="transport-choice"${i===0?' open':''}><summary>${escHtml(choice.name)}<span>展開路線</span></summary>${routes(choice.routes,`choice-${i}`)}</details>`).join('')}</div>`:(plan.drive&&!plan.routes)?`<div class="transport-drive-card"><span>🚗</span><div><strong>今天全程自駕</strong><small>按下方按鈕開啟當日主要地點導航；停車、休息站與道路狀況以當日為準。</small>${transportSegmentExtrasHTML(dayIdx,'drive-0')}</div></div>`:routes(plan.routes,plan.routeKey||'route');
+  const body=plan.choices?`<div class="transport-choice-list">${(()=>{const pk=dayPlanDecided(dayIdx);const openIdx=Math.max(0,plan.choices.findIndex(c=>c.plan&&c.plan===pk));return plan.choices.map((choice,i)=>`<details class="transport-choice"${i===openIdx?' open':''}><summary>${escHtml(choice.name)}${choice.plan&&choice.plan===pk?'<em class="tc-picked">已選</em>':''}<span>展開路線</span></summary>${routes(choice.routes,choice.key||`choice-${i}`)}</details>`).join('');})()}</div>`:(plan.drive&&!plan.routes)?`<div class="transport-drive-card"><span>🚗</span><div><strong>今天全程自駕</strong><small>按下方按鈕開啟當日主要地點導航；停車、休息站與道路狀況以當日為準。</small>${transportSegmentExtrasHTML(dayIdx,'drive-0')}</div></div>`:routes(plan.routes,plan.routeKey||'route');
   return `<section class="transport-plan"><div class="tp-head"><div><small>D${days[dayIdx].dayNum}・${days[dayIdx].date}</small><strong>今日交通</strong></div><img src="images/deer-car.webp" alt="" width="64" height="45"></div><div class="transport-alert">⚠️ ${escHtml(plan.alert)}</div>${body}${customTransportHTML(dayIdx)}${legacyTransportExtrasHTML(dayIdx)}${transportAddBarHTML(dayIdx)}<div class="transport-actions"><a href="https://www.google.com/maps/dir/?api=1&travelmode=${plan.drive?'driving':'transit'}&destination=${encodeURIComponent(currentFieldValue('day'+dayIdx+'-nav','mapQuery',null)||(days[dayIdx].region+' Japan'))}" target="_blank" rel="noopener">📍 開啟今日導航</a><button type="button" class="edit-only tp-nav-fix" onclick="editSpotField(event,'day${dayIdx}-nav','mapQuery','今日導航目的地（地址、經緯度或關鍵字）')">修正導航</button><button type="button" class="edit-only tp-nav-fix" onclick="restoreTransportSteps(${dayIdx})">↺ 還原本日交通步驟</button></div></section>`;
 }
 
@@ -2606,7 +2609,7 @@ const DAY_TIMELINE=[
 17:30 東福寺夜間貸切｜草坂門前集合，最晚 19:00 入場
 19:30 京都站周邊晚餐
 21:00 回飯店休息`,
-`07:20 出發（依當天選的方案：大原／高雄／鞍馬）
+`07:20 出發（依當天選的方案：大原／高雄／鞍馬／大原野）
 08:30 抵達山區，慢慢散步
 12:00 當地午餐
 15:00 開始回程（山區班次少，不要拖太晚）
@@ -2689,7 +2692,66 @@ const DAY_TIMELINE=[
 ];
 var timelineStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_timeline'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
 function persistTimeline(){safeSetItem('kyoto_timeline',timelineStore);}
-function timelineText(i){return typeof timelineStore[i]==='string'?timelineStore[i]:(DAY_TIMELINE[i]||'');}
+/* v96：有多個方案的日子（11/28 四選一）。決定的方案存在 timelineStore['1_plan']，全家同步；各方案的時間表各自可改 */
+const DAY_PLANS={1:[
+  {id:'A',name:'大原',sub:'三千院・寶泉院・寂光院',level:'步行中等｜最推薦',tl:`08:00 四條烏丸出發｜地鐵到國際會館，轉京都巴士 19 號到大原
+09:00 大原站，沿參道散步
+09:15 三千院｜聚碧園、有清園、童地藏
+10:50 寶泉院｜額緣庭園、喝抹茶
+11:40 實光院｜欣賞庭園（累了可以跳過）
+12:15 大原午餐｜湯豆腐、味噌鍋或京野菜料理
+13:15 沿鄉間小路散步到寂光院｜約 20 分
+14:00 寂光院｜平家物語的歷史古寺
+15:00 走回大原巴士站｜沿途逛漬物、土產店
+15:40 搭巴士回京都市區｜約 17:00 到
+18:30 晚餐｜天ぷら天天天／京の焼肉処 弘`},
+  {id:'B',name:'高雄',sub:'神護寺・西明寺・高山寺',level:'石階多｜紅葉最密',tl:`07:45 四條烏丸搭市巴士 8 號往高雄｜約 1 小時
+08:45 高雄巴士站，沿清瀧川散步
+09:00 神護寺｜金堂、山門石階（約 350 階）與紅葉
+10:45 沿清瀧川走到西明寺
+11:15 西明寺｜指月橋與寺院
+12:00 清瀧川沿岸午餐
+13:00 步行前往栂尾
+13:30 高山寺｜石水院、世界遺產
+14:45 栂尾附近散步、休息
+15:30 搭巴士回京都市區｜約 17:00 到
+18:30 晚餐｜天ぷら天天天／京の焼肉処 弘`},
+  {id:'C',name:'鞍馬・貴船',sub:'鞍馬寺・木之根道・貴船神社',level:'山路最多｜體力需求高',tl:`08:00 四條烏丸出發｜經出町柳搭叡山電車到鞍馬
+09:15 鞍馬站、天狗像、仁王門
+09:40 鞍馬寺｜本殿金堂、金剛床
+10:30 木之根道、奧之院魔王殿｜山路下到貴船約 1.5 小時；濕滑就改搭電車
+12:00 貴船午餐｜川床季已結束，選一般日式料理
+13:15 貴船神社本宮｜紅燈籠石階、水占籤
+14:00 結社、奧宮參拜
+15:00 走回貴船口站｜約 30 分，或搭巴士 33 號
+16:00 叡山電車回出町柳，再回四條烏丸｜約 17:30 到
+18:30 晚餐｜天ぷら天天天／京の焼肉処 弘`},
+  {id:'D',name:'大原野',sub:'勝持寺・大原野神社・正法寺',level:'人最少｜巴士班次少',tl:`08:30 四條烏丸搭阪急到東向日｜轉往南春日町的巴士（班次少，先查時刻）
+09:30 南春日町下車，步行到勝持寺｜約 20 分緩上坡
+10:00 勝持寺｜紅葉庭園與古寺
+11:15 步行到大原野神社
+11:35 大原野神社｜紅葉參道、鹿神使、鯉澤池
+12:30 大原野周邊午餐或茶屋
+13:30 正法寺｜庭園與遠山景觀
+14:30 走回南春日町巴士站
+15:00 搭巴士回京都市區｜約 16:30 到
+18:30 晚餐｜天ぷら天天天／京の焼肉処 弘`}]};
+const tlViewPlan={};
+function dayPlanDecided(i){const v=timelineStore[i+'_plan'];return (DAY_PLANS[i]||[]).some(p=>p.id===v)?v:'';}
+function dayPlanView(i){const ps=DAY_PLANS[i];if(!ps)return '';return ps.some(p=>p.id===tlViewPlan[i])?tlViewPlan[i]:(dayPlanDecided(i)||ps[0].id);}
+function tlKey(i){const p=dayPlanView(i);return p?i+'_'+p:i;}
+function timelineText(i){const k=tlKey(i);if(typeof timelineStore[k]==='string')return timelineStore[k];const p=dayPlanView(i);return p?DAY_PLANS[i].find(x=>x.id===p).tl:(DAY_TIMELINE[i]||'');}
+function viewDayPlan(i,id){tlViewPlan[i]=id;safeRenderDayContent();}
+function decideDayPlan(i,id){
+  const prev=timelineStore[i+'_plan'];timelineStore[i+'_plan']=id;tlViewPlan[i]=id;persistTimeline();safeRenderDayContent();
+  const p=DAY_PLANS[i].find(x=>x.id===id);
+  offerUndo(`決定了：${p.id} ${p.name}！全家都會看到 🍁`,()=>{if(prev===undefined)delete timelineStore[i+'_plan'];else timelineStore[i+'_plan']=prev;persistTimeline();safeRenderDayContent();});
+}
+function dayPlanBarHTML(i){
+  const ps=DAY_PLANS[i];if(!ps)return '';
+  const view=dayPlanView(i),dec=dayPlanDecided(i),cur=ps.find(p=>p.id===view);
+  return `<div class="tl-plans"><div class="tl-plan-status">${dec?`✅ 已決定：<b>${dec} ${escHtml(ps.find(p=>p.id===dec).name)}</b>`:'🤔 還沒決定，先點點看各方案'}</div><div class="tl-plan-tabs" role="tablist">${ps.map(p=>`<button type="button" role="tab" aria-selected="${p.id===view}" class="tl-plan-tab${p.id===view?' on':''}${p.id===dec?' decided':''}" onclick="viewDayPlan(${i},'${p.id}')"><b>${p.id} ${escHtml(p.name)}</b><small>${escHtml(p.level)}</small>${p.id===dec?'<i>已選</i>':''}</button>`).join('')}</div><div class="tl-plan-sub">${escHtml(cur.sub)}</div>${view!==dec?`<button type="button" class="tl-plan-decide" onclick="decideDayPlan(${i},'${view}')">✅ 就決定 ${view} ${escHtml(cur.name)}！</button>`:''}</div>`;
+}
 function parseTimeline(text){
   return String(text||'').split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
     const m=l.match(/^(\d{1,2})[:：](\d{2})\s*(.*)$/);
@@ -2707,12 +2769,12 @@ function dayTimelineHTML(i){
     const [title,...rest]=r.text.split('｜');
     return `<li class="tl-row${cls}" role="button" tabindex="0" title="點一下修改這一項" onclick="editTimelineRow(${i},${k})"><span class="tl-time">${escHtml(r.t||'')}</span><span class="tl-dot" aria-hidden="true"></span><span class="tl-text"><b>${escHtml(title)}</b>${rest.length?`<small>${escHtml(rest.join('｜'))}</small>`:''}${cls===' now'?'<em>進行中</em>':cls===' next'?'<em>下一個</em>':''}</span><span class="tl-pen" aria-hidden="true">✏️</span></li>`;
   }).join('');
-  const edited=typeof timelineStore[i]==='string';
-  return `<details class="day-timeline" ${isToday||!localStorage.getItem('kyoto_tl_closed_'+i)?'open':''} ontoggle="try{this.open?localStorage.removeItem('kyoto_tl_closed_${i}'):localStorage.setItem('kyoto_tl_closed_${i}','1')}catch(e){}"><summary><span><img class="tl-icon" src="images/tl-deer.webp" alt="" width="34" height="34">今日時間表</span><small>${isToday?'今天':'點這裡收合／展開'}</small></summary><ol class="tl-list">${items}</ol><div class="tl-foot"><span>點任一行就能修改；時間是建議，依現場調整。</span><span class="tl-btns"><button type="button" class="tl-add" onclick="editTimelineRow(${i},-1)">＋ 新增一項</button><button type="button" onclick="editTimeline(${i})">整張修改</button>${edited?`<button type="button" class="tl-reset" onclick="resetTimeline(${i})">還原建議</button>`:''}</span></div></details>`;
+  const edited=typeof timelineStore[tlKey(i)]==='string';
+  return `<details class="day-timeline" ${isToday||!localStorage.getItem('kyoto_tl_closed_'+i)?'open':''} ontoggle="try{this.open?localStorage.removeItem('kyoto_tl_closed_${i}'):localStorage.setItem('kyoto_tl_closed_${i}','1')}catch(e){}"><summary><span><img class="tl-icon" src="images/tl-deer.webp" alt="" width="34" height="34">今日時間表</span><small>${isToday?'今天':'點這裡收合／展開'}</small></summary>${dayPlanBarHTML(i)}<ol class="tl-list">${items}</ol><div class="tl-foot"><span>點任一行就能修改；時間是建議，依現場調整。</span><span class="tl-btns"><button type="button" class="tl-add" onclick="editTimelineRow(${i},-1)">＋ 新增一項</button><button type="button" onclick="editTimeline(${i})">整張修改</button>${edited?`<button type="button" class="tl-reset" onclick="resetTimeline(${i})">還原建議</button>`:''}</span></div></details>`;
 }
 function editTimeline(i){
   openFormModal({title:`修改時間表：D${days[i].dayNum}・${days[i].date}`,fields:[{id:'t',label:'一行一項，開頭寫時間，例如「07:20 搭計程車出發」。想加小字說明，用「｜」隔開。',type:'textarea',rows:14,value:timelineText(i)}],saveText:'儲存',
-    onSave:v=>{if(!v.t){alert('時間表不能是空的；要回到建議版請按「還原建議」。');return false;}const prev=timelineStore[i];timelineStore[i]=v.t;persistTimeline();safeRenderDayContent();offerUndo('已更新時間表',()=>{if(prev===undefined)delete timelineStore[i];else timelineStore[i]=prev;persistTimeline();safeRenderDayContent();});}});
+    onSave:v=>{if(!v.t){alert('時間表不能是空的；要回到建議版請按「還原建議」。');return false;}const k=tlKey(i),prev=timelineStore[k];timelineStore[k]=v.t;persistTimeline();safeRenderDayContent();offerUndo('已更新時間表',()=>{if(prev===undefined)delete timelineStore[k];else timelineStore[k]=prev;persistTimeline();safeRenderDayContent();});}});
 }
 /* 單行修改：時間＋內容＋小字說明；k=-1 代表新增 */
 function timelineLine(r){return (r.t?r.t+' ':'')+r.text;}
@@ -2721,8 +2783,8 @@ function saveTimelineRows(i,rows,msg){
   let last='';const keyed=rows.map((r,n)=>{if(r.t)last=r.t;return {r,n,key:r.t||last};});
   keyed.sort((a,b)=>a.key<b.key?-1:a.key>b.key?1:a.n-b.n);
   const text=keyed.map(x=>timelineLine(x.r)).join('\n');
-  const prev=timelineStore[i];timelineStore[i]=text;persistTimeline();safeRenderDayContent();
-  offerUndo(msg,()=>{if(prev===undefined)delete timelineStore[i];else timelineStore[i]=prev;persistTimeline();safeRenderDayContent();});
+  const k=tlKey(i),prev=timelineStore[k];timelineStore[k]=text;persistTimeline();safeRenderDayContent();
+  offerUndo(msg,()=>{if(prev===undefined)delete timelineStore[k];else timelineStore[k]=prev;persistTimeline();safeRenderDayContent();});
 }
 function hhmmToMin(t){const m=/^(\d{1,2}):(\d{2})$/.exec(t||'');return m?(+m[1])*60+(+m[2]):null;}
 function minToHHMM(n){n=((n%1440)+1440)%1440;return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');}
@@ -2784,8 +2846,8 @@ function editTimelineRow(i,k){
 }
 function resetTimeline(i){
   if(!confirm('把這天的時間表還原成建議版本？'))return;
-  const prev=timelineStore[i];delete timelineStore[i];persistTimeline();safeRenderDayContent();
-  offerUndo('已還原建議時間表',()=>{timelineStore[i]=prev;persistTimeline();safeRenderDayContent();});
+  const k=tlKey(i),prev=timelineStore[k];delete timelineStore[k];persistTimeline();safeRenderDayContent();
+  offerUndo('已還原建議時間表',()=>{timelineStore[k]=prev;persistTimeline();safeRenderDayContent();});
 }
 
 /* ============ v92：每日回顧（每個帳號各寫一則，全家都看得到） ============ */
@@ -3064,7 +3126,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=95').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=96').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3687,7 +3749,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v95-2026-10-10';
+const APP_VERSION='v96-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -5507,8 +5569,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=95';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=95';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=96';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=96';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
