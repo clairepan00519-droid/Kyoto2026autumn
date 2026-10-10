@@ -771,17 +771,17 @@ const days = [
 
 /* v43｜依「京都交通明細｜4 人慢旅行版」整理的每日交通速查。 */
 const transportPlans = [
-  {summary:'KIX 搭 HARUKA 到京都站，先到飯店寄行李休息；傍晚 17:30 東福寺夜間貸切（已預約）。', alert:'東福寺 17:30 入場，請 17:00 前後從飯店出發；HARUKA 建議搭 13:10–13:50 間的班次。', routeKey:'v88', routes:[
+  {summary:'KIX 搭 HARUKA 到京都站，先到飯店寄行李休息；傍晚 17:30 東福寺夜間貸切（已預約）。', alert:'東福寺夜間貸切 17:30–19:30（最晚 19:00 入場），在「草坂門」前集合；請 17:00 前後從飯店出發。HARUKA 建議搭 13:10–13:50 間的班次。', routeKey:'v88', routes:[
     {from:'KIX',to:'京都站',mode:'🚆 JR 特急 HARUKA',time:'75–85 分',note:'JR 關西機場站上車，免轉車；建議 13:10–13:50 間的班次'},
     {from:'京都站',to:'Richmond Hotel 京都站',mode:'🚶 步行',time:'5–10 分',note:'寄放行李或入住，休息到傍晚'},
-    {from:'飯店',to:'東福寺',mode:'🚕 計程車',time:'10–15 分',note:'17:00 前後出發，行李箱留在飯店；17:30 起依序入場，法堂 19:20 前進入；約 ¥1,500–2,200。也可搭 JR 奈良線到東福寺站（2–3 分）再步行 10–15 分'},
-    {from:'東福寺',to:'飯店（京都站周邊晚餐）',mode:'🚕 計程車',time:'10–15 分',note:'結束後在京都站周邊晚餐再回飯店'}]},
+    {from:'飯店',to:'東福寺',mode:'🚕 計程車',time:'10–15 分',note:'17:00 前後出發，行李箱留在飯店；接待地點在東福寺「草坂門」前，工作人員會在那裡等。約 ¥1,500–2,200。也可搭 JR 奈良線或京阪到東福寺站，步行約 10 分'},
+    {from:'東福寺',to:'飯店（京都站周邊晚餐）',mode:'🚕 計程車',time:'10–15 分',note:'參觀到 19:30（最晚 19:00 入場）；結束後在京都站周邊晚餐再回飯店'}]},
   {summary:'三千院／高雄／鞍馬三選一；先選方案，再照同色路線走。', alert:'山區回程班次較疏，15:00–16:00 開始回程最安心。', choices:[
     {name:'A 三千院・大原',routes:[{from:'四條站 K09',to:'國際會館 K01',mode:'🚇 地下鐵烏丸線',time:'20–23 分',note:'07:20–07:40 進站'},{from:'國際會館',to:'大原',mode:'🚌 京都巴士 19／特16／特17',time:'25–40 分',note:'目標 08:00 前後發車；約 20–40 分一班'},{from:'大原站',to:'三千院',mode:'🚶 步行',time:'10–15 分',note:'回程較難叫車'},{from:'國際會館',to:'三千院（備案）',mode:'🚕 計程車',time:'25–35 分',note:'約 ¥4,000–5,500／車'}]},
     {name:'B 高雄三寺',routes:[{from:'四條',to:'京都站',mode:'🚇 地下鐵烏丸線',time:'約 4 分',note:'07:00–07:20 離開飯店'},{from:'京都站',to:'栂ノ尾',mode:'🚌 JR 巴士 47／48／49',time:'50–65 分',note:'鎖定 07:20 前後班次，提早 20 分排隊'},{from:'栂ノ尾',to:'槇ノ尾・山城高雄',mode:'🚶 步行／區間巴士',time:'依體力',note:'慢旅只選兩寺'},{from:'山城高雄',to:'京都站',mode:'🚌 JR 巴士 47／47S／48／48S／49',time:'50–70 分',note:'15:00–16:00 候車'}]},
     {name:'C 鞍馬',routes:[{from:'四條烏丸',to:'出町柳',mode:'🚕 計程車',time:'15–30 分',note:'約 ¥2,000–3,000／車'},{from:'出町柳',to:'鞍馬',mode:'🚆 叡山電車鞍馬線',time:'30–35 分',note:'免轉車；日間約 15–20 分一班'},{from:'鞍馬',to:'出町柳',mode:'🚆 叡山電車鞍馬線',time:'30–35 分',note:'鞍馬站難叫車，務必以電車回程'}]}]},
-  {summary:'計程車直達永觀堂晨間貸切；南禪寺、天授庵、無鄰菴與午餐都在步行範圍，午後搭車上真如堂，步行到金戒光明寺。', alert:'永觀堂晨間貸切最後入場 08:30，遲到不能進！建議 07:15 從飯店出發。清晨巴士少、週日紅葉人潮多，前一晚先用 GO 預約計程車。', routeKey:'v79', routes:[
-    {from:'飯店（烏丸四條）',to:'永觀堂',mode:'🚕 計程車',time:'20–30 分',note:'建議 07:15 出發、07:45 前後抵達；最後入場 08:30，開門後人多可能要排隊。約 ¥2,500–3,500／車'},
+  {summary:'計程車直達永觀堂晨間貸切；南禪寺、天授庵、無鄰菴與午餐都在步行範圍，午後搭車上真如堂，步行到金戒光明寺。', alert:'永觀堂晨間貸切 08:00 開始、最晚 08:30 入場，遲到不能進！建議 07:20 從飯店出發，到「永觀堂會館」前集合。清晨巴士少、週日紅葉人潮多，前一晚先用 GO 預約計程車。', routeKey:'v79', routes:[
+    {from:'飯店（烏丸四條）',to:'永觀堂',mode:'🚕 計程車',time:'20–30 分',note:'建議 07:20 出發、07:45–07:50 到「永觀堂會館」前（工作人員在那裡等）；08:00 開始，最晚 08:30 入場，開始後人多可能要排隊。約 ¥2,500–3,500／車'},
     {from:'永觀堂',to:'南禪寺',mode:'🚶 步行',time:'約 10 分',note:'想看堂內與秋季寺寶展的話，待到 09:00 後再出發（約 09:45）；沿鹿ヶ谷通往南，平路'},
     {from:'南禪寺',to:'天授庵',mode:'🚶 步行',time:'2–3 分',note:'就在三門南側'},
     {from:'天授庵',to:'無鄰菴',mode:'🚶 步行',time:'約 10 分',note:'經南禪寺參道、仁王門通往西'},
@@ -1014,9 +1014,9 @@ const transportGeneralTips = ['全程準備 ICOCA，日常路段直接刷卡最�
   // 每張卡：封面一句話；內文至少 3–4 句。戰術資訊放入評論與資訊。
   const tacticByName={
     '京都站周邊':'Porta、伊勢丹與車站建築都適合抵達日下午慢慢逛，不需要再跨區移動。',
-    '東福寺':'17:30 起依序進入通天橋區域，剛開始最擠、可能要排隊；法堂 19:20 前入場。人多時通天橋上可能限制拍照；不能用腳架、自拍棒；不提供御朱印；晚上冷，帶保暖外套。',
+    '東福寺':'接待地點在「草坂門」前；17:30 起依序進入通天橋區域，剛開始最擠、可能要排隊；最晚 19:00 入場、法堂 19:20 前進入。不能用腳架、自拍棒；不提供御朱印；晚上冷，帶保暖外套。',
     '真如堂':'午後光線柔和，先看本堂與三重塔周邊，再沿南側小路步行到金戒光明寺。',
-    '永觀堂':'最後入場 08:30，遲到不能進；出寺後不能再入場。御朱印 09:00 起受理，可能要等一段時間。結束後沿鹿ヶ谷通往南步行約 10 分到南禪寺。',
+    '永觀堂':'接待地點在「永觀堂會館」前；08:00 開始，最晚 08:30 入場，遲到不能進；出寺後不能再入場。御朱印 09:00 起受理。結束後沿鹿ヶ谷通往南步行約 10 分到南禪寺。',
     '南禪寺':'時間有限時集中三門、法堂與水路閣，不必逐一收集所有塔頭。',
     '天授庵':'就在南禪寺三門旁；入口隊伍過長時縮短停留，準時前往無鄰菴。',
     '無鄰菴':'建議預約午前時段，看完就在南禪寺・岡崎一帶午餐。',
@@ -1050,10 +1050,10 @@ const transportGeneralTips = ['全程準備 ICOCA，日常路段直接刷卡最�
 
   // 開放時間、公休日與官方資訊（季節特別公開仍以官網公告為準）。
   const info={
-    '東福寺':['11/27（五）夜間貸切：17:30 起依序進入通天橋區域；法堂入場到 19:20','已預約：成人 4 位，申請號碼 E013944766001（JR 東海預約）。自行前往受付地點，請搭計程車或大眾運輸；不能寄放行李箱；禁止腳架、自拍棒；不提供御朱印','https://tofukuji.jp/','東福寺官方網站'],
+    '東福寺':['11/27（五）夜間貸切 17:30–19:30（最晚 19:00 入場；法堂 19:20 前）','已預約：成人 4 位，申請號碼 E013944766001（JR 東海預約）。接待地點：東福寺「草坂門」前（京都市東山區本町15丁目778）；沒有停車場，搭計程車或電車；不能寄放行李箱；禁止腳架、自拍棒；不提供御朱印','https://tofukuji.jp/','東福寺官方網站'],
     '三千院＋大原散步':['3–10月通常 09:00–17:00；11月約 08:30–17:00；12–2月約 09:00–16:30','全年開放，法務或天候可能調整','https://www.sanzenin.or.jp/','三千院官方網站'],
     '真如堂':['境內通常 06:00–17:00；庭園與堂內拝観另有時間','法要時可能停止堂內參觀','https://shin-nyo-do.jp/','真如堂官方網站'],
-    '永觀堂':['11/29（日）晨間貸切：最後入場 08:30（遲到不能進）；09:00 一般開放後可繼續留在寺內，堂內與秋季寺寶展 09:00 起','已預約：成人 4 位（JR 東海預約）。自行前往受付地點；沒有停車場，請搭計程車；不能寄放行李箱；開門後人多可能要排隊；可能有媒體拍攝','https://www.eikando.or.jp/','永觀堂官方網站'],
+    '永觀堂':['11/29（日）晨間貸切 08:00–09:00（最晚 08:30 入場，遲到不能進）；09:00 一般開放後可繼續留在寺內，堂內與秋季寺寶展 09:00 起','已預約：成人 4 位（JR 東海預約）。接待地點：「永觀堂會館」前（京都市左京區永觀堂町48）；沒有停車場，搭計程車；不能寄放行李箱；開始後人多可能要排隊','https://www.eikando.or.jp/','永觀堂官方網站'],
     '南禪寺':['境內自由；方丈庭園通常 08:40–16:30／17:00 依季節','年末可能停止部分拝観','https://www.nanzenji.or.jp/','南禪寺官方網站'],
     '無鄰菴':['通常 09:00–17:00，最後入場約 16:30','12/29–12/31 等維護日可能休園','https://murin-an.jp/','無鄰菴官方網站'],
     '詩仙堂':['通常 09:00–17:00，最後入場約 16:45','5/23 丈山忌等可能停止一般拝観','https://kyoto-shisendo.net/','詩仙堂官方網站'],
@@ -2650,8 +2650,8 @@ function addRuleItem() {
 const defaultDocsData = [
   {ic:'✈️',t:'去程航班 TPE → KIX',s:'11/27 08:05 → 11:35',chip:'待確認',link:'',img:null,confirmed:false},
   {ic:'🚆',t:'HARUKA特急',s:'11/27 KIX → 京都站',chip:'待確認',link:'',img:null,confirmed:false},
-  {ic:'🍁',t:'東福寺 夜間貸切',s:'11/27（五）17:30 起入場・法堂到 19:20・成人 4 位・申請號碼 E013944766001',chip:'已預約',link:'',img:null,confirmed:true},
-  {ic:'🍁',t:'永觀堂 晨間貸切',s:'11/29（日）最後入場 08:30・成人 4 位・搭計程車前往',chip:'已預約',link:'',img:null,confirmed:true},
+  {ic:'🍁',t:'東福寺 夜間貸切',s:'11/27（五）17:30–19:30（最晚 19:00 入場）・草坂門前接待・成人 4 位・申請號碼 E013944766001',chip:'已預約',link:'',img:null,confirmed:true},
+  {ic:'🍁',t:'永觀堂 晨間貸切',s:'11/29（日）08:00–09:00（最晚 08:30 入場）・永觀堂會館前接待・成人 4 位',chip:'已預約',link:'',img:null,confirmed:true},
   {ic:'🏨',t:'京都站 Richmond',s:'11/27、12/5',chip:'住宿',link:'',img:null,confirmed:false},
   {ic:'🏨',t:'Daiwa Roynet Hotel 烏丸四條',s:'11/28–11/29',chip:'住宿',link:'',img:null,confirmed:false},
   {ic:'🏨',t:'Daiwa Roynet Hotel 奈良',s:'11/30',chip:'住宿',link:'',img:null,confirmed:false},
@@ -2769,7 +2769,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=89').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=90').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3389,7 +3389,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v89-2026-10-10';
+const APP_VERSION='v90-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -4854,10 +4854,10 @@ function tpGoButtonsHTML(dayIdx,r,isLast){
 /* v83：給司機看的日文資料（日文名稱、地址、在哪裡下車）。可在編輯模式修改，修改會同步給家人。
    地址只放有確認過的；不確定的就不寫，避免讓司機開錯地方。 */
 const DRIVER_INFO={
-  '永觀堂':{ja:'永観堂（禅林寺）',drop:'鹿ヶ谷通り沿いの総門の前で降ろしてください。',dropZh:'在鹿ヶ谷通旁的總門（正門）前下車。晨間貸切最後入場 08:30。'},
+  '永觀堂':{ja:'永観堂会館（永観堂）',addr:'京都市左京区永観堂町48',drop:'永観堂会館の前で降ろしてください。',dropZh:'在永觀堂會館前下車，工作人員會在那裡等候（08:00 開始，最晚 08:30 入場）。'},
   '真如堂':{ja:'真如堂（真正極楽寺）',drop:'できるだけ真如堂の門の近くまでお願いします。',dropZh:'上坡路段，請司機盡量開到寺門口附近。'},
   '金戒光明寺':{ja:'金戒光明寺（くろ谷さん）'},
-  '東福寺':{ja:'東福寺',drop:'夜間特別拝観の受付の近くで降ろしてください。',dropZh:'到東福寺夜間貸切的受付附近下車（地點以預約通知為準）。'},
+  '東福寺':{ja:'東福寺',addr:'京都市東山区本町15丁目778',drop:'夜間特別拝観の受付（門の前）で降ろしてください。',dropZh:'接待地點在東福寺「草坂門」前，工作人員會在那裡等候（17:30 開始，最晚 19:00 入場）。'},
   '三千院＋大原散步':{ja:'三千院（大原）',drop:'三千院の参道入口（大原バス停の近く）までお願いします。',dropZh:'到三千院參道入口（大原巴士站附近），之後步行上去。'},
   '出町柳':{ja:'出町柳駅（叡山電車）',drop:'叡山電車の出町柳駅の前で降ろしてください。',dropZh:'在叡山電車出町柳站前下車。'},
   '詩仙堂':{ja:'詩仙堂（一乗寺）',drop:'詩仙堂の入口の近くまでお願いします。道が狭ければ手前で大丈夫です。',dropZh:'到詩仙堂入口附近；巷子太窄的話在前面下車也可以。'},
@@ -4881,7 +4881,7 @@ function showDriverCard(name,nav){
   const el=document.createElement('div');el.id='driverCard';el.className='driver-card';
   el.innerHTML=`<div class="driver-card-inner">
     <p class="driver-ja">ここまでお願いします</p><p class="driver-zh">（請載我到這裡）</p>
-    <div class="driver-name${String(info.ja||name).length>12?' long':''}">${escHtml(info.ja||name)}</div>${info.ja&&info.ja!==name?`<div class="driver-name-zh">${escHtml(name)}</div>`:''}
+    <div class="driver-name${String(info.ja||name).length>8?' long':''}">${escHtml(info.ja||name)}</div>${info.ja&&info.ja!==name?`<div class="driver-name-zh">${escHtml(name)}</div>`:''}
     ${info.addr?`<div class="driver-addr"><small>住所</small>${escHtml(info.addr)}</div>`:''}
     ${info.drop?`<div class="driver-drop"><small>降りる場所</small><b>${escHtml(info.drop)}</b>${info.dropZh?`<span>${escHtml(info.dropZh)}</span>`:''}</div>`:''}
     <a class="driver-map" href="${escAttr(mapsLink(nav))}" target="_blank" rel="noopener">打開地圖給司機看</a>
@@ -5207,8 +5207,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=89';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=89';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=90';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=90';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
