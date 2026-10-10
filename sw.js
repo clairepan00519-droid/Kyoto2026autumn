@@ -1,5 +1,5 @@
 /* 京都・奈良・丹後行程：App Shell、圖片與已瀏覽內容離線快取 */
-const CACHE_VERSION='kyoto-trip-v102';
+const CACHE_VERSION='kyoto-trip-v101';
 const SHELL_CACHE=`kyoto-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE=`kyoto-runtime-${CACHE_VERSION}`;
 /* 圖片快取獨立於版本：更新網站不會清掉已下載的圖片，也不必重新下載 */
@@ -17,7 +17,7 @@ self.addEventListener('install',event=>{
 
 self.addEventListener('activate',event=>{
   event.waitUntil(caches.keys()
-    .then(keys=>Promise.all(keys.filter(k=>k.startsWith('kyoto-')&&k!==SHELL_CACHE&&k!==RUNTIME_CACHE&&k!==IMAGE_CACHE).map(k=>caches.delete(k))))
+    .then(keys=>Promise.all(keys.filter(k=>k!==SHELL_CACHE&&k!==RUNTIME_CACHE&&k!==IMAGE_CACHE).map(k=>caches.delete(k))))
     .then(async()=>{
       await self.clients.claim();
       /* 不強制重新載入（會打斷正在輸入的家人），改通知頁面由使用者決定 */
@@ -67,8 +67,6 @@ self.addEventListener('fetch',event=>{
   const req=event.request;if(req.method!=='GET')return;
   let url;try{url=new URL(req.url);}catch(e){return;}
   if(isWeather(url))return;
-  /* 挪威網站（/norway/）有自己的 Service Worker，這裡不攔截 */
-  if(url.origin===self.location.origin&&url.pathname.includes('/norway/'))return;
 
   if(req.mode==='navigate'){
     event.respondWith(fetch(req).then(res=>{const copy=res.clone();caches.open(SHELL_CACHE).then(c=>c.put('./index.html',copy));return res;}).catch(async()=>await caches.match('./index.html')||await caches.match('./')));
