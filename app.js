@@ -2705,14 +2705,41 @@ function dayTimelineHTML(i){
   const items=rows.map((r,k)=>{
     const cls=isToday?(nextIdx>=0&&k<nextIdx-1?' past':k===nextIdx-1&&nextIdx>0?' now':k===nextIdx?' next':(nextIdx<0&&r.t?' past':'')):'';
     const [title,...rest]=r.text.split('｜');
-    return `<li class="tl-row${cls}"><span class="tl-time">${escHtml(r.t||'')}</span><span class="tl-dot" aria-hidden="true"></span><span class="tl-text"><b>${escHtml(title)}</b>${rest.length?`<small>${escHtml(rest.join('｜'))}</small>`:''}${cls===' now'?'<em>進行中</em>':cls===' next'?'<em>下一個</em>':''}</span></li>`;
+    return `<li class="tl-row${cls}" role="button" tabindex="0" title="點一下修改這一項" onclick="editTimelineRow(${i},${k})"><span class="tl-time">${escHtml(r.t||'')}</span><span class="tl-dot" aria-hidden="true"></span><span class="tl-text"><b>${escHtml(title)}</b>${rest.length?`<small>${escHtml(rest.join('｜'))}</small>`:''}${cls===' now'?'<em>進行中</em>':cls===' next'?'<em>下一個</em>':''}</span><span class="tl-pen" aria-hidden="true">✏️</span></li>`;
   }).join('');
   const edited=typeof timelineStore[i]==='string';
-  return `<details class="day-timeline" ${isToday||!localStorage.getItem('kyoto_tl_closed_'+i)?'open':''} ontoggle="try{this.open?localStorage.removeItem('kyoto_tl_closed_${i}'):localStorage.setItem('kyoto_tl_closed_${i}','1')}catch(e){}"><summary><span>🕘 今日時間表</span><small>${isToday?'今天':'點這裡收合／展開'}</small></summary><ol class="tl-list">${items}</ol><div class="tl-foot"><span>時間是建議，依現場調整。</span><span class="edit-only"><button type="button" onclick="editTimeline(${i})">修改時間表</button>${edited?`<button type="button" class="del" onclick="resetTimeline(${i})">還原建議</button>`:''}</span></div></details>`;
+  return `<details class="day-timeline" ${isToday||!localStorage.getItem('kyoto_tl_closed_'+i)?'open':''} ontoggle="try{this.open?localStorage.removeItem('kyoto_tl_closed_${i}'):localStorage.setItem('kyoto_tl_closed_${i}','1')}catch(e){}"><summary><span>🕘 今日時間表</span><small>${isToday?'今天':'點這裡收合／展開'}</small></summary><ol class="tl-list">${items}</ol><div class="tl-foot"><span>點任一行就能修改；時間是建議，依現場調整。</span><span class="tl-btns"><button type="button" class="tl-add" onclick="editTimelineRow(${i},-1)">＋ 新增一項</button><button type="button" onclick="editTimeline(${i})">整張修改</button>${edited?`<button type="button" class="tl-reset" onclick="resetTimeline(${i})">還原建議</button>`:''}</span></div></details>`;
 }
 function editTimeline(i){
   openFormModal({title:`修改時間表：D${days[i].dayNum}・${days[i].date}`,fields:[{id:'t',label:'一行一項，開頭寫時間，例如「07:20 搭計程車出發」。想加小字說明，用「｜」隔開。',type:'textarea',rows:14,value:timelineText(i)}],saveText:'儲存',
     onSave:v=>{if(!v.t){alert('時間表不能是空的；要回到建議版請按「還原建議」。');return false;}const prev=timelineStore[i];timelineStore[i]=v.t;persistTimeline();safeRenderDayContent();offerUndo('已更新時間表',()=>{if(prev===undefined)delete timelineStore[i];else timelineStore[i]=prev;persistTimeline();safeRenderDayContent();});}});
+}
+/* 單行修改：時間＋內容＋小字說明；k=-1 代表新增 */
+function timelineLine(r){return (r.t?r.t+' ':'')+r.text;}
+function saveTimelineRows(i,rows,msg){
+  // 依時間排序（沒寫時間的行跟著前一行），保持原本相對順序
+  let last='';const keyed=rows.map((r,n)=>{if(r.t)last=r.t;return {r,n,key:r.t||last};});
+  keyed.sort((a,b)=>a.key<b.key?-1:a.key>b.key?1:a.n-b.n);
+  const text=keyed.map(x=>timelineLine(x.r)).join('\n');
+  const prev=timelineStore[i];timelineStore[i]=text;persistTimeline();safeRenderDayContent();
+  offerUndo(msg,()=>{if(prev===undefined)delete timelineStore[i];else timelineStore[i]=prev;persistTimeline();safeRenderDayContent();});
+}
+function editTimelineRow(i,k){
+  const rows=parseTimeline(timelineText(i));const isNew=k<0||!rows[k];
+  const cur=isNew?{t:'',text:''}:rows[k];const [title,...rest]=cur.text.split('｜');
+  openFormModal({title:isNew?'新增一項':'修改這一項',fields:[
+    {id:'t',label:'時間（可空白）',type:'time',value:cur.t},
+    {id:'title',label:'要做什麼',value:isNew?'':title,placeholder:'例如：搭計程車去詩仙堂'},
+    {id:'note',label:'小字說明（選填）',value:rest.join('｜'),placeholder:'例如：約 25 分、¥3,000'}],saveText:'儲存',
+    onDelete:isNew?null:()=>{if(rows.length<=1){alert('至少要留一項；要回到建議版請按「還原建議」。');return;}rows.splice(k,1);saveTimelineRows(i,rows,'已刪除這一項');},
+    onSave:v=>{
+      const t=(v.title||'').replace(/[\n｜]/g,' ').trim();if(!t){alert('請寫上要做什麼。');return false;}
+      const note=(v.note||'').replace(/\n/g,' ').trim();
+      const tm=/^\d{1,2}:\d{2}/.test(v.t||'')?v.t.slice(0,5).padStart(5,'0'):'';
+      const row={t:tm,text:note?`${t}｜${note}`:t};
+      if(isNew)rows.push(row);else rows[k]=row;
+      saveTimelineRows(i,rows,isNew?'已新增一項':'已修改這一項');
+    }});
 }
 function resetTimeline(i){
   if(!confirm('把這天的時間表還原成建議版本？'))return;
@@ -2729,7 +2756,7 @@ function dayReviewHTML(i){
   const day=reviewStore[i]||{},me=accountKey();
   const entries=Object.entries(day).filter(([,r])=>r&&(r.text||r.img)).sort((a,b)=>(a[0]===me?-1:b[0]===me?1:String(a[1].at||'').localeCompare(String(b[1].at||''))));
   const mood=m=>{const x=REVIEW_MOODS.find(z=>z[0]===m);return x?`<span class="rv-mood" title="${x[2]}">${x[1]} ${x[2]}</span>`:'';};
-  const card=([k,r])=>`<div class="rv-item${k===me?' mine':''}"><div class="rv-head"><span class="rv-av">${escHtml(String(r.name||'?').slice(0,1).toUpperCase())}</span><b>${escHtml(r.name||'家人')}${k===me?'<em>（我）</em>':''}</b>${mood(r.mood)}</div>${r.text?`<p>${brText(r.text)}</p>`:''}${r.img?`<img class="rv-img" src="${escAttr(r.img)}" data-src="${escAttr(r.img)}" alt="" loading="lazy" onclick="openAttachModal(this.dataset.src)">`:''}${k===me?`<div class="rv-acts"><button type="button" onclick="editMyReview(${i})">修改</button><button type="button" class="del" onclick="deleteMyReview(${i})">刪除</button></div>`:''}</div>`;
+  const card=([k,r])=>`<div class="rv-item${k===me?' mine':''}"><div class="rv-head"><span class="rv-av">${escHtml(String(r.name||'?').slice(0,1).toUpperCase())}</span><b>${escHtml(r.name||'家人')}${k===me?'<em>（我）</em>':''}</b>${mood(r.mood)}</div>${r.text?`<p>${brText(r.text)}</p>`:''}${r.img?`<img class="rv-img" src="${escAttr(r.img)}" data-src="${escAttr(r.img)}" alt="" loading="lazy" onclick="openAttachModal(this.dataset.src)">`:''}${k===me?`<div class="rv-acts"><button type="button" onclick="editMyReview(${i})">修改</button><button type="button" class="rv-del" onclick="deleteMyReview(${i})">刪除</button></div>`:''}</div>`;
   const mine=day[me]&&(day[me].text||day[me].img);
   return `<section class="day-review"><h3>📝 今日回顧</h3><p class="rv-sub">每個人各寫一則：今天最喜歡什麼、一張照片，全家都看得到。</p>${entries.map(card).join('')||'<div class="rv-empty">還沒有人寫。今天結束時，寫一句話留給自己吧！</div>'}${mine?'':`<button type="button" class="rv-add" onclick="editMyReview(${i})">＋ 寫我的回顧</button>`}</section>`;
 }
@@ -2944,7 +2971,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=92').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=93').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3121,6 +3148,7 @@ function openFormModal({title,fields,onSave,onDelete,saveText='儲存'}){
     if(f.type==='textarea') input=`<textarea data-f="${f.id}" rows="${f.rows||3}" placeholder="${escAttr(f.placeholder||'')}">${escHtml(f.value||'')}</textarea>`;
     else if(f.type==='file') input=`<input type="file" data-f="${f.id}" accept="image/*">`;
     else if(f.type==='date') input=`<input type="date" data-f="${f.id}" value="${escAttr(f.value||'')}">`;
+    else if(f.type==='time') input=`<input type="time" data-f="${f.id}" value="${escAttr(f.value||'')}">`;
     else if(f.type==='files') input=`<input type="file" data-f="${f.id}" data-multi="1" accept="image/*" multiple>`;
     else if(f.type==='select') input=`<select data-f="${f.id}">${f.options.map(o=>`<option value="${escAttr(o.value)}" ${o.value===f.value?'selected':''}>${escHtml(o.label)}</option>`).join('')}</select>`;
     else input=`<input type="text" data-f="${f.id}" value="${escAttr(f.value||'')}" placeholder="${escAttr(f.placeholder||'')}">`;
@@ -3564,7 +3592,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v92-2026-10-10';
+const APP_VERSION='v93-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -5382,8 +5410,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=92';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=92';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=93';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=93';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
