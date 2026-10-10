@@ -2736,15 +2736,18 @@ const DAY_PLANS={1:[
 15:00 搭巴士回京都市區｜約 16:30 到
 18:30 晚餐｜天ぷら天天天／京の焼肉処 弘`}]};
 const tlViewPlan={};
+/* v99：使用者自己點的動作一定要馬上重畫；safeRenderDayContent 是給背景同步用的，
+   在某些手機（例如 Samsung 瀏覽器）會誤判「正在編輯」而不重畫，造成點了沒反應 */
+function userRender(){const go=()=>{if(document.getElementById('formModal'))return void setTimeout(go,60);window._dayRemoteRenderPending=false;renderDayContent();};go();}
 function dayPlanDecided(i){const v=timelineStore[i+'_plan'];return (DAY_PLANS[i]||[]).some(p=>p.id===v)?v:'';}
 function dayPlanView(i){const ps=DAY_PLANS[i];if(!ps)return '';return ps.some(p=>p.id===tlViewPlan[i])?tlViewPlan[i]:(dayPlanDecided(i)||ps[0].id);}
 function tlKey(i){const p=dayPlanView(i);return p?i+'_'+p:i;}
 function timelineText(i){const k=tlKey(i);if(typeof timelineStore[k]==='string')return timelineStore[k];const p=dayPlanView(i);return p?DAY_PLANS[i].find(x=>x.id===p).tl:(DAY_TIMELINE[i]||'');}
-function viewDayPlan(i,id){tlViewPlan[i]=id;safeRenderDayContent();}
+function viewDayPlan(i,id){tlViewPlan[i]=id;userRender();}
 function decideDayPlan(i,id){
-  const prev=timelineStore[i+'_plan'];timelineStore[i+'_plan']=id;tlViewPlan[i]=id;persistTimeline();safeRenderDayContent();
+  const prev=timelineStore[i+'_plan'];timelineStore[i+'_plan']=id;tlViewPlan[i]=id;persistTimeline();userRender();
   const p=DAY_PLANS[i].find(x=>x.id===id);
-  offerUndo(`決定了：${p.id} ${p.name}！全家都會看到 🍁`,()=>{if(prev===undefined)delete timelineStore[i+'_plan'];else timelineStore[i+'_plan']=prev;persistTimeline();safeRenderDayContent();});
+  offerUndo(`決定了：${p.id} ${p.name}！全家都會看到 🍁`,()=>{if(prev===undefined)delete timelineStore[i+'_plan'];else timelineStore[i+'_plan']=prev;persistTimeline();userRender();});
 }
 function dayPlanBarHTML(i){
   const ps=DAY_PLANS[i];if(!ps)return '';
@@ -2780,7 +2783,7 @@ function toggleTimeline(btn){
 }
 function editTimeline(i){
   openFormModal({title:`修改時間表：D${days[i].dayNum}・${days[i].date}`,fields:[{id:'t',label:'一行一項，開頭寫時間，例如「07:20 搭計程車出發」。想加小字說明，用「｜」隔開。',type:'textarea',rows:14,value:timelineText(i)}],saveText:'儲存',
-    onSave:v=>{if(!v.t){alert('時間表不能是空的；要回到建議版請按「還原建議」。');return false;}const k=tlKey(i),prev=timelineStore[k];timelineStore[k]=v.t;persistTimeline();safeRenderDayContent();offerUndo('已更新時間表',()=>{if(prev===undefined)delete timelineStore[k];else timelineStore[k]=prev;persistTimeline();safeRenderDayContent();});}});
+    onSave:v=>{if(!v.t){alert('時間表不能是空的；要回到建議版請按「還原建議」。');return false;}const k=tlKey(i),prev=timelineStore[k];timelineStore[k]=v.t;persistTimeline();userRender();offerUndo('已更新時間表',()=>{if(prev===undefined)delete timelineStore[k];else timelineStore[k]=prev;persistTimeline();userRender();});}});
 }
 /* 單行修改：時間＋內容＋小字說明；k=-1 代表新增 */
 function timelineLine(r){return (r.t?r.t+' ':'')+r.text;}
@@ -2789,8 +2792,8 @@ function saveTimelineRows(i,rows,msg){
   let last='';const keyed=rows.map((r,n)=>{if(r.t)last=r.t;return {r,n,key:r.t||last};});
   keyed.sort((a,b)=>a.key<b.key?-1:a.key>b.key?1:a.n-b.n);
   const text=keyed.map(x=>timelineLine(x.r)).join('\n');
-  const k=tlKey(i),prev=timelineStore[k];timelineStore[k]=text;persistTimeline();safeRenderDayContent();
-  offerUndo(msg,()=>{if(prev===undefined)delete timelineStore[k];else timelineStore[k]=prev;persistTimeline();safeRenderDayContent();});
+  const k=tlKey(i),prev=timelineStore[k];timelineStore[k]=text;persistTimeline();userRender();
+  offerUndo(msg,()=>{if(prev===undefined)delete timelineStore[k];else timelineStore[k]=prev;persistTimeline();userRender();});
 }
 function hhmmToMin(t){const m=/^(\d{1,2}):(\d{2})$/.exec(t||'');return m?(+m[1])*60+(+m[2]):null;}
 function minToHHMM(n){n=((n%1440)+1440)%1440;return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');}
@@ -2852,8 +2855,8 @@ function editTimelineRow(i,k){
 }
 function resetTimeline(i){
   if(!confirm('把這天的時間表還原成建議版本？'))return;
-  const k=tlKey(i),prev=timelineStore[k];delete timelineStore[k];persistTimeline();safeRenderDayContent();
-  offerUndo('已還原建議時間表',()=>{timelineStore[k]=prev;persistTimeline();safeRenderDayContent();});
+  const k=tlKey(i),prev=timelineStore[k];delete timelineStore[k];persistTimeline();userRender();
+  offerUndo('已還原建議時間表',()=>{timelineStore[k]=prev;persistTimeline();userRender();});
 }
 
 /* ============ v92：每日回顧（每個帳號各寫一則，全家都看得到） ============ */
@@ -2905,7 +2908,7 @@ function editMyReview(i){
         let img=cur.img||'';
         if(v.file){try{img=await uploadMediaFile(v.file,'reviews');}catch(err){reportUploadError(err);return false;}}
         (reviewStore[i]=reviewStore[i]||{})[me]={name:v.name||myReviewName(),mood:v.mood||'',text:v.text,img,at:new Date().toISOString()};
-        persistReviews();safeRenderDayContent();
+        persistReviews();userRender();
         showToast('記下來了！今天辛苦了 🦌');
       })();
     }});
@@ -2941,8 +2944,8 @@ async function logoutFamily(){
 function deleteMyReview(i){
   const me=accountKey(),day=reviewStore[i];if(!day||!day[me])return;
   if(!confirm('刪除我這天的回顧？（8 秒內可復原）'))return;
-  const prev=day[me];delete day[me];persistReviews();safeRenderDayContent();
-  offerUndo('已刪除回顧',()=>{(reviewStore[i]=reviewStore[i]||{})[me]=prev;persistReviews();safeRenderDayContent();});
+  const prev=day[me];delete day[me];persistReviews();userRender();
+  offerUndo('已刪除回顧',()=>{(reviewStore[i]=reviewStore[i]||{})[me]=prev;persistReviews();userRender();});
 }
 
 
@@ -3132,7 +3135,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=98').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=99').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3755,7 +3758,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v98-2026-10-10';
+const APP_VERSION='v99-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -5575,8 +5578,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=98';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=98';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=99';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=99';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
