@@ -2182,3 +2182,39 @@ body.mode-travel .driver-edit{display:none;}
 .er-row b{display:block;font-size:16px;color:var(--ink);}
 .er-row small{font-size:13px;color:#8a6a55;}
 .er-row button{flex:none;min-height:44px;padding:0 18px;border:0;border-radius:999px;background:#b8431f;color:#fff;font:inherit;font-size:15px;font-weight:900;cursor:pointer;}
+
+/* ===== v85：出發前待辦 ===== */
+.td-progress{display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px 10px;margin:4px 0 12px;}
+.td-bar{grid-column:1/-1;height:10px;border-radius:999px;background:#f1e6d4;overflow:hidden;}
+.td-bar i{display:block;height:100%;background:linear-gradient(90deg,#2f8a52,#7cc48f);border-radius:999px;}
+.td-progress b{font-size:16px;color:var(--ink);}
+.td-progress small{font-size:13px;color:#8a6a55;}
+.td-item{display:flex;align-items:flex-start;gap:10px;padding:12px 4px;border-top:1px dashed #ecdcc2;}
+.td-check{flex:none;position:relative;width:34px;height:34px;cursor:pointer;}
+.td-check input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;}
+.td-box{display:block;width:34px;height:34px;border:2.5px solid #c9a77c;border-radius:10px;background:#fff;}
+.td-check input:checked+.td-box{background:#2f8a52;border-color:#2f8a52;}
+.td-check input:checked+.td-box::after{content:'✓';display:flex;align-items:center;justify-content:center;height:100%;color:#fff;font-size:22px;font-weight:900;}
+.td-check input:focus-visible+.td-box{outline:3px solid rgba(83,129,236,.4);}
+.td-main{flex:1;min-width:0;}
+.td-text{font-size:15.5px;font-weight:700;line-height:1.55;color:var(--ink);}
+.td-item.done .td-text{color:#9a8a7a;text-decoration:line-through;}
+.td-note{margin-top:4px;font-size:13.5px;line-height:1.6;color:#6b4d38;white-space:pre-line;word-break:break-word;}
+.td-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.td-due{font-size:12.5px;font-weight:800;padding:2px 10px;border-radius:999px;background:#eef3fb;color:#3a5a8a;}
+.td-due.soon{background:#fff1dc;color:#b8431f;}
+.td-due.late{background:#fde4df;color:#c1302f;}
+.td-by{font-size:12.5px;font-weight:800;padding:2px 10px;border-radius:999px;background:#e6f4ea;color:#23683d;}
+.td-acts{flex:none;display:flex;flex-direction:column;gap:6px;}
+.td-acts button{min-height:36px;padding:0 12px;border:0;border-radius:999px;background:#eef3fb;color:var(--blue);font:inherit;font-size:13px;font-weight:800;cursor:pointer;}
+.td-acts button.del{background:#fde4df;color:#c1502f;}
+.td-done{margin-top:8px;}
+.td-done summary{min-height:44px;display:flex;align-items:center;font-size:14.5px;font-weight:800;color:#8a6a55;cursor:pointer;}
+.td-add{width:100%;min-height:48px;margin-top:10px;border:1.5px dashed #c9a77c;border-radius:14px;background:#fffaf0;color:#8a4a22;font:inherit;font-size:15px;font-weight:900;cursor:pointer;}
+.todo-banner{display:flex;align-items:center;gap:10px;width:calc(100% - 24px);margin:8px 12px 10px;padding:12px 14px;border:1.5px solid #9ccfaa;border-radius:16px;background:#eef8f0;font:inherit;text-align:left;cursor:pointer;}
+.todo-banner .tb-ic{font-size:22px;}
+.todo-banner .tb-txt{flex:1;display:flex;flex-direction:column;}
+.todo-banner b{font-size:15.5px;color:#1f5a35;}
+.todo-banner small{font-size:13px;color:#3f7a52;}
+.todo-banner em{font-style:normal;font-size:24px;color:#2f8a52;}
+.spot-edit-field input[type=date]{width:100%;box-sizing:border-box;min-height:46px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;font-size:16px;background:#fff;}

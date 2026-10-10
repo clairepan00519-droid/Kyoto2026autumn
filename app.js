@@ -192,9 +192,9 @@ const SUPABASE_URL = "https://xkahhddatpoxuembeiwl.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrYWhoZGRhdHBveHVlbWJlaXdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NDExNDksImV4cCI6MjEwMDAxNzE0OX0.Jdpxpz7rgyK_OikYkRrVQComDWZiaI4fgf5ZV_SdaII";
 
 const SYNC_META_KEY = 'kyoto_sync_meta_v3';
-const SYNC_KEYS = ['kyoto_notes','kyoto_info_overrides','kyoto_field_overrides','kyoto_photos','kyoto_covers','kyoto_custom_spots','kyoto_order','kyoto_block_order','kyoto_route_maps','kyoto_transport_extras','kyoto_foliage_maps','kyoto_pack','kyoto_shop','kyoto_rules','kyoto_docs','kyoto_hidden_fixed_spots','kyoto_transport_cards','kyoto_eatshop','kyoto_photo_pos','kyoto_marks','kyoto_livelinks','kyoto_mama','kyoto_surprises','kyoto_tips_seen','kyoto_eat_area','kyoto_eat_plan','kyoto_detail_covers','kyoto_hidden_orig','kyoto_transport_custom','kyoto_eat_area_custom','kyoto_sub_spots','kyoto_place_pos','kyoto_spot_day','kyoto_eat_area_order'];
+const SYNC_KEYS = ['kyoto_notes','kyoto_info_overrides','kyoto_field_overrides','kyoto_photos','kyoto_covers','kyoto_custom_spots','kyoto_order','kyoto_block_order','kyoto_route_maps','kyoto_transport_extras','kyoto_foliage_maps','kyoto_pack','kyoto_shop','kyoto_rules','kyoto_docs','kyoto_hidden_fixed_spots','kyoto_transport_cards','kyoto_eatshop','kyoto_photo_pos','kyoto_marks','kyoto_livelinks','kyoto_mama','kyoto_surprises','kyoto_tips_seen','kyoto_eat_area','kyoto_eat_plan','kyoto_detail_covers','kyoto_hidden_orig','kyoto_transport_custom','kyoto_eat_area_custom','kyoto_sub_spots','kyoto_place_pos','kyoto_spot_day','kyoto_eat_area_order','kyoto_todos'];
 const MEDIA_SYNC_KEYS = new Set(['kyoto_photos','kyoto_covers','kyoto_route_maps','kyoto_transport_extras','kyoto_foliage_maps']);
-const STRUCTURED_LIST_KEYS = new Set(['kyoto_shop','kyoto_rules','kyoto_docs','kyoto_transport_cards','kyoto_eatshop','kyoto_livelinks','kyoto_surprises']);
+const STRUCTURED_LIST_KEYS = new Set(['kyoto_shop','kyoto_rules','kyoto_todos','kyoto_docs','kyoto_transport_cards','kyoto_eatshop','kyoto_livelinks','kyoto_surprises']);
 const cloudSync = {enabled:false, starting:false, applyingRemote:false, pending:{}, timer:null, pollTimer:null, lastError:null, ready:false};
 const MEDIA_BUCKET = 'trip-media';
 
@@ -570,7 +570,7 @@ function flushPendingDayRender(){
 }
 function applyStoreUpdate(key,jsonStr){
   let parsed;try{parsed=JSON.parse(jsonStr);}catch(e){return;}
-  switch(key){case'kyoto_notes':notesStore=parsed;break;case'kyoto_info_overrides':infoOverrideStore=parsed||{};break;case'kyoto_field_overrides':fieldOverrideStore=parsed||{};break;case'kyoto_photos':photoStore=parsed;break;case'kyoto_covers':coverStore=parsed;break;case'kyoto_custom_spots':customSpotsStore=parsed;break;case'kyoto_order':orderStore=parsed;break;case'kyoto_block_order':blockOrderStore=parsed;break;case'kyoto_route_maps':routeMapStore=parsed;break;case'kyoto_transport_extras':transportExtrasStore=parsed||{};break;case'kyoto_foliage_maps':foliageMapStore=Array.isArray(parsed)?parsed:[];renderFoliageMaps();return;case'kyoto_pack':packData=migratePackCategoryNames(parsed);window._packLive=packData;if(isPackComposerEditing()){window._packRemoteRenderPending=true;}else{renderPackList();}return;case'kyoto_shop':shopData=normalizeStructuredList('kyoto_shop',parsed);renderShopList();return;case'kyoto_rules':rulesData=normalizeStructuredList('kyoto_rules',parsed);renderRulesList();return;case'kyoto_docs':docsData=mergeDocsWithDefaults(parsed);persistDocs();renderDocsList();return;case'kyoto_transport_cards':transportCardsData=normalizeStructuredList('kyoto_transport_cards',parsed);renderTransportCards();return;case'kyoto_eatshop':eatShopStore=normalizeStructuredList('kyoto_eatshop',parsed);if(typeof activeDay==='string')renderDayContent();return;case'kyoto_photo_pos':photoPosStore=parsed||{};safeRenderDayContent();return;case'kyoto_marks':marksStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};renderMarksBar();safeRenderDayContent();return;case'kyoto_livelinks':liveData=normalizeStructuredList('kyoto_livelinks',parsed);renderLive();return;case'kyoto_surprises':surprisesData=normalizeStructuredList('kyoto_surprises',parsed);renderSurpriseAdmin();return;case'kyoto_tips_seen':tipsSeen=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};return;case'kyoto_place_pos':placePosStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};if(typeof activeDay==='string')safeRenderDayContent();return;case'kyoto_sub_spots':subSpotStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_area_custom':eatAreaCustom=Array.isArray(parsed)?parsed:[];safeRenderDayContent();return;case'kyoto_spot_day':spotDayStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};renderDayChips();safeRenderDayContent();return;case'kyoto_eat_area_order':eatAreaOrder=Array.isArray(parsed)?parsed:[];safeRenderDayContent();return;case'kyoto_transport_custom':transportCustomStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_detail_covers':detailCoverStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_hidden_orig':hiddenOrigStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_plan':eatPlanStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_area':eatAreaStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};if(typeof activeDay==='string')safeRenderDayContent();return;case'kyoto_mama':mamaStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};refreshMamaButtons(null);if(document.getElementById('mamaModal'))renderMamaList();return;case'kyoto_hidden_fixed_spots':hiddenFixedSpotsStore=parsed||{};safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();return;default:return;}
+  switch(key){case'kyoto_notes':notesStore=parsed;break;case'kyoto_info_overrides':infoOverrideStore=parsed||{};break;case'kyoto_field_overrides':fieldOverrideStore=parsed||{};break;case'kyoto_photos':photoStore=parsed;break;case'kyoto_covers':coverStore=parsed;break;case'kyoto_custom_spots':customSpotsStore=parsed;break;case'kyoto_order':orderStore=parsed;break;case'kyoto_block_order':blockOrderStore=parsed;break;case'kyoto_route_maps':routeMapStore=parsed;break;case'kyoto_transport_extras':transportExtrasStore=parsed||{};break;case'kyoto_foliage_maps':foliageMapStore=Array.isArray(parsed)?parsed:[];renderFoliageMaps();return;case'kyoto_pack':packData=migratePackCategoryNames(parsed);window._packLive=packData;if(isPackComposerEditing()){window._packRemoteRenderPending=true;}else{renderPackList();}return;case'kyoto_shop':shopData=normalizeStructuredList('kyoto_shop',parsed);renderShopList();return;case'kyoto_rules':rulesData=normalizeStructuredList('kyoto_rules',parsed);renderRulesList();return;case'kyoto_todos':todoData=normalizeStructuredList('kyoto_todos',parsed);renderTodos();return;case'kyoto_docs':docsData=mergeDocsWithDefaults(parsed);persistDocs();renderDocsList();return;case'kyoto_transport_cards':transportCardsData=normalizeStructuredList('kyoto_transport_cards',parsed);renderTransportCards();return;case'kyoto_eatshop':eatShopStore=normalizeStructuredList('kyoto_eatshop',parsed);if(typeof activeDay==='string')renderDayContent();return;case'kyoto_photo_pos':photoPosStore=parsed||{};safeRenderDayContent();return;case'kyoto_marks':marksStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};renderMarksBar();safeRenderDayContent();return;case'kyoto_livelinks':liveData=normalizeStructuredList('kyoto_livelinks',parsed);renderLive();return;case'kyoto_surprises':surprisesData=normalizeStructuredList('kyoto_surprises',parsed);renderSurpriseAdmin();return;case'kyoto_tips_seen':tipsSeen=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};return;case'kyoto_place_pos':placePosStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};if(typeof activeDay==='string')safeRenderDayContent();return;case'kyoto_sub_spots':subSpotStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_area_custom':eatAreaCustom=Array.isArray(parsed)?parsed:[];safeRenderDayContent();return;case'kyoto_spot_day':spotDayStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};renderDayChips();safeRenderDayContent();return;case'kyoto_eat_area_order':eatAreaOrder=Array.isArray(parsed)?parsed:[];safeRenderDayContent();return;case'kyoto_transport_custom':transportCustomStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_detail_covers':detailCoverStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_hidden_orig':hiddenOrigStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_plan':eatPlanStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_area':eatAreaStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};if(typeof activeDay==='string')safeRenderDayContent();return;case'kyoto_mama':mamaStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};refreshMamaButtons(null);if(document.getElementById('mamaModal'))renderMamaList();return;case'kyoto_hidden_fixed_spots':hiddenFixedSpotsStore=parsed||{};safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();return;default:return;}
   safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();
 }
 function scheduleCloudPush(key,valueObj){
@@ -794,16 +794,34 @@ const transportPlans = [
     {from:'飯店',to:'京都站',mode:'🚕 計程車',time:'10–20 分',note:'約 ¥1,200–2,000；有行李推薦'},
     {from:'京都站',to:'宇治',mode:'🚆 JR 奈良線',time:'17–20 分',note:'普通車約 25–30 分'},
     {from:'宇治',to:'奈良',mode:'🚆 JR 奈良線',time:'35–50 分',note:'依車次銜接'}]},
-  {summary:'Route Inn 步行到乘船場，漂流抵嵐山；回程由嵯峨嵐山搭 JR 回龜岡。', alert:'漂流約 2 小時，秋末注意保暖；天候不佳直接改搭 JR。', routes:[
-    {from:'Route Inn',to:'保津川乘船場',mode:'🚶 步行',time:'約 10 分',note:'飯店／龜岡站北側出發'},
-    {from:'龜岡',to:'嵐山',mode:'🚣 保津川漂流',time:'約 2 小時',note:'天候不佳改搭 JR'},
-    {from:'嵐山下船處',to:'天龍寺',mode:'🚶 步行',time:'10–20 分',note:'核心區塞車，步行較快'},
-    {from:'嵯峨嵐山',to:'龜岡',mode:'🚆 JR 嵯峨野線',time:'8–12 分',note:'免轉車；約 15–20 分一班'}]},
-  {summary:'自駕日｜龜岡 → 南丹 → 綾部 → 京丹後，約 150 km。', alert:'PDF 未指定逐段班次；以導航即時路況為準，山路放慢並保留 15:00 入住緩衝。',drive:true},
-  {summary:'自駕日｜京丹後海岸短距離移動，依風勢選立岩或琴引濱。', alert:'海岸強風或大雨時縮短戶外停留，改走道之驛＋咖啡雨備。',drive:true},
-  {summary:'自駕日｜京丹後 → 金剛院 → 天橋立 → 西舞鶴，約 100–130 km。', alert:'天橋立只選一岸；強風可能影響纜車、單軌與吊椅。',drive:true},
-  {summary:'舞鶴自駕回京都還車，假日與京都市區塞車需多留緩衝。', alert:'車程至少約 2 小時；還車後有行李可搭短程計程車到飯店。', routes:[
-    {from:'舞鶴',to:'京都還車點',mode:'🚗 自駕',time:'2 小時以上',note:'預留假日及市區塞車'},
+  {summary:'清晨奈良公園散步 → 退房取車 → 開車約 1.5 小時到龜岡，車停飯店 → 步行搭保津川漂流到嵐山 → 傍晚搭 JR 回龜岡。', alert:'時間以保津川預約班次往回推（冬季班次較少，以官網為準）。取車時順便租 ETC 卡，並請店員把導航目的地設成 Route Inn 龜岡。', routeKey:'v86', routes:[
+    {from:'飯店（奈良）',to:'奈良公園',mode:'🚶 步行',time:'20–30 分',note:'建議 06:45–07:00 出門，散步一至兩處（浮見堂、飛火野）；也可搭計程車約 5–10 分'},
+    {from:'奈良公園',to:'飯店（退房後去取車）',mode:'🚕 計程車／步行',time:'約 1 小時（含退房、取車手續）',note:'建議 08:30 前回飯店退房；09:00 取車，確認冬季胎、ETC 卡與保險'},
+    {from:'奈良取車點',to:'Route Inn 龜岡',mode:'🚗 自駕',time:'約 1 小時 15 分–1 小時 45 分',note:'約 70 km，大多走高速，依導航；建議 09:30 出發、約 11:00 抵達。到飯店先停車、寄行李（入住前停車請先跟飯店確認）'},
+    {from:'Route Inn 龜岡',to:'保津川乘船場',mode:'🚶 步行',time:'約 10 分',note:'抵達後預留 30 分報到；建議預約 12:00 前後的船班'},
+    {from:'龜岡',to:'嵐山',mode:'🚣 保津川漂流',time:'約 2 小時',note:'天候不佳改搭 JR 嵯峨野線（龜岡 → 嵯峨嵐山 8–12 分）'},
+    {from:'嵐山下船處',to:'天龍寺',mode:'🚶 步行',time:'10–20 分',note:'約 14:00 下船；核心區塞車，步行較快'},
+    {from:'嵯峨嵐山',to:'Route Inn 龜岡',mode:'🚆 JR 嵯峨野線',time:'8–12 分＋步行',note:'建議 16:30–17:00 回程，龜岡站下車走回飯店；免轉車，約 15–20 分一班'}]},
+  {summary:'自駕日｜龜岡 → 南丹 → 綾部 → 京丹後，約 150 km；建議 09:00 出發、15:00 前後到旅館。', alert:'車程為估算，以導航即時路況為準；山路與海岸路放慢。12 月天黑早（約 16:45），山路盡量在天黑前走完。', drive:true, routeKey:'v87', routes:[
+    {from:'Route Inn 龜岡',to:'玉寶山 龍穩寺',mode:'🚗 自駕',time:'約 30–45 分',note:'建議 09:00 出發，約 09:40 抵達，參觀約 1 小時'},
+    {from:'玉寶山 龍穩寺',to:'大本本部 梅松苑',mode:'🚗 自駕',time:'約 50–70 分',note:'約 10:45 出發，11:45 前後抵達綾部，參觀約 1 小時'},
+    {from:'大本本部 梅松苑',to:'綾部站周邊（午餐）',mode:'🚗 自駕',time:'約 5–10 分',note:'12:45–13:30 午餐，選好停車的店'},
+    {from:'綾部',to:'シーサイド佐竹',mode:'🚗 自駕',time:'約 1 小時 15 分–1 小時 45 分',note:'13:30 出發，約 15:00 抵達入住；途中可在休息站上廁所'}]},
+  {summary:'自駕日｜京丹後海岸短距離移動，每段 10–30 分；15:00 到下一間旅館。', alert:'車程為估算，以導航即時路況為準；山路與海岸路放慢。強風或大雨時縮短海岸停留，改走道之驛＋咖啡雨備；琴引濱看時間與天氣再決定。', drive:true, routeKey:'v87', routes:[
+    {from:'シーサイド佐竹',to:'立岩（後ヶ濱海岸）',mode:'🚗 自駕',time:'約 15–30 分',note:'10:00 退房出發，海岸停留約 1 小時'},
+    {from:'立岩',to:'道之驛 てんきてんき丹後',mode:'🚗 自駕',time:'約 5 分',note:'11:30 前後休息、買伴手禮'},
+    {from:'道之驛',to:'間人／網野（午餐）',mode:'🚗 自駕',time:'約 10–30 分',note:'12:00–13:00 午餐，依位置選順路的店'},
+    {from:'午餐',to:'琴引濱',mode:'🚗 自駕',time:'約 10–25 分',note:'13:30–14:30 海灘散步、咖啡（可省略）'},
+    {from:'琴引濱',to:'HOTEL＆湖邸 艸花',mode:'🚗 自駕',time:'約 10–30 分',note:'15:00 入住，這天把旅館當作行程'}]},
+  {summary:'自駕日｜京丹後 → 金剛院 → 天橋立 → 西舞鶴，約 130 km；建議 09:00 出發、16:30 前到飯店。', alert:'車程為估算，以導航即時路況為準；山路與海岸路放慢。天橋立只選一岸；強風可能影響纜車、單軌與吊椅。', drive:true, routeKey:'v87', routes:[
+    {from:'HOTEL＆湖邸 艸花',to:'金剛院',mode:'🚗 自駕',time:'約 1 小時 15 分–1 小時 30 分',note:'09:00 退房出發，約 10:20 抵達，參觀約 1 小時'},
+    {from:'金剛院',to:'天橋立',nav:'天橋立 京都府宮津市',mode:'🚗 自駕',time:'約 50–60 分',note:'11:30 出發，12:30 前後抵達；先午餐，再依選的岸搭纜車或吊椅'},
+    {from:'天橋立',to:'Route Inn 西舞鶴',mode:'🚗 自駕',time:'約 40–50 分',note:'15:30 前離開，約 16:15 入住；晚餐在西舞鶴'}]},
+  {summary:'早上舞鶴三站（市場早午餐 → 五老天空塔 → 紅磚公園），13:00 出發回京都還車。', alert:'車程為估算，以導航即時路況為準；山路與海岸路放慢。回京都車程至少約 2 小時，京都市區傍晚塞車；還車前記得加滿油。', drive:true, routeKey:'v87', routes:[
+    {from:'Route Inn 西舞鶴',to:'舞鶴港とれとれセンター',mode:'🚗 自駕',time:'約 5–10 分',note:'08:30 前後抵達，海鮮早午餐'},
+    {from:'とれとれセンター',to:'五老天空塔',mode:'🚗 自駕',time:'約 20–25 分',note:'約 10:00 抵達，展望約 45 分'},
+    {from:'五老天空塔',to:'舞鶴紅磚公園',mode:'🚗 自駕',time:'約 15 分',note:'約 11:00–12:30 散步'},
+    {from:'舞鶴',to:'京都還車點',mode:'🚗 自駕',time:'約 2 小時以上',note:'13:00 出發，約 15:00–15:30 還車；預留市區塞車'},
     {from:'京都站周邊還車點',to:'Richmond Hotel',mode:'🚶／🚕',time:'5–15 分',note:'計程車約 ¥700–1,300'}]},
   {summary:'市區三段計程車最省力；13:15 左右由下鴨神社叫車回飯店，京都站搭 HARUKA。', alert:'建議搭 15:00–15:30 間 HARUKA；19:00 起飛，勿再追加遠距景點。', routes:[
     {from:'飯店',to:'西本願寺',mode:'🚶／🚕',time:'步行 15–20 分',note:'計程車約 ¥700–1,100'},
@@ -1643,7 +1661,7 @@ function transportSegmentExtrasHTML(dayIdx,segmentKey){
 /* 交通步驟改版（routeKey）後，掛在舊步驟上的補充說明／圖片不會不見，改放到「其他舊版交通補充」 */
 function isOrphanTransportSeg(dayIdx,key){
   const plan=transportPlans[dayIdx];
-  return !!(key&&plan&&plan.routeKey&&/^route-\d+$/.test(key));
+  return !!(key&&plan&&plan.routeKey&&/^(route-\d+|drive-0)$/.test(key));
 }
 function legacyTransportExtrasHTML(dayIdx){
   const data=transportExtrasFor(dayIdx);
@@ -1706,8 +1724,8 @@ let activeSubTabStore = {}; /* dayIdx -> 'main' | 'transport' | 'more' | 'routem
 function transportPlanHTML(dayIdx){
   const plan=transportPlans[dayIdx];
   if(!plan)return `<section class="transport-plan"><div class="tp-head"><div><small>D${days[dayIdx].dayNum}・${days[dayIdx].date}</small><strong>今日交通</strong></div><img src="images/deer-car.webp" alt="" width="64" height="45"></div>${customTransportHTML(dayIdx)}${transportAddBarHTML(dayIdx)}</section>`;
-  const routes=(rows,prefix='route')=>`<div class="transport-steps">${(rows||[]).map((r0,i)=>{const segmentKey=`${prefix}-${i}`;const sk=`tp${dayIdx}-${segmentKey}`;if(currentFieldValue(sk,'hidden',null)==='1')return '';const r={from:currentFieldValue(sk,'from',r0.from)||r0.from,to:currentFieldValue(sk,'to',r0.to)||r0.to,mode:currentFieldValue(sk,'mode',r0.mode)||r0.mode,time:currentFieldValue(sk,'time',r0.time)||r0.time,note:currentFieldValue(sk,'note',r0.note)||r0.note};window._tpOrig=window._tpOrig||{};window._tpOrig[sk]=r0;return `<div class="transport-step"><span class="transport-step-no">${i+1}</span><div class="transport-step-main"><div class="transport-points"><strong>${escHtml(r.from)}</strong><span>→</span><strong>${escHtml(r.to)}</strong></div><div class="transport-meta"><b>${escHtml(r.mode)}</b><span>⏱ ${escHtml(r.time)}</span></div><small>${escHtml(r.note)}</small>${tpGoButtonsHTML(dayIdx,r,i===(rows||[]).length-1)}<div class="edit-only tp-step-actions"><button type="button" onclick="editTransportStep('${sk}')">✎ 修改</button><button type="button" onclick="deleteTransportStep('${sk}')">🗑 刪除</button></div>${transportSegmentExtrasHTML(dayIdx,segmentKey)}</div></div>`;}).join('')}</div>`;
-  const body=plan.choices?`<div class="transport-choice-list">${plan.choices.map((choice,i)=>`<details class="transport-choice"${i===0?' open':''}><summary>${escHtml(choice.name)}<span>展開路線</span></summary>${routes(choice.routes,`choice-${i}`)}</details>`).join('')}</div>`:plan.drive?`<div class="transport-drive-card"><span>🚗</span><div><strong>今天全程自駕</strong><small>按下方按鈕開啟當日主要地點導航；停車、休息站與道路狀況以當日為準。</small>${transportSegmentExtrasHTML(dayIdx,'drive-0')}</div></div>`:routes(plan.routes,plan.routeKey||'route');
+  const routes=(rows,prefix='route')=>`<div class="transport-steps">${(rows||[]).map((r0,i)=>{const segmentKey=`${prefix}-${i}`;const sk=`tp${dayIdx}-${segmentKey}`;if(currentFieldValue(sk,'hidden',null)==='1')return '';const r={from:currentFieldValue(sk,'from',r0.from)||r0.from,to:currentFieldValue(sk,'to',r0.to)||r0.to,mode:currentFieldValue(sk,'mode',r0.mode)||r0.mode,time:currentFieldValue(sk,'time',r0.time)||r0.time,note:currentFieldValue(sk,'note',r0.note)||r0.note,nav:currentFieldValue(sk,'to',null)?null:(r0.nav||null)};window._tpOrig=window._tpOrig||{};window._tpOrig[sk]=r0;return `<div class="transport-step"><span class="transport-step-no">${i+1}</span><div class="transport-step-main"><div class="transport-points"><strong>${escHtml(r.from)}</strong><span>→</span><strong>${escHtml(r.to)}</strong></div><div class="transport-meta"><b>${escHtml(r.mode)}</b><span>⏱ ${escHtml(r.time)}</span></div><small>${escHtml(r.note)}</small>${tpGoButtonsHTML(dayIdx,r,i===(rows||[]).length-1)}<div class="edit-only tp-step-actions"><button type="button" onclick="editTransportStep('${sk}')">✎ 修改</button><button type="button" onclick="deleteTransportStep('${sk}')">🗑 刪除</button></div>${transportSegmentExtrasHTML(dayIdx,segmentKey)}</div></div>`;}).join('')}</div>`;
+  const body=plan.choices?`<div class="transport-choice-list">${plan.choices.map((choice,i)=>`<details class="transport-choice"${i===0?' open':''}><summary>${escHtml(choice.name)}<span>展開路線</span></summary>${routes(choice.routes,`choice-${i}`)}</details>`).join('')}</div>`:(plan.drive&&!plan.routes)?`<div class="transport-drive-card"><span>🚗</span><div><strong>今天全程自駕</strong><small>按下方按鈕開啟當日主要地點導航；停車、休息站與道路狀況以當日為準。</small>${transportSegmentExtrasHTML(dayIdx,'drive-0')}</div></div>`:routes(plan.routes,plan.routeKey||'route');
   return `<section class="transport-plan"><div class="tp-head"><div><small>D${days[dayIdx].dayNum}・${days[dayIdx].date}</small><strong>今日交通</strong></div><img src="images/deer-car.webp" alt="" width="64" height="45"></div><div class="transport-alert">⚠️ ${escHtml(plan.alert)}</div>${body}${customTransportHTML(dayIdx)}${legacyTransportExtrasHTML(dayIdx)}${transportAddBarHTML(dayIdx)}<div class="transport-actions"><a href="https://www.google.com/maps/dir/?api=1&travelmode=${plan.drive?'driving':'transit'}&destination=${encodeURIComponent(currentFieldValue('day'+dayIdx+'-nav','mapQuery',null)||(days[dayIdx].region+' Japan'))}" target="_blank" rel="noopener">📍 開啟今日導航</a><button type="button" class="edit-only tp-nav-fix" onclick="editSpotField(event,'day${dayIdx}-nav','mapQuery','今日導航目的地（地址、經緯度或關鍵字）')">修正導航</button><button type="button" class="edit-only tp-nav-fix" onclick="restoreTransportSteps(${dayIdx})">↺ 還原本日交通步驟</button></div></section>`;
 }
 
@@ -2467,6 +2485,102 @@ const defaultRulesData = [
 let rulesData = normalizeStructuredList('kyoto_rules', JSON.parse(localStorage.getItem('kyoto_rules')) || defaultRulesData);
 function persistRules(){ safeSetItem('kyoto_rules', rulesData); }
 
+/* ============ v85：出發前待辦（全家共用，誰勾的會顯示名字） ============ */
+const TODO_SEED=[
+  {id:'todo-vjw',text:'每個人填好 Visit Japan Web（入境與海關資料），截圖 QR Code',due:'2026-11-20'},
+  {id:'todo-insurance',text:'保旅遊平安險＋旅遊不便險',due:'2026-11-13'},
+  {id:'todo-license',text:'開車的人到監理站辦「駕照日文譯本」，和台灣駕照一起帶',due:'2026-11-06'},
+  {id:'todo-car',text:'確認租車：12/1 奈良取車、12/5 京都還車；冬季胎、保險、取車地點與時間',due:'2026-11-13'},
+  {id:'todo-eikando',text:'永觀堂晨間貸切：確認預約、集合時間與地點（改到「給司機看」卡片上）',due:'2026-11-13'},
+  {id:'todo-murinan',text:'預約無鄰菴 11/29 午前時段',due:'2026-11-15'},
+  {id:'todo-lunch1129',text:'11/29（週日）南禪寺・岡崎午餐訂位',due:'2026-11-20'},
+  {id:'todo-dinner',text:'晚餐訂位：京都天ぷら天天天、京の焼肉処 弘（標「預約」的店）',due:'2026-11-13'},
+  {id:'todo-hozu',text:'預約保津川漂流（12/1），記下停航時的改搭方式',due:'2026-11-13'},
+  {id:'todo-haruka',text:'買 KIX⇄京都 HARUKA 優惠票，準備 ICOCA',due:'2026-11-20'},
+  {id:'todo-sim',text:'買網卡／eSIM，或開通漫遊',due:'2026-11-20'},
+  {id:'todo-yen',text:'換日幣（小額現金：寺院門票、小店）',due:'2026-11-20'},
+  {id:'todo-go',text:'手機下載 GO Taxi，綁好信用卡',due:'2026-11-20'},
+  {id:'todo-login',text:'每位家人都用自己的手機登入這個網站一次，並在 ⚙️ 下載離線圖片',due:'2026-11-24'},
+  {id:'todo-hotel',text:'確認每間飯店的入住時間、行李寄放與早晚餐',due:'2026-11-20'},
+  {id:'todo-flight',text:'確認航班時間，線上報到',due:'2026-11-26'},
+  {id:'todo-foliage',text:'看紅葉與天氣預報，決定 11/28 去大原、高雄還是鞍馬',due:'2026-11-25'},
+  {id:'todo-taxi1129',text:'11/28 晚上用 GO 預約 11/29 早上到永觀堂的計程車',due:'2026-11-28'}
+].map(t=>({...t,done:false,note:''}));
+let todoData=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_todos'));return Array.isArray(v)?normalizeStructuredList('kyoto_todos',v):structuredClone(TODO_SEED);}catch(e){return structuredClone(TODO_SEED);}})();
+function persistTodos(){safeSetItem('kyoto_todos',todoData);}
+function todoWho(){
+  try{const e=(familyAuthSession&&familyAuthSession.email)||(readAuthSession()&&readAuthSession().email)||'';return e?e.split('@')[0]:'';}catch(e){return '';}
+}
+function todoDaysLeft(due){
+  if(!due)return null;const m=String(due).match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!m)return null;
+  const d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));const t=new Date();t.setHours(0,0,0,0);
+  return Math.round((d-t)/86400000);
+}
+function todoDueHTML(due,done){
+  const n=todoDaysLeft(due);if(n==null)return '';
+  const m=due.slice(5).replace('-','/').replace(/^0/,'');
+  if(done)return `<span class="td-due">${m}</span>`;
+  const cls=n<0?'late':n<=3?'soon':'';
+  const txt=n<0?`${m}・已過 ${-n} 天`:n===0?`${m}・今天`:`${m}・還有 ${n} 天`;
+  return `<span class="td-due ${cls}">${txt}</span>`;
+}
+function todoSorted(){
+  const key=t=>t.due||'9999-99-99';
+  return todoData.map((t,i)=>({t,i})).sort((a,b)=>(a.t.done-b.t.done)||key(a.t).localeCompare(key(b.t))||(a.i-b.i));
+}
+function renderTodos(){
+  const wrap=document.getElementById('todoListWrap');
+  const left=todoData.filter(t=>!t.done).length,total=todoData.length;
+  if(wrap){
+    const rows=todoSorted();
+    const row=({t})=>`<div class="td-item${t.done?' done':''}"><label class="td-check"><input type="checkbox" ${t.done?'checked':''} onchange="toggleTodo('${jsQuote(t.id)}',this.checked)"><span class="td-box" aria-hidden="true"></span></label><div class="td-main"><div class="td-text">${escHtml(t.text)}</div>${t.note?`<div class="td-note">${brText(t.note)}</div>`:''}<div class="td-meta">${todoDueHTML(t.due,t.done)}${t.done&&t.doneBy?`<span class="td-by">✓ ${escHtml(t.doneBy)} 完成</span>`:''}</div></div><div class="td-acts edit-only"><button type="button" onclick="editTodo('${jsQuote(t.id)}')">修改</button><button type="button" class="del" onclick="deleteTodo('${jsQuote(t.id)}')">刪除</button></div></div>`;
+    const undone=rows.filter(x=>!x.t.done),done=rows.filter(x=>x.t.done);
+    wrap.innerHTML=`<div class="td-progress"><div class="td-bar"><i style="width:${total?Math.round((total-left)/total*100):0}%"></i></div><b>${left?`還有 ${left} 項`:'全部完成 🎉'}</b><small>已完成 ${total-left} / ${total}</small></div>
+      <div class="td-list">${undone.map(row).join('')||'<div class="empty compact">都完成了！</div>'}</div>
+      ${done.length?`<details class="td-done"><summary>已完成（${done.length}）</summary>${done.map(row).join('')}</details>`:''}
+      <button type="button" class="td-add" onclick="addTodo()">＋ 新增待辦</button>`;
+  }
+  renderTodoBanner();
+}
+function toggleTodo(id,checked){
+  const t=todoData.find(x=>x.id===id);if(!t)return;
+  t.done=!!checked;if(checked){t.doneBy=todoWho();t.doneAt=new Date().toISOString();}else{delete t.doneBy;delete t.doneAt;}
+  persistTodos();renderTodos();
+}
+function todoFields(t){return [
+  {id:'text',label:'要做什麼',type:'textarea',rows:2,value:t.text||'',placeholder:'例：預約保津川漂流'},
+  {id:'due',label:'最晚哪天前完成（選填）',type:'date',value:t.due||''},
+  {id:'note',label:'備註（選填：預約編號、網址、誰負責…）',type:'textarea',rows:3,value:t.note||''}];}
+function addTodo(){
+  openFormModal({title:'新增出發前待辦',fields:todoFields({}),saveText:'新增',onSave:v=>{
+    if(!v.text){alert('請輸入要做什麼');return false;}
+    todoData.push({id:newItemId('todo'),text:v.text,due:v.due,note:v.note,done:false});persistTodos();renderTodos();}});
+}
+function editTodo(id){
+  const t=todoData.find(x=>x.id===id);if(!t)return;
+  openFormModal({title:'修改待辦',fields:todoFields(t),saveText:'儲存',onSave:v=>{
+    if(!v.text){alert('內容不能是空的');return false;}
+    Object.assign(t,{text:v.text,due:v.due,note:v.note});persistTodos();renderTodos();},onDelete:()=>deleteTodo(id,true)});
+}
+function deleteTodo(id,skipConfirm){
+  const i=todoData.findIndex(x=>x.id===id);if(i<0)return;
+  if(!skipConfirm&&!confirm(`刪除待辦「${todoData[i].text}」？（8 秒內可復原）`))return;
+  const removed=todoData.splice(i,1)[0];persistTodos();renderTodos();
+  offerUndo('已刪除待辦',()=>{todoData.splice(Math.min(i,todoData.length),0,removed);persistTodos();renderTodos();});
+}
+/* 行程頁頂端：出發前才顯示「出發前待辦還有幾項」，點了直接跳到清單 */
+function renderTodoBanner(){
+  const host=document.getElementById('view-itinerary');if(!host)return;
+  let el=document.getElementById('todoBanner');
+  const left=todoData.filter(t=>!t.done);
+  const beforeTrip=new Date()<new Date(2026,10,27);
+  if(!beforeTrip||!left.length){el?.remove();return;}
+  const late=left.filter(t=>{const n=todoDaysLeft(t.due);return n!=null&&n<=3;}).length;
+  if(!el){el=document.createElement('button');el.type='button';el.id='todoBanner';el.className='todo-banner';el.onclick=goToTodos;host.prepend(el);}
+  el.innerHTML=`<span class="tb-ic">✅</span><span class="tb-txt"><b>出發前待辦還有 ${left.length} 項</b>${late?`<small>${late} 項快到期或已過期</small>`:'<small>點這裡查看、勾選</small>'}</span><em>›</em>`;
+}
+function goToTodos(){setTab('guide');setTimeout(()=>document.getElementById('todoSection')?.scrollIntoView({behavior:'smooth',block:'start'}),80);}
+
 function renderRulesList() {
   const wrap = document.getElementById('rulesListWrap');
   if(!wrap) return;
@@ -2651,7 +2765,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=84').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=87').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -2827,6 +2941,7 @@ function openFormModal({title,fields,onSave,onDelete,saveText='儲存'}){
     let input;
     if(f.type==='textarea') input=`<textarea data-f="${f.id}" rows="${f.rows||3}" placeholder="${escAttr(f.placeholder||'')}">${escHtml(f.value||'')}</textarea>`;
     else if(f.type==='file') input=`<input type="file" data-f="${f.id}" accept="image/*">`;
+    else if(f.type==='date') input=`<input type="date" data-f="${f.id}" value="${escAttr(f.value||'')}">`;
     else if(f.type==='files') input=`<input type="file" data-f="${f.id}" data-multi="1" accept="image/*" multiple>`;
     else if(f.type==='select') input=`<select data-f="${f.id}">${f.options.map(o=>`<option value="${escAttr(o.value)}" ${o.value===f.value?'selected':''}>${escHtml(o.label)}</option>`).join('')}</select>`;
     else input=`<input type="text" data-f="${f.id}" value="${escAttr(f.value||'')}" placeholder="${escAttr(f.placeholder||'')}">`;
@@ -3270,7 +3385,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v84-2026-10-05';
+const APP_VERSION='v87-2026-10-09';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -4708,7 +4823,7 @@ function tpDestination(dayIdx,toText,isLast){
     const st=isLast?(tonight||lastNight):(lastNight||tonight);
     if(st)return {name:st.name,nav:st.nav};
   }
-  if(!core)return null;
+  if(!core||/還車點|取車點/.test(core))return null;
   const list=[...getNaturalList(dayIdx,'main'),...getNaturalList(dayIdx,'life')];
   const hit=list.find(o=>{const n=currentFieldValue(o.key,'name',o.spot.name)||o.spot.name;return n===core||n.startsWith(core)||core.startsWith(n);});
   if(hit){const n=currentFieldValue(hit.key,'name',hit.spot.name)||hit.spot.name;return {name:n,nav:currentFieldValue(hit.key,'mapQuery',null)||hit.spot.mapQuery||n};}
@@ -4726,7 +4841,8 @@ function tpDirLink(nav,travelmode){
   return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(/^[-+]?\d/.test(v)?v:v+' Japan')}&travelmode=${travelmode}`;
 }
 function tpGoButtonsHTML(dayIdx,r,isLast){
-  const dest=tpDestination(dayIdx,r.to,isLast);if(!dest)return '';
+  if(/漂流|🚣|遊船/.test(String(r.mode||'')))return ''; /* 坐船本身就是交通，不需要導航 */
+  const dest=r.nav?{name:String(r.to).replace(/[（(][^）)]*[）)]/g,'').trim(),nav:r.nav}:tpDestination(dayIdx,r.to,isLast);if(!dest)return '';
   const tm=tpTravelMode(r.mode);
   const taxi=/計程車|🚕/.test(String(r.mode||''));
   return `<div class="tp-go"><a href="${escAttr(tpDirLink(dest.nav,tm))}" target="_blank" rel="noopener">導航到 ${escHtml(dest.name)}</a>${taxi?`<button type="button" data-name="${escAttr(dest.name)}" data-nav="${escAttr(dest.nav)}" onclick="showDriverCard(this.dataset.name,this.dataset.nav)">給司機看</button>`:''}</div>`;
@@ -5086,8 +5202,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=84';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=84';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=87';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=87';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
@@ -5354,6 +5470,7 @@ renderShopList();
 
 /* ============ 頁面初始化 ============ */
 renderRulesList();
+renderTodos();
 renderDocsList();
 updateNetStatus();
 simplifyMetServiceButton();
