@@ -1,0 +1,17 @@
+{
+  "name": "狐光漫遊・在峽灣慢行，等一場北方的光",
+  "short_name": "狐光漫遊",
+  "description": "挪威 20 日峽灣與極光慢旅行程與家人共享指南",
+  "lang": "zh-Hant",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F6F5FA",
+  "theme_color": "#F6F5FA",
+  "icons": [
+    {"src": "images/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "images/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

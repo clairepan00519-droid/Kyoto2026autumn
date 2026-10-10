@@ -1,10 +1,11 @@
-/* 京都・奈良・丹後行程：App Shell、圖片與已瀏覽內容離線快取 */
-const CACHE_VERSION='kyoto-trip-v102';
-const SHELL_CACHE=`kyoto-shell-${CACHE_VERSION}`;
-const RUNTIME_CACHE=`kyoto-runtime-${CACHE_VERSION}`;
+/* 狐光漫遊（挪威）：App Shell、圖片與已瀏覽內容離線快取 */
+const CACHE_VERSION='norway-trip-nw6';
+const SHELL_CACHE=`norway-shell-${CACHE_VERSION}`;
+const RUNTIME_CACHE=`norway-runtime-${CACHE_VERSION}`;
 /* 圖片快取獨立於版本：更新網站不會清掉已下載的圖片，也不必重新下載 */
-const IMAGE_CACHE='kyoto-images-persist';
-const SHELL=['./','./index.html','./app.js','./style.css','./manifest.webmanifest','./images/map.webp','./images/hero-bg.webp','./images/icon-192.png','./images/apple-touch-icon.png','./images/favicon.png','./images/nav-itinerary.webp','./images/nav-route.webp','./images/nav-guide.webp','./images/nav-weather.webp','./images/nav-food.webp','./images/nav-shopping.webp','./images/nav-lodging.webp','./images/other-1.webp','./images/other-2.webp','./images/other-3.webp','./images/other-4.webp','./images/other-5.webp','./images/deer-lying.webp','./images/deer-suitcase.webp','./images/deer-photo.webp','./images/deer-heart.webp','./images/deer-rain.webp','./images/deer-search.webp','./images/deer-car.webp','./images/deer-sleep.webp','./images/tl-deer.webp','./images/mood-excited.webp','./images/mood-content.webp','./images/mood-touched.webp','./images/mood-surprised.webp','./images/mood-accomplished.webp','./images/mood-tired.webp','./images/mood-sleepy.webp','./images/mood-disappointed.webp','./images/day1-arrival.webp','./images/day2-northern-maples.webp','./images/day3-higashiyama.webp','./images/day4-uji-nara.webp','./images/day5-hozugawa.webp','./images/day6-ayabe.webp','./images/day7-coast.webp','./images/day8-amanohashidate.webp','./images/day9-maizuru.webp','./images/day10-departure.webp','./images/splash-deer-suitcase.webp','./images/splash-deer-map.webp','./images/splash-deer-wakeup.webp','./splash.css','./splash.js','./images/icon-512.png','./leaflet.js','./leaflet.css','./images/weather-01-sunny.webp','./images/weather-02-partly-cloudy.webp','./images/weather-03-cloudy.webp','./images/weather-04-rain.webp','./images/weather-05-showers.webp','./images/weather-06-thunderstorm.webp','./images/weather-07-snow.webp','./images/weather-08-fog.webp','./images/weather-09-windy.webp','./images/weather-10-cold.webp'];
+const IMAGE_CACHE='norway-images-persist';
+const LOCAL_MEDIA_CACHE='norway-local-media';
+const SHELL=["./","./index.html","./app.js","./style.css","./splash.css","./splash.js","./manifest.webmanifest","./config.js","./fonts/title-chenyu.woff2","./daiwei/daiwei-widget.css","./daiwei/daiwei-widget.js","./daiwei/daiwei-content.js","./images/apple-touch-icon.png","./images/day01.webp","./images/day02.webp","./images/day03.webp","./images/day04.webp","./images/day05.webp","./images/day06.webp","./images/day07.webp","./images/day08.webp","./images/day09.webp","./images/day10.webp","./images/day11.webp","./images/day12.webp","./images/day13.webp","./images/day14.webp","./images/day15.webp","./images/day16.webp","./images/day17.webp","./images/day18.webp","./images/day19.webp","./images/day20.webp","./images/favicon.png","./images/fox-complete.webp","./images/fox-fact.webp","./images/fox-point.webp","./images/fox-rest.webp","./images/fox-upload.webp","./images/fox-welcome.webp","./images/header.webp","./images/icon-192.png","./images/icon-512.png","./images/icon-maskable-512.png","./images/logo.webp","./images/map.webp","./images/mood-cold.webp","./images/mood-disappointed.webp","./images/mood-farewell.webp","./images/mood-happy.webp","./images/mood-moved.webp","./images/mood-relaxed.webp","./images/mood-surprised.webp","./images/mood-tired.webp","./images/nav-food.webp","./images/nav-guide.webp","./images/nav-itinerary.webp","./images/nav-lodging.webp","./images/nav-route.webp","./images/nav-shopping.webp","./images/nav-weather.webp","./images/splash-coffee.webp","./images/splash-travel.webp"];
 
 self.addEventListener('install',event=>{
   self.skipWaiting();
@@ -17,7 +18,7 @@ self.addEventListener('install',event=>{
 
 self.addEventListener('activate',event=>{
   event.waitUntil(caches.keys()
-    .then(keys=>Promise.all(keys.filter(k=>k.startsWith('kyoto-')&&k!==SHELL_CACHE&&k!==RUNTIME_CACHE&&k!==IMAGE_CACHE).map(k=>caches.delete(k))))
+    .then(keys=>Promise.all(keys.filter(k=>k.startsWith('norway-')&&k!==SHELL_CACHE&&k!==RUNTIME_CACHE&&k!==IMAGE_CACHE&&k!==LOCAL_MEDIA_CACHE).map(k=>caches.delete(k))))
     .then(async()=>{
       await self.clients.claim();
       /* 不強制重新載入（會打斷正在輸入的家人），改通知頁面由使用者決定 */
@@ -29,7 +30,7 @@ self.addEventListener('activate',event=>{
 function isWeather(url){return url.hostname.includes('api.open-meteo.com')||url.hostname.includes('api.rainviewer.com');}
 function isStaticLib(url){return url.hostname.includes('fonts.googleapis.com')||url.hostname.includes('fonts.gstatic.com')||url.hostname.includes('cdnjs.cloudflare.com');}
 function imageFallback(){
-  const svg='<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700"><rect width="100%" height="100%" fill="#eadfce"/><text x="600" y="330" text-anchor="middle" font-size="50" font-family="sans-serif" fill="#745b49">京都・奈良・丹後</text><text x="600" y="390" text-anchor="middle" font-size="25" font-family="sans-serif" fill="#745b49">離線圖片尚未下載</text></svg>';
+  const svg='<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700"><rect width="100%" height="100%" fill="#EEE5D2"/><text x="600" y="330" text-anchor="middle" font-size="50" font-family="sans-serif" fill="#27478C">狐光漫遊</text><text x="600" y="390" text-anchor="middle" font-size="25" font-family="sans-serif" fill="#745b49">離線圖片尚未下載</text></svg>';
   return new Response(svg,{headers:{'Content-Type':'image/svg+xml;charset=utf-8','Cache-Control':'no-store'}});
 }
 
@@ -67,8 +68,11 @@ self.addEventListener('fetch',event=>{
   const req=event.request;if(req.method!=='GET')return;
   let url;try{url=new URL(req.url);}catch(e){return;}
   if(isWeather(url))return;
-  /* 挪威網站（/norway/）有自己的 Service Worker，這裡不攔截 */
-  if(url.origin===self.location.origin&&url.pathname.includes('/norway/'))return;
+  /* 單機預覽模式上傳的照片 */
+  if(url.origin===self.location.origin&&url.pathname.includes('/local-media/')){
+    event.respondWith(caches.open(LOCAL_MEDIA_CACHE).then(c=>c.match(url.href)).then(r=>r||new Response('',{status:404})));
+    return;
+  }
 
   if(req.mode==='navigate'){
     event.respondWith(fetch(req).then(res=>{const copy=res.clone();caches.open(SHELL_CACHE).then(c=>c.put('./index.html',copy));return res;}).catch(async()=>await caches.match('./index.html')||await caches.match('./')));

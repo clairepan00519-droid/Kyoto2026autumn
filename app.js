@@ -3159,7 +3159,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=101').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=102').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3782,7 +3782,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v101-2026-10-10';
+const APP_VERSION='v102-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -3931,8 +3931,8 @@ async function renderDeviceStatus(){
 }
 async function forceRefreshApp(){
   if(!confirm('會清除這台裝置的網站快取並重新載入，取得最新版本。你的行程資料、照片與登入狀態不會被刪除。要繼續嗎？'))return;
-  try{if(navigator.serviceWorker){const regs=await navigator.serviceWorker.getRegistrations();await Promise.all(regs.map(r=>r.unregister()));}}catch(e){}
-  try{if(window.caches){const keys=await caches.keys();await Promise.all(keys.map(k=>caches.delete(k)));}}catch(e){}
+  try{if(navigator.serviceWorker){const reg=await navigator.serviceWorker.getRegistration();if(reg)await reg.unregister();}}catch(e){}
+  try{if(window.caches){const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith('kyoto-')).map(k=>caches.delete(k)));}}catch(e){}
   location.reload();
 }
 async function syncNowManual(){
