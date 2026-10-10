@@ -2770,7 +2770,14 @@ function dayTimelineHTML(i){
     return `<li class="tl-row${cls}" role="button" tabindex="0" title="點一下修改這一項" onclick="editTimelineRow(${i},${k})"><span class="tl-time">${escHtml(r.t||'')}</span><span class="tl-dot" aria-hidden="true"></span><span class="tl-text"><b>${escHtml(title)}</b>${rest.length?`<small>${escHtml(rest.join('｜'))}</small>`:''}${cls===' now'?'<em>進行中</em>':cls===' next'?'<em>下一個</em>':''}</span><span class="tl-pen" aria-hidden="true">✏️</span></li>`;
   }).join('');
   const edited=typeof timelineStore[tlKey(i)]==='string';
-  return `<details class="day-timeline" ${isToday||!localStorage.getItem('kyoto_tl_closed_'+i)?'open':''} ontoggle="try{this.open?localStorage.removeItem('kyoto_tl_closed_${i}'):localStorage.setItem('kyoto_tl_closed_${i}','1')}catch(e){}"><summary><span><img class="tl-icon" src="images/tl-deer.webp" alt="" width="34" height="34">今日時間表</span><small>${isToday?'今天':'點這裡收合／展開'}</small></summary>${dayPlanBarHTML(i)}<ol class="tl-list">${items}</ol><div class="tl-foot"><span>點任一行就能修改；時間是建議，依現場調整。</span><span class="tl-btns"><button type="button" class="tl-add" onclick="editTimelineRow(${i},-1)">＋ 新增一項</button><button type="button" onclick="editTimeline(${i})">整張修改</button>${edited?`<button type="button" class="tl-reset" onclick="resetTimeline(${i})">還原建議</button>`:''}</span></div></details>`;
+  let closed=false;try{closed=!isToday&&!!localStorage.getItem('kyoto_tl_closed_'+i);}catch(e){}
+  const peek=rows.find(r=>r.t)||rows[0];
+  return `<div class="day-timeline${closed?' closed':''}" data-tl-day="${i}"><button type="button" class="tl-head" aria-expanded="${!closed}" onclick="toggleTimeline(this)"><span class="tl-head-title"><img class="tl-icon" src="images/tl-deer.webp" alt="" width="34" height="34">今日時間表</span><span class="tl-head-hint"><span class="tl-when-open">收起 ▲</span><span class="tl-when-closed">點開看 ▼</span></span></button><div class="tl-peek">${peek?`${escHtml(peek.t||'')} ${escHtml(peek.text.split('｜')[0])}… 共 ${rows.length} 項`:''}</div><div class="tl-body">${dayPlanBarHTML(i)}<ol class="tl-list">${items}</ol><div class="tl-foot"><span>點任一行就能修改；時間是建議，依現場調整。</span><span class="tl-btns"><button type="button" class="tl-add" onclick="editTimelineRow(${i},-1)">＋ 新增一項</button><button type="button" onclick="editTimeline(${i})">整張修改</button>${edited?`<button type="button" class="tl-reset" onclick="resetTimeline(${i})">還原建議</button>`:''}</span></div></div></div>`;
+}
+function toggleTimeline(btn){
+  const card=btn.closest('.day-timeline');if(!card)return;
+  const closed=!card.classList.contains('closed');card.classList.toggle('closed',closed);btn.setAttribute('aria-expanded',String(!closed));
+  try{const k='kyoto_tl_closed_'+card.dataset.tlDay;closed?localStorage.setItem(k,'1'):localStorage.removeItem(k);}catch(e){}
 }
 function editTimeline(i){
   openFormModal({title:`修改時間表：D${days[i].dayNum}・${days[i].date}`,fields:[{id:'t',label:'一行一項，開頭寫時間，例如「07:20 搭計程車出發」。想加小字說明，用「｜」隔開。',type:'textarea',rows:14,value:timelineText(i)}],saveText:'儲存',
@@ -3126,7 +3133,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=96').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=97').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3749,7 +3756,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v96-2026-10-10';
+const APP_VERSION='v97-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -5569,8 +5576,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=96';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=96';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=97';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=97';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }

@@ -2335,3 +2335,13 @@ body.large-text .tl-text b{font-size:16px!important;}
 .tl-plan-sub{margin:8px 2px 0;font-size:13.5px;font-weight:800;color:#7a3d1c;}
 .tl-plan-decide{display:block;width:100%;min-height:46px;margin-top:8px;border:0;border-radius:999px;background:#2f8a52;color:#fff;font:inherit;font-size:15px;font-weight:900;cursor:pointer;}
 .tc-picked{font-style:normal;font-size:11.5px;font-weight:900;margin-left:6px;padding:1px 8px;border-radius:999px;background:#2f8a52;color:#fff;}
+/* v97：時間表收合改用按鈕（iPhone 也能點） */
+.tl-head{display:flex;align-items:center;gap:8px;width:100%;min-height:52px;padding:0;border:0;background:none;font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.tl-head-title{display:inline-flex;align-items:center;gap:6px;font-size:17px;font-weight:900;color:var(--ink);}
+.tl-head-hint{margin-left:auto;font-size:13px;font-weight:800;color:#b8431f;background:#fff1dc;border-radius:999px;padding:5px 12px;}
+.tl-when-closed{display:none;}
+.day-timeline.closed .tl-when-open{display:none;}
+.day-timeline.closed .tl-when-closed{display:inline;}
+.day-timeline.closed .tl-body{display:none;}
+.tl-peek{display:none;font-size:13.5px;color:#8a6a55;padding:0 2px 6px;}
+.day-timeline.closed .tl-peek{display:block;}
