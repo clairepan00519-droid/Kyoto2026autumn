@@ -2708,7 +2708,7 @@ function dayTimelineHTML(i){
     return `<li class="tl-row${cls}" role="button" tabindex="0" title="點一下修改這一項" onclick="editTimelineRow(${i},${k})"><span class="tl-time">${escHtml(r.t||'')}</span><span class="tl-dot" aria-hidden="true"></span><span class="tl-text"><b>${escHtml(title)}</b>${rest.length?`<small>${escHtml(rest.join('｜'))}</small>`:''}${cls===' now'?'<em>進行中</em>':cls===' next'?'<em>下一個</em>':''}</span><span class="tl-pen" aria-hidden="true">✏️</span></li>`;
   }).join('');
   const edited=typeof timelineStore[i]==='string';
-  return `<details class="day-timeline" ${isToday||!localStorage.getItem('kyoto_tl_closed_'+i)?'open':''} ontoggle="try{this.open?localStorage.removeItem('kyoto_tl_closed_${i}'):localStorage.setItem('kyoto_tl_closed_${i}','1')}catch(e){}"><summary><span>🕘 今日時間表</span><small>${isToday?'今天':'點這裡收合／展開'}</small></summary><ol class="tl-list">${items}</ol><div class="tl-foot"><span>點任一行就能修改；時間是建議，依現場調整。</span><span class="tl-btns"><button type="button" class="tl-add" onclick="editTimelineRow(${i},-1)">＋ 新增一項</button><button type="button" onclick="editTimeline(${i})">整張修改</button>${edited?`<button type="button" class="tl-reset" onclick="resetTimeline(${i})">還原建議</button>`:''}</span></div></details>`;
+  return `<details class="day-timeline" ${isToday||!localStorage.getItem('kyoto_tl_closed_'+i)?'open':''} ontoggle="try{this.open?localStorage.removeItem('kyoto_tl_closed_${i}'):localStorage.setItem('kyoto_tl_closed_${i}','1')}catch(e){}"><summary><span><img class="tl-icon" src="images/tl-deer.webp" alt="" width="34" height="34">今日時間表</span><small>${isToday?'今天':'點這裡收合／展開'}</small></summary><ol class="tl-list">${items}</ol><div class="tl-foot"><span>點任一行就能修改；時間是建議，依現場調整。</span><span class="tl-btns"><button type="button" class="tl-add" onclick="editTimelineRow(${i},-1)">＋ 新增一項</button><button type="button" onclick="editTimeline(${i})">整張修改</button>${edited?`<button type="button" class="tl-reset" onclick="resetTimeline(${i})">還原建議</button>`:''}</span></div></details>`;
 }
 function editTimeline(i){
   openFormModal({title:`修改時間表：D${days[i].dayNum}・${days[i].date}`,fields:[{id:'t',label:'一行一項，開頭寫時間，例如「07:20 搭計程車出發」。想加小字說明，用「｜」隔開。',type:'textarea',rows:14,value:timelineText(i)}],saveText:'儲存',
@@ -2724,12 +2724,48 @@ function saveTimelineRows(i,rows,msg){
   const prev=timelineStore[i];timelineStore[i]=text;persistTimeline();safeRenderDayContent();
   offerUndo(msg,()=>{if(prev===undefined)delete timelineStore[i];else timelineStore[i]=prev;persistTimeline();safeRenderDayContent();});
 }
+function hhmmToMin(t){const m=/^(\d{1,2}):(\d{2})$/.exec(t||'');return m?(+m[1])*60+(+m[2]):null;}
+function minToHHMM(n){n=((n%1440)+1440)%1440;return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');}
+/* v94：直觀的時間調整器：大大的時間、± 按鈕、前後項目即時預覽、可整段往後挪 */
+function timeAdjHTML(t,hasLater){
+  const steps=[[-60,'−1 小時'],[-30,'−30 分'],[-10,'−10 分'],[-5,'−5 分'],[5,'+5 分'],[10,'+10 分'],[30,'+30 分'],[60,'+1 小時']];
+  return `<input type="hidden" data-f="t" value="${escAttr(t)}"><div class="ta">
+    <div class="ta-ctx ta-prev"></div>
+    <div class="ta-clock"><button type="button" class="ta-big" aria-label="點一下用轉盤選時間"><span class="ta-val">${t||'--:--'}</span><small>點這裡用轉盤選</small></button><input type="time" class="ta-native" tabindex="-1" aria-hidden="true" value="${escAttr(t)}"></div>
+    <div class="ta-steps">${steps.map(([d,l])=>`<button type="button" data-d="${d}" class="${d<0?'minus':'plus'}">${l}</button>`).join('')}</div>
+    <div class="ta-ctx ta-next"></div>
+    <div class="ta-opts"><button type="button" class="ta-clear">不寫時間</button>${hasLater?'<label class="ta-shift"><input type="checkbox" data-f="shift"> <span>後面的時間也一起挪 <b class="ta-delta"></b></span></label>':''}</div>
+  </div>`;
+}
+function initTimeAdj(wrap,rows,k,origT){
+  const hid=wrap.querySelector('[data-f="t"]'),val=wrap.querySelector('.ta-val'),nat=wrap.querySelector('.ta-native');
+  const prevEl=wrap.querySelector('.ta-prev'),nextEl=wrap.querySelector('.ta-next'),delta=wrap.querySelector('.ta-delta');
+  const others=rows.map((r,n)=>({r,n})).filter(x=>x.n!==k&&x.r.t);
+  const label=r=>escHtml(r.text.split('｜')[0]);
+  const refresh=()=>{
+    const t=hid.value,m=hhmmToMin(t);val.textContent=t||'--:--';nat.value=t||'';
+    const before=m==null?null:others.filter(x=>hhmmToMin(x.r.t)<=m).pop();
+    const after=m==null?null:others.find(x=>hhmmToMin(x.r.t)>m);
+    prevEl.innerHTML=before?`<span>前一項</span><b>${before.r.t}</b> ${label(before.r)}`:(m==null?'沒寫時間的話，會留在原本的位置':'<span>這會是今天第一項</span>');
+    nextEl.innerHTML=after?`<span>下一項</span><b>${after.r.t}</b> ${label(after.r)}`:(m==null?'':'<span>這會是今天最後一項</span>');
+    if(delta){const o=hhmmToMin(origT),d=(o==null||m==null)?0:m-o;delta.textContent=d?`（${d>0?'+':'−'}${Math.abs(d)} 分）`:'';wrap.querySelector('.ta-shift').classList.toggle('dim',!d);}
+  };
+  wrap.querySelectorAll('.ta-steps button').forEach(b=>b.onclick=()=>{const m=hhmmToMin(hid.value);hid.value=minToHHMM((m==null?hhmmToMin(origT)??540:m)+Number(b.dataset.d));refresh();});
+  nat.addEventListener('click',()=>{try{nat.showPicker&&nat.showPicker();}catch(e){}});
+  nat.addEventListener('input',()=>{if(nat.value){hid.value=nat.value.slice(0,5);refresh();}});
+  nat.addEventListener('change',()=>{if(nat.value){hid.value=nat.value.slice(0,5);refresh();}});
+  wrap.querySelector('.ta-clear').onclick=()=>{hid.value='';refresh();};
+  refresh();
+}
 function editTimelineRow(i,k){
   const rows=parseTimeline(timelineText(i));const isNew=k<0||!rows[k];
   const cur=isNew?{t:'',text:''}:rows[k];const [title,...rest]=cur.text.split('｜');
-  openFormModal({title:isNew?'新增一項':'修改這一項',fields:[
-    {id:'t',label:'時間（可空白）',type:'time',value:cur.t},
+  let startT=cur.t;
+  if(isNew){const last=[...rows].reverse().find(r=>r.t);startT=last?minToHHMM(hhmmToMin(last.t)+30):'09:00';}
+  const hasLater=!isNew&&!!cur.t&&rows.some((r,n)=>n>k&&r.t);
+  openFormModal({title:isNew?'＋ 新增一項':'✏️ 修改這一項',fields:[
     {id:'title',label:'要做什麼',value:isNew?'':title,placeholder:'例如：搭計程車去詩仙堂'},
+    {id:'t',type:'custom',label:'幾點？',html:timeAdjHTML(startT,hasLater),init:w=>initTimeAdj(w,rows,isNew?-1:k,cur.t),noFocus:!isNew},
     {id:'note',label:'小字說明（選填）',value:rest.join('｜'),placeholder:'例如：約 25 分、¥3,000'}],saveText:'儲存',
     onDelete:isNew?null:()=>{if(rows.length<=1){alert('至少要留一項；要回到建議版請按「還原建議」。');return;}rows.splice(k,1);saveTimelineRows(i,rows,'已刪除這一項');},
     onSave:v=>{
@@ -2737,8 +2773,13 @@ function editTimelineRow(i,k){
       const note=(v.note||'').replace(/\n/g,' ').trim();
       const tm=/^\d{1,2}:\d{2}/.test(v.t||'')?v.t.slice(0,5).padStart(5,'0'):'';
       const row={t:tm,text:note?`${t}｜${note}`:t};
+      let msg=isNew?'已新增一項':'已修改這一項';
+      if(!isNew&&v.shift&&cur.t&&tm){
+        const d=hhmmToMin(tm)-hhmmToMin(cur.t);
+        if(d){let moved=0;rows.forEach((r,n)=>{if(n>k&&r.t){r.t=minToHHMM(hhmmToMin(r.t)+d);moved++;}});msg=`已修改，後面 ${moved} 項也${d>0?'延後':'提早'} ${Math.abs(d)} 分`;}
+      }
       if(isNew)rows.push(row);else rows[k]=row;
-      saveTimelineRows(i,rows,isNew?'已新增一項':'已修改這一項');
+      saveTimelineRows(i,rows,msg);
     }});
 }
 function resetTimeline(i){
@@ -2750,32 +2791,81 @@ function resetTimeline(i){
 /* ============ v92：每日回顧（每個帳號各寫一則，全家都看得到） ============ */
 var reviewStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_reviews'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
 function persistReviews(){safeSetItem('kyoto_reviews',reviewStore);}
-const REVIEW_MOODS=[['great','😊','很開心'],['good','🙂','不錯'],['ok','😌','普通'],['tired','😴','好累']];
+/* v94：小鹿心情（圖片 icon）；舊版的 great/good/ok/tired 自動對應 */
+const REVIEW_MOODS=[
+  ['excited','超開心！','開心到跳起來～'],
+  ['content','好滿足～','吃飽飽、心滿滿'],
+  ['touched','好感動','眼眶有點濕濕的'],
+  ['surprised','哇！好驚喜','今天有意外收穫'],
+  ['accomplished','任務達成！','行程全部完成 ✔'],
+  ['tired','走到腿軟…','但是很值得'],
+  ['sleepy','想睡覺 zzz','眼睛快閉起來了'],
+  ['disappointed','有點可惜','明天會更好的！']];
+const OLD_MOOD_MAP={great:'excited',good:'content',ok:'content'};
+function moodInfo(m){m=OLD_MOOD_MAP[m]||m;const x=REVIEW_MOODS.find(z=>z[0]===m);return x?{key:x[0],label:x[1],sub:x[2],img:`images/mood-${x[0]}.webp`}:null;}
 function myReviewName(){const w=todoWho();return w||'這支手機';}
+function myEmail(){try{return (familyAuthSession&&familyAuthSession.email)||(readAuthSession()&&readAuthSession().email)||'';}catch(e){return '';}}
 function dayReviewHTML(i){
   const day=reviewStore[i]||{},me=accountKey();
-  const entries=Object.entries(day).filter(([,r])=>r&&(r.text||r.img)).sort((a,b)=>(a[0]===me?-1:b[0]===me?1:String(a[1].at||'').localeCompare(String(b[1].at||''))));
-  const mood=m=>{const x=REVIEW_MOODS.find(z=>z[0]===m);return x?`<span class="rv-mood" title="${x[2]}">${x[1]} ${x[2]}</span>`:'';};
-  const card=([k,r])=>`<div class="rv-item${k===me?' mine':''}"><div class="rv-head"><span class="rv-av">${escHtml(String(r.name||'?').slice(0,1).toUpperCase())}</span><b>${escHtml(r.name||'家人')}${k===me?'<em>（我）</em>':''}</b>${mood(r.mood)}</div>${r.text?`<p>${brText(r.text)}</p>`:''}${r.img?`<img class="rv-img" src="${escAttr(r.img)}" data-src="${escAttr(r.img)}" alt="" loading="lazy" onclick="openAttachModal(this.dataset.src)">`:''}${k===me?`<div class="rv-acts"><button type="button" onclick="editMyReview(${i})">修改</button><button type="button" class="rv-del" onclick="deleteMyReview(${i})">刪除</button></div>`:''}</div>`;
-  const mine=day[me]&&(day[me].text||day[me].img);
-  return `<section class="day-review"><h3>📝 今日回顧</h3><p class="rv-sub">每個人各寫一則：今天最喜歡什麼、一張照片，全家都看得到。</p>${entries.map(card).join('')||'<div class="rv-empty">還沒有人寫。今天結束時，寫一句話留給自己吧！</div>'}${mine?'':`<button type="button" class="rv-add" onclick="editMyReview(${i})">＋ 寫我的回顧</button>`}</section>`;
+  const entries=Object.entries(day).filter(([,r])=>r&&(r.text||r.img||r.mood)).sort((a,b)=>(a[0]===me?-1:b[0]===me?1:String(a[1].at||'').localeCompare(String(b[1].at||''))));
+  const card=([k,r])=>{const mi=moodInfo(r.mood);return `<div class="rv-item${k===me?' mine':''}"><div class="rv-head">${mi?`<img class="rv-deer" src="${mi.img}" alt="${escAttr(mi.label)}" width="56" height="56">`:`<span class="rv-av">${escHtml(String(r.name||'?').slice(0,1).toUpperCase())}</span>`}<div class="rv-who"><b>${escHtml(r.name||'家人')}${k===me?'<em>（我）</em>':''}</b>${mi?`<span class="rv-mood">${escHtml(mi.label)}</span>`:''}</div></div>${r.text?`<p>${brText(r.text)}</p>`:''}${r.img?`<img class="rv-img" src="${escAttr(r.img)}" data-src="${escAttr(r.img)}" alt="" loading="lazy" onclick="openAttachModal(this.dataset.src)">`:''}${k===me?`<div class="rv-acts"><button type="button" onclick="editMyReview(${i})">修改</button><button type="button" class="rv-del" onclick="deleteMyReview(${i})">刪除</button></div>`:''}</div>`;};
+  const mine=day[me]&&(day[me].text||day[me].img||day[me].mood);
+  const email=myEmail();
+  return `<section class="day-review"><h3><img src="images/mood-content.webp" alt="" width="40" height="40">今日回顧</h3><p class="rv-sub">今天過得怎麼樣呀？選一隻小鹿代表你的心情，再說說今天最喜歡的瞬間～全家都看得到喔 🍁</p>${entries.map(card).join('')||'<div class="rv-empty">還沒有人寫喔～<br>睡前來跟小鹿說說今天吧！</div>'}${mine?'':`<button type="button" class="rv-add" onclick="editMyReview(${i})">＋ 寫我的回顧</button>`}<p class="rv-acct">${email?`目前用 <b>${escHtml(email)}</b> 寫`:'目前沒有登入'}・<button type="button" class="rv-switch" onclick="logoutFamily()">不是你？換帳號</button></p></section>`;
+}
+function moodPickerHTML(cur){
+  cur=OLD_MOOD_MAP[cur]||cur||'';
+  return `<input type="hidden" data-f="mood" value="${escAttr(cur)}"><div class="mood-grid" role="radiogroup">${REVIEW_MOODS.map(([k,l,sub])=>`<button type="button" class="mood-opt${k===cur?' on':''}" data-mood="${k}" role="radio" aria-checked="${k===cur}"><img src="images/mood-${k}.webp" alt="" width="64" height="64"><b>${escHtml(l)}</b><small>${escHtml(sub)}</small></button>`).join('')}</div>`;
+}
+function initMoodPicker(wrap){
+  const hid=wrap.querySelector('[data-f="mood"]');
+  wrap.querySelectorAll('.mood-opt').forEach(b=>b.onclick=()=>{wrap.querySelectorAll('.mood-opt').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-checked',x===b);});hid.value=b.dataset.mood;});
 }
 function editMyReview(i){
   const me=accountKey(),cur=(reviewStore[i]||{})[me]||{};
-  openFormModal({title:`我的回顧：D${days[i].dayNum}・${days[i].date}`,fields:[
-    {id:'name',label:'顯示名字',value:cur.name||myReviewName()},
-    {id:'mood',label:'今天心情',type:'select',value:cur.mood||'great',options:REVIEW_MOODS.map(([v,e,l])=>({value:v,label:`${e} ${l}`}))},
-    {id:'text',label:'今天最喜歡的事、想記住的一句話',type:'textarea',rows:6,value:cur.text||''},
-    {id:'file',label:cur.img?'換一張照片（選填；不選就保留原本的）':'放一張今天最喜歡的照片（選填）',type:'file'}],saveText:'儲存',
+  openFormModal({title:`🦌 D${days[i].dayNum}・${days[i].date} 的我`,fields:[
+    {id:'mood',type:'custom',label:'今天的心情是哪一隻小鹿？',html:moodPickerHTML(cur.mood),init:initMoodPicker,noFocus:true},
+    {id:'text',label:'今天最喜歡的瞬間是…？',type:'textarea',rows:5,value:cur.text||'',placeholder:'例如：永觀堂的紅葉在陽光下好像在發光！'},
+    {id:'file',label:cur.img?'換一張照片（選填；不選就保留原本的）':'放一張今天最喜歡的照片（選填）',type:'file'},
+    {id:'name',label:'大家看到的名字',value:cur.name||myReviewName()}],saveText:'存起來 🍁',
     onSave:v=>{
-      if(!v.text&&!v.file&&!cur.img){alert('寫一句話或放一張照片吧！');return false;}
+      if(!v.mood&&!v.text&&!v.file&&!cur.img){alert('先選一隻小鹿，或寫一句話吧～');return false;}
       return (async()=>{
         let img=cur.img||'';
         if(v.file){try{img=await uploadMediaFile(v.file,'reviews');}catch(err){reportUploadError(err);return false;}}
-        (reviewStore[i]=reviewStore[i]||{})[me]={name:v.name||myReviewName(),mood:v.mood,text:v.text,img,at:new Date().toISOString()};
+        (reviewStore[i]=reviewStore[i]||{})[me]={name:v.name||myReviewName(),mood:v.mood||'',text:v.text,img,at:new Date().toISOString()};
         persistReviews();safeRenderDayContent();
+        showToast('記下來了！今天辛苦了 🦌');
       })();
     }});
+}
+/* v94：晚上 22:00–24:00 打開 app，若今天（旅行中）還沒寫回顧，小鹿會來提醒 */
+function maybeNightReviewPrompt(){
+  try{
+    if(document.body.classList.contains('family-locked'))return;
+    const now=new Date();if(now.getHours()<22)return;
+    const i=tripTodayIndex(now);if(i<0)return;
+    const mine=(reviewStore[i]||{})[accountKey()];if(mine&&(mine.text||mine.img||mine.mood))return;
+    const k='kyoto_rv_nag_'+i,snooze=Number(localStorage.getItem(k)||0);if(Date.now()<snooze)return;
+    if(document.getElementById('formModal')||document.getElementById('nightReview'))return;
+    const w=document.createElement('div');w.id='nightReview';w.className='night-rv';
+    w.innerHTML=`<div class="night-rv-card" role="dialog" aria-label="寫今日回顧"><img src="images/mood-sleepy.webp" alt="" width="150" height="100"><h3>今天辛苦了～</h3><p>睡覺前，跟小鹿說說今天吧！<br>選個心情、寫一句話就好 🍁</p><button type="button" class="night-go">好呀，現在寫</button><button type="button" class="night-later">等一下再說</button></div>`;
+    document.body.appendChild(w);
+    const close=()=>w.remove();
+    w.querySelector('.night-go').onclick=()=>{close();if(typeof setActiveDay==='function'&&activeDay!==i)setActiveDay(i);editMyReview(i);};
+    w.querySelector('.night-later').onclick=()=>{try{localStorage.setItem(k,String(Date.now()+30*60000));}catch(e){}close();};
+  }catch(e){}
+}
+document.addEventListener('DOMContentLoaded',()=>setTimeout(maybeNightReviewPrompt,2500));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')setTimeout(maybeNightReviewPrompt,800);});
+/* v94：登出／換帳號（先把還沒上傳的改動送出，再清掉登入） */
+async function logoutFamily(){
+  const email=myEmail();
+  if(!confirm(`${email?`目前登入：${email}\n\n`:''}要登出，換成別的帳號嗎？\n行程資料會留在這支手機上，不會不見。`))return;
+  try{if(typeof cloudSync!=='undefined'&&cloudSync.enabled&&navigator.onLine)await Promise.race([flushCloudPush(),new Promise(r=>setTimeout(r,4000))]);}catch(e){}
+  saveAuthSession(null);
+  try{localStorage.removeItem('kyoto_rv_nag_'+tripTodayIndex());}catch(e){}
+  location.reload();
 }
 function deleteMyReview(i){
   const me=accountKey(),day=reviewStore[i];if(!day||!day[me])return;
@@ -2971,7 +3061,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=93').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=94').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3151,6 +3241,7 @@ function openFormModal({title,fields,onSave,onDelete,saveText='儲存'}){
     else if(f.type==='time') input=`<input type="time" data-f="${f.id}" value="${escAttr(f.value||'')}">`;
     else if(f.type==='files') input=`<input type="file" data-f="${f.id}" data-multi="1" accept="image/*" multiple>`;
     else if(f.type==='select') input=`<select data-f="${f.id}">${f.options.map(o=>`<option value="${escAttr(o.value)}" ${o.value===f.value?'selected':''}>${escHtml(o.label)}</option>`).join('')}</select>`;
+    else if(f.type==='custom') return `<div class="spot-edit-field">${f.label?`<span>${escHtml(f.label)}</span>`:''}${f.html}</div>`;
     else input=`<input type="text" data-f="${f.id}" value="${escAttr(f.value||'')}" placeholder="${escAttr(f.placeholder||'')}">`;
     return `<label class="spot-edit-field"><span>${escHtml(f.label)}</span>${input}</label>`;
   }).join('');
@@ -3158,14 +3249,15 @@ function openFormModal({title,fields,onSave,onDelete,saveText='儲存'}){
   document.body.appendChild(wrap);
   wrap.querySelector('[data-close]').onclick=()=>closeFormModal();
   wrap.querySelector('[data-save]').onclick=()=>{
-    const v={};wrap.querySelectorAll('[data-f]').forEach(el=>{v[el.dataset.f]=el.type==='file'?(el.dataset.multi?[...(el.files||[])]:((el.files&&el.files[0])||null)):el.value.trim();});
+    const v={};wrap.querySelectorAll('[data-f]').forEach(el=>{v[el.dataset.f]=el.type==='file'?(el.dataset.multi?[...(el.files||[])]:((el.files&&el.files[0])||null)):el.type==='checkbox'?el.checked:el.value.trim();});
     const r=onSave(v);
     if(r&&typeof r.then==='function'){const btn=wrap.querySelector('[data-save]');btn.disabled=true;btn.textContent='儲存中…';r.then(ok=>{if(ok===false){btn.disabled=false;btn.textContent=saveText;}else closeFormModal();}).catch(()=>{btn.disabled=false;btn.textContent=saveText;});}
     else if(r!==false)closeFormModal();
   };
   const del=wrap.querySelector('[data-del]');
   if(del)del.onclick=()=>{if(confirm('確定要刪除嗎？（刪除後 5 秒內可按「復原」）')){onDelete();closeFormModal();}};
-  setTimeout(()=>wrap.querySelector('[data-f]')?.focus(),60);
+  fields.forEach(f=>{if(typeof f.init==='function')f.init(wrap);});
+  if(!fields.some(f=>f.noFocus))setTimeout(()=>wrap.querySelector('[data-f]:not([type=hidden])')?.focus(),60);
 }
 function closeFormModal(silent){
   document.getElementById('formModal')?.remove();
@@ -3592,7 +3684,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v93-2026-10-10';
+const APP_VERSION='v94-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -3970,6 +4062,7 @@ function openToolsSheet(){
   const install=isStandalone()?'<p class="sheet-note">✅ 已用 App 模式開啟。</p>':(deferredInstall?'<button type="button" class="sheet-btn primary" data-act="install">📲 安裝到主畫面</button>':(ios?'<p class="sheet-note">iPhone／iPad：用 <b>Safari</b> 開啟 → 點下方「分享」→「加入主畫面」。</p>':'<p class="sheet-note">用 Chrome 開啟 → 右上角選單 →「安裝應用程式」或「加到主畫面」。</p>'));
   const wrap=document.createElement('div');wrap.id='toolsSheet';wrap.className='sheet-wrap';
   wrap.innerHTML=`<div class="sheet" role="dialog" aria-label="工具與設定"><div class="sheet-grab"></div><div class="sheet-head"><b>⚙️ 工具與設定</b><button type="button" data-close aria-label="關閉">✕</button></div><div class="sheet-body">
+    <section><h4>👤 帳號</h4><p class="sheet-note">目前登入：<b>${escHtml(myEmail()||'沒有登入')}</b></p><div class="sheet-row one"><button type="button" data-act="logout">登出／換帳號</button></div></section>
     <section><h4>📲 安裝成 App</h4>${install}</section>
     <section><h4>離線使用</h4><p class="sheet-note" id="offlineStatusRow">檢查中…</p><div class="sheet-row one"><button type="button" data-act="precache">下載全部圖片到這台裝置</button></div><p class="sheet-note" style="margin-top:6px">網頁本身與你的資料會自動保留；圖片需要下載一次，之後沒網路也能看。</p></section>
     <section><h4>小驚喜</h4><div class="sheet-row one"><button type="button" data-act="surprise">來一則小知識／笑話</button></div></section>
@@ -3988,7 +4081,8 @@ function openToolsSheet(){
     diag:()=>{closeToolsSheet();diagnoseCloud();},
     precache:()=>startOfflinePrecache(true),
     surprise:()=>{closeToolsSheet();showSurprise();},
-    force:()=>{closeToolsSheet();forceRefreshApp();}
+    force:()=>{closeToolsSheet();forceRefreshApp();},
+    logout:()=>{closeToolsSheet();logoutFamily();}
   };
   wrap.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>acts[b.dataset.act]&&acts[b.dataset.act]());
   renderDeviceStatus();updateOfflineRow();
@@ -5410,8 +5504,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=93';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=93';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=94';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=94';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }

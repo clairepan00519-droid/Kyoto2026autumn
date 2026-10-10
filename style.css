@@ -2267,3 +2267,50 @@ body.large-text .tl-text b{font-size:16px!important;}
 .tl-btns{display:flex;flex-wrap:wrap;gap:6px;}
 .tl-foot .tl-btns button{margin-left:0;}
 .tl-foot button.tl-add{background:#e6f4ea;color:#23683d;}
+/* ===== v94：小鹿心情、晚安提醒、時間調整器、帳號 ===== */
+.day-timeline summary span{display:inline-flex;align-items:center;gap:6px;}
+.tl-icon{width:34px;height:34px;object-fit:contain;margin:-6px 0;}
+.day-review h3{display:flex;align-items:center;gap:6px;}
+.day-review h3 img{width:40px;height:40px;object-fit:contain;margin:-6px 0;}
+.rv-head{align-items:center;}
+.rv-deer{width:56px;height:56px;object-fit:contain;flex:0 0 56px;filter:drop-shadow(0 2px 3px rgba(150,90,40,.15));}
+.rv-who{display:flex;flex-direction:column;gap:3px;min-width:0;}
+.rv-who .rv-mood{align-self:flex-start;margin-left:0;font-size:13px;font-weight:800;padding:2px 10px;border-radius:999px;background:#fff1dc;color:#b8431f;}
+.rv-acct{margin:10px 0 0;font-size:12.5px;color:#a07a55;text-align:center;line-height:1.7;word-break:break-all;}
+.rv-switch{border:0;background:none;color:var(--blue);font:inherit;font-size:12.5px;font-weight:800;text-decoration:underline;cursor:pointer;padding:4px 2px;}
+.mood-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.mood-opt{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 6px 10px;border:2px solid #f0e2cc;border-radius:16px;background:#fffaf2;font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .12s,border-color .12s,background .12s;}
+.mood-opt img{width:64px;height:64px;object-fit:contain;}
+.mood-opt b{font-size:15px;font-weight:900;color:var(--ink);}
+.mood-opt small{font-size:11.5px;color:#a07a55;}
+.mood-opt.on{border-color:#e08a4c;background:#fff0dc;transform:scale(1.03);box-shadow:0 4px 12px rgba(224,138,76,.25);}
+.mood-opt.on b{color:#b8431f;}
+.night-rv{position:fixed;inset:0;z-index:9000;background:rgba(40,25,10,.45);display:flex;align-items:center;justify-content:center;padding:16px;animation:nightIn .25s ease;}
+@keyframes nightIn{from{opacity:0}to{opacity:1}}
+.night-rv-card{width:100%;max-width:340px;background:linear-gradient(#fff8ee,#fff);border-radius:24px;padding:20px 20px 16px;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.25);}
+.night-rv-card img{width:150px;height:100px;object-fit:contain;}
+.night-rv-card h3{margin:6px 0 4px;font-size:21px;color:#7a3d1c;}
+.night-rv-card p{margin:0 0 14px;font-size:15px;line-height:1.6;color:#6b5240;}
+.night-rv-card button{display:block;width:100%;min-height:50px;border:0;border-radius:999px;font:inherit;font-size:16px;font-weight:900;cursor:pointer;margin-top:8px;}
+.night-go{background:#e08a4c;color:#fff;}
+.night-later{background:transparent;color:#a07a55;font-size:14px!important;font-weight:700!important;}
+.ta{display:flex;flex-direction:column;gap:10px;}
+.ta-ctx{font-size:13.5px;color:#7a6250;background:#faf5ee;border-radius:10px;padding:8px 10px;line-height:1.5;min-height:20px;}
+.ta-ctx:empty{display:none;}
+.ta-ctx span{display:inline-block;font-size:11.5px;font-weight:800;color:#a07a55;margin-right:6px;}
+.ta-ctx b{color:#b8431f;margin-right:4px;font-variant-numeric:tabular-nums;}
+.ta-clock{position:relative;}
+.ta-big{width:100%;display:flex;flex-direction:column;align-items:center;gap:0;padding:6px 0 8px;border:2px solid #f0d2b0;border-radius:18px;background:#fff;font:inherit;cursor:pointer;}
+.ta-val{font-size:46px;font-weight:900;color:#b8431f;letter-spacing:2px;font-variant-numeric:tabular-nums;line-height:1.15;}
+.ta-big small{font-size:12px;color:#a07a55;}
+.spot-edit-field .ta-native{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;padding:0;margin:0;cursor:pointer;-webkit-appearance:none;appearance:none;}
+.ta-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.ta-steps button{min-height:46px;border:0;border-radius:12px;font:inherit;font-size:14.5px;font-weight:900;cursor:pointer;}
+.ta-steps .minus{background:#eef3fb;color:var(--blue);}
+.ta-steps .plus{background:#fff1dc;color:#b8431f;}
+.ta-steps button:active{transform:scale(.95);}
+.ta-opts{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+.ta-clear{min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#8a6a55;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;}
+.ta-shift{display:flex;align-items:center;gap:8px;flex:1 1 200px;min-height:44px;padding:4px 12px;border-radius:12px;background:#e6f4ea;color:#23683d;font-size:14px;font-weight:800;cursor:pointer;}
+.spot-edit-field .ta-shift input{width:22px;height:22px;flex:0 0 22px;margin:0;}
+.ta-shift.dim{opacity:.55;}
