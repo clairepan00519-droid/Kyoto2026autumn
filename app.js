@@ -192,7 +192,7 @@ const SUPABASE_URL = "https://xkahhddatpoxuembeiwl.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrYWhoZGRhdHBveHVlbWJlaXdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NDExNDksImV4cCI6MjEwMDAxNzE0OX0.Jdpxpz7rgyK_OikYkRrVQComDWZiaI4fgf5ZV_SdaII";
 
 const SYNC_META_KEY = 'kyoto_sync_meta_v3';
-const SYNC_KEYS = ['kyoto_notes','kyoto_info_overrides','kyoto_field_overrides','kyoto_photos','kyoto_covers','kyoto_custom_spots','kyoto_order','kyoto_block_order','kyoto_route_maps','kyoto_transport_extras','kyoto_foliage_maps','kyoto_pack','kyoto_shop','kyoto_rules','kyoto_docs','kyoto_hidden_fixed_spots','kyoto_transport_cards','kyoto_eatshop','kyoto_photo_pos','kyoto_marks','kyoto_livelinks','kyoto_mama','kyoto_surprises','kyoto_tips_seen','kyoto_eat_area','kyoto_eat_plan','kyoto_detail_covers','kyoto_hidden_orig','kyoto_transport_custom','kyoto_eat_area_custom','kyoto_sub_spots','kyoto_place_pos','kyoto_spot_day','kyoto_eat_area_order','kyoto_todos'];
+const SYNC_KEYS = ['kyoto_notes','kyoto_info_overrides','kyoto_field_overrides','kyoto_photos','kyoto_covers','kyoto_custom_spots','kyoto_order','kyoto_block_order','kyoto_route_maps','kyoto_transport_extras','kyoto_foliage_maps','kyoto_pack','kyoto_shop','kyoto_rules','kyoto_docs','kyoto_hidden_fixed_spots','kyoto_transport_cards','kyoto_eatshop','kyoto_photo_pos','kyoto_marks','kyoto_livelinks','kyoto_mama','kyoto_surprises','kyoto_tips_seen','kyoto_eat_area','kyoto_eat_plan','kyoto_detail_covers','kyoto_hidden_orig','kyoto_transport_custom','kyoto_eat_area_custom','kyoto_sub_spots','kyoto_place_pos','kyoto_spot_day','kyoto_eat_area_order','kyoto_todos','kyoto_timeline','kyoto_reviews'];
 const MEDIA_SYNC_KEYS = new Set(['kyoto_photos','kyoto_covers','kyoto_route_maps','kyoto_transport_extras','kyoto_foliage_maps']);
 const STRUCTURED_LIST_KEYS = new Set(['kyoto_shop','kyoto_rules','kyoto_todos','kyoto_docs','kyoto_transport_cards','kyoto_eatshop','kyoto_livelinks','kyoto_surprises']);
 const cloudSync = {enabled:false, starting:false, applyingRemote:false, pending:{}, timer:null, pollTimer:null, lastError:null, ready:false};
@@ -570,7 +570,7 @@ function flushPendingDayRender(){
 }
 function applyStoreUpdate(key,jsonStr){
   let parsed;try{parsed=JSON.parse(jsonStr);}catch(e){return;}
-  switch(key){case'kyoto_notes':notesStore=parsed;break;case'kyoto_info_overrides':infoOverrideStore=parsed||{};break;case'kyoto_field_overrides':fieldOverrideStore=parsed||{};break;case'kyoto_photos':photoStore=parsed;break;case'kyoto_covers':coverStore=parsed;break;case'kyoto_custom_spots':customSpotsStore=parsed;break;case'kyoto_order':orderStore=parsed;break;case'kyoto_block_order':blockOrderStore=parsed;break;case'kyoto_route_maps':routeMapStore=parsed;break;case'kyoto_transport_extras':transportExtrasStore=parsed||{};break;case'kyoto_foliage_maps':foliageMapStore=Array.isArray(parsed)?parsed:[];renderFoliageMaps();return;case'kyoto_pack':packData=migratePackCategoryNames(parsed);window._packLive=packData;if(isPackComposerEditing()){window._packRemoteRenderPending=true;}else{renderPackList();}return;case'kyoto_shop':shopData=normalizeStructuredList('kyoto_shop',parsed);renderShopList();return;case'kyoto_rules':rulesData=normalizeStructuredList('kyoto_rules',parsed);renderRulesList();return;case'kyoto_todos':todoData=normalizeStructuredList('kyoto_todos',parsed);renderTodos();return;case'kyoto_docs':docsData=mergeDocsWithDefaults(parsed);persistDocs();renderDocsList();return;case'kyoto_transport_cards':transportCardsData=normalizeStructuredList('kyoto_transport_cards',parsed);renderTransportCards();return;case'kyoto_eatshop':eatShopStore=normalizeStructuredList('kyoto_eatshop',parsed);if(typeof activeDay==='string')renderDayContent();return;case'kyoto_photo_pos':photoPosStore=parsed||{};safeRenderDayContent();return;case'kyoto_marks':marksStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};renderMarksBar();safeRenderDayContent();return;case'kyoto_livelinks':liveData=normalizeStructuredList('kyoto_livelinks',parsed);renderLive();return;case'kyoto_surprises':surprisesData=normalizeStructuredList('kyoto_surprises',parsed);renderSurpriseAdmin();return;case'kyoto_tips_seen':tipsSeen=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};return;case'kyoto_place_pos':placePosStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};if(typeof activeDay==='string')safeRenderDayContent();return;case'kyoto_sub_spots':subSpotStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_area_custom':eatAreaCustom=Array.isArray(parsed)?parsed:[];safeRenderDayContent();return;case'kyoto_spot_day':spotDayStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};renderDayChips();safeRenderDayContent();return;case'kyoto_eat_area_order':eatAreaOrder=Array.isArray(parsed)?parsed:[];safeRenderDayContent();return;case'kyoto_transport_custom':transportCustomStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_detail_covers':detailCoverStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_hidden_orig':hiddenOrigStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_plan':eatPlanStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_area':eatAreaStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};if(typeof activeDay==='string')safeRenderDayContent();return;case'kyoto_mama':mamaStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};refreshMamaButtons(null);if(document.getElementById('mamaModal'))renderMamaList();return;case'kyoto_hidden_fixed_spots':hiddenFixedSpotsStore=parsed||{};safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();return;default:return;}
+  switch(key){case'kyoto_notes':notesStore=parsed;break;case'kyoto_info_overrides':infoOverrideStore=parsed||{};break;case'kyoto_field_overrides':fieldOverrideStore=parsed||{};break;case'kyoto_photos':photoStore=parsed;break;case'kyoto_covers':coverStore=parsed;break;case'kyoto_custom_spots':customSpotsStore=parsed;break;case'kyoto_order':orderStore=parsed;break;case'kyoto_block_order':blockOrderStore=parsed;break;case'kyoto_route_maps':routeMapStore=parsed;break;case'kyoto_transport_extras':transportExtrasStore=parsed||{};break;case'kyoto_foliage_maps':foliageMapStore=Array.isArray(parsed)?parsed:[];renderFoliageMaps();return;case'kyoto_pack':packData=migratePackCategoryNames(parsed);window._packLive=packData;if(isPackComposerEditing()){window._packRemoteRenderPending=true;}else{renderPackList();}return;case'kyoto_shop':shopData=normalizeStructuredList('kyoto_shop',parsed);renderShopList();return;case'kyoto_rules':rulesData=normalizeStructuredList('kyoto_rules',parsed);renderRulesList();return;case'kyoto_todos':todoData=normalizeStructuredList('kyoto_todos',parsed);renderTodos();return;case'kyoto_timeline':timelineStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_reviews':reviewStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_docs':docsData=mergeDocsWithDefaults(parsed);persistDocs();renderDocsList();return;case'kyoto_transport_cards':transportCardsData=normalizeStructuredList('kyoto_transport_cards',parsed);renderTransportCards();return;case'kyoto_eatshop':eatShopStore=normalizeStructuredList('kyoto_eatshop',parsed);if(typeof activeDay==='string')renderDayContent();return;case'kyoto_photo_pos':photoPosStore=parsed||{};safeRenderDayContent();return;case'kyoto_marks':marksStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};renderMarksBar();safeRenderDayContent();return;case'kyoto_livelinks':liveData=normalizeStructuredList('kyoto_livelinks',parsed);renderLive();return;case'kyoto_surprises':surprisesData=normalizeStructuredList('kyoto_surprises',parsed);renderSurpriseAdmin();return;case'kyoto_tips_seen':tipsSeen=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};return;case'kyoto_place_pos':placePosStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};if(typeof activeDay==='string')safeRenderDayContent();return;case'kyoto_sub_spots':subSpotStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_area_custom':eatAreaCustom=Array.isArray(parsed)?parsed:[];safeRenderDayContent();return;case'kyoto_spot_day':spotDayStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};renderDayChips();safeRenderDayContent();return;case'kyoto_eat_area_order':eatAreaOrder=Array.isArray(parsed)?parsed:[];safeRenderDayContent();return;case'kyoto_transport_custom':transportCustomStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_detail_covers':detailCoverStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_hidden_orig':hiddenOrigStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_plan':eatPlanStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};safeRenderDayContent();return;case'kyoto_eat_area':eatAreaStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};if(typeof activeDay==='string')safeRenderDayContent();return;case'kyoto_mama':mamaStore=(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))?parsed:{};refreshMamaButtons(null);if(document.getElementById('mamaModal'))renderMamaList();return;case'kyoto_hidden_fixed_spots':hiddenFixedSpotsStore=parsed||{};safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();return;default:return;}
   safeRenderDayContent();if(typeof updateSpotCount==='function')updateSpotCount();
 }
 function scheduleCloudPush(key,valueObj){
@@ -789,13 +789,12 @@ const transportPlans = [
     {from:'岡崎',to:'真如堂',mode:'🚕 計程車',time:'約 10 分',note:'上坡約 2 公里，搭車保留體力；約 ¥1,200–1,600'},
     {from:'真如堂',to:'金戒光明寺',mode:'🚶 步行',time:'5–10 分',note:'寺域南側小路相連，不必搭車'},
     {from:'金戒光明寺',to:'飯店（烏丸四條）',mode:'🚕 計程車',time:'20–30 分',note:'走到岡崎道或丸太町通較好叫車；約 ¥2,000–2,800'}]},
-  {summary:'上午洛北計程車串寺；回飯店取行李後，京都站搭 JR 奈良線至宇治、奈良。', alert:'宇治段優先搭「みやこ路快速」；快速是否直達奈良依當班車確認。', routes:[
-    {from:'飯店',to:'詩仙堂',mode:'🚕 計程車',time:'30–45 分',note:'建議 08:15 出發，09:00 開門前後抵達；約 ¥3,000–4,300／車'},
-    {from:'詩仙堂',to:'圓光寺',mode:'🚶 步行',time:'5–10 分',note:'約 10:00 移動，停留約 1 小時；圓光寺秋季可能要預約，出發前確認'},
-    {from:'修學院區',to:'飯店',mode:'🚕 計程車',time:'30–45 分',note:'約 11:15 叫車回飯店拿行李；約 ¥3,300–4,800；先走到大路較好叫'},
-    {from:'飯店',to:'京都站',mode:'🚕 計程車',time:'10–20 分',note:'約 12:15 出發；約 ¥1,200–2,000；有行李推薦'},
-    {from:'京都站',to:'宇治',mode:'🚆 JR 奈良線',time:'17–20 分',note:'12:45 前後搭車，約 13:15 到宇治先吃午餐；普通車約 25–30 分'},
-    {from:'宇治',to:'奈良',mode:'🚆 JR 奈良線',time:'35–50 分',note:'平等院、宇治川逛完，約 16:30 搭車，17:30 前後到奈良；依車次銜接'}]},
+  {summary:'推薦：行李前一晚寄宅急便到奈良飯店，早上輕裝｜詩仙堂＋圓光寺 → 計程車到京都站 → JR 到宇治（午餐、平等院、宇治川）→ 傍晚到奈良。', alert:'沒寄宅急便的話：早上把行李寄放烏丸四條櫃檯，11:00 從圓光寺先回飯店拿行李（多約 45 分、計程車約 ¥3,300–4,800），再去京都站，到宇治約晚 45 分。', routeKey:'v92', routes:[
+    {from:'飯店（烏丸四條）',to:'詩仙堂',mode:'🚕 計程車',time:'30–45 分',note:'08:20 退房，08:30 出發，09:00 開門時抵達；約 ¥3,000–4,300／車'},
+    {from:'詩仙堂',to:'圓光寺',mode:'🚶 步行',time:'約 5 分',note:'09:50 移動；圓光寺秋季採預約時，訂 10:00 前後的時段，停留約 1 小時'},
+    {from:'圓光寺',to:'京都站',mode:'🚕 計程車',time:'30–40 分',note:'11:00 叫車（先走到一乘寺下松一帶的大路較好叫）；約 ¥3,000–4,000'},
+    {from:'京都站',to:'宇治',mode:'🚆 JR 奈良線',time:'17–20 分',note:'11:50 前後搭車，約 12:15 到宇治先吃午餐；普通車約 25–30 分'},
+    {from:'宇治',to:'奈良',mode:'🚆 JR 奈良線',time:'35–50 分',note:'13:00 平等院、14:30 宇治川與宇治上神社，約 16:15 搭車、17:00 前後到奈良；依車次銜接'}]},
   {summary:'清晨奈良公園散步 → 退房取車 → 開車約 1.5 小時到龜岡，車停飯店 → 步行搭保津川漂流到嵐山 → 傍晚搭 JR 回龜岡。', alert:'時間以保津川預約班次往回推（冬季班次較少，以官網為準）。取車時順便租 ETC 卡，並請店員把導航目的地設成 Route Inn 龜岡。', routeKey:'v86', routes:[
     {from:'飯店（奈良）',to:'奈良公園',mode:'🚶 步行',time:'20–30 分',note:'建議 06:45–07:00 出門，散步一至兩處（浮見堂、飛火野）；也可搭計程車約 5–10 分'},
     {from:'奈良公園',to:'飯店（退房後去取車）',mode:'🚕 計程車／步行',time:'約 1 小時（含退房、取車手續）',note:'建議 08:30 前回飯店退房；09:00 取車，確認冬季胎、ETC 卡與保險'},
@@ -885,9 +884,9 @@ const transportGeneralTips = ['全程準備 ICOCA，日常路段直接刷卡最�
     S("金戒光明寺","attraction","真如堂南側的「くろ谷さん」，山門、三重塔與墓地坡道可俯瞰京都市街。",{tags:["收尾"],dur:"約45–60分鐘",link:"https://www.kurodani.jp/",linkLabel:"金戒光明寺官方資訊",hours:"境內通常 09:00–16:00；秋季特別公開（御影堂、大方丈、庭園）另有時間與費用，以官網公告為準",fullDesc:"金戒光明寺與真如堂相鄰，步行 5–10 分即到，是這天的最後一站。巨大的山門、阿彌陀堂與三重塔都在坡地上，登上三重塔旁的石階可眺望京都市區與西山。幕末曾是會津藩京都守護職本陣。參觀後由岡崎道一帶叫車回飯店。"})
   );
   split(3,"詩仙堂・圓光寺・曼殊院三選二",[
-    S("詩仙堂","attraction","小巧而層次分明的山居庭園，白砂、杜鵑丘與楓色相互映襯。",{tags:["三選二"],dur:"約45–60分鐘",fullDesc:"詩仙堂由書院望向庭園的框景十分優雅，秋季色彩集中、停留節奏安靜。入口到庭園有些坡度，建議開門前後抵達；若院內已擁擠，不必久候經典空景。"}),
-    S("圓光寺","attraction","十牛之庭與額緣庭園是洛北紅葉代表，落葉期也很有韻味。",{tags:["三選二","紅葉重點"],dur:"約60–75分鐘",fullDesc:"圓光寺從書院向外望，可看到楓樹、苔庭與石燈籠形成如畫框般的景致；後方高處還能俯瞰京都。旺季通常需注意預約或入場安排，若當年紅葉狀況最好，可優先保留。"}),
-    S("曼殊院","attraction","門跡寺院氣質典雅，白砂庭園與勅使門周邊楓色較沉靜。",{tags:["三選二","較清幽"],dur:"約45–60分鐘",fullDesc:"曼殊院的庭園留白較多，氛圍比圓光寺安靜，適合作為洛北散步的收尾。三處全走會壓縮宇治時間，因此只選兩處；若希望少一點人潮，可把曼殊院排進組合。"})
+    S("詩仙堂","attraction","小巧而層次分明的山居庭園，白砂、杜鵑丘與楓色相互映襯。",{tags:["三選二","推薦"],dur:"約45–60分鐘",fullDesc:"詩仙堂由書院望向庭園的框景十分優雅，秋季色彩集中、停留節奏安靜。【推薦】和圓光寺相距約 5 分鐘步行，09:00 開門時先來。入口到庭園有些坡度，建議開門前後抵達；若院內已擁擠，不必久候經典空景。"}),
+    S("圓光寺","attraction","十牛之庭與額緣庭園是洛北紅葉代表，落葉期也很有韻味。",{tags:["三選二","推薦","紅葉重點"],dur:"約60–75分鐘",fullDesc:"圓光寺從書院向外望，可看到楓樹、苔庭與石燈籠形成如畫框般的景致；後方高處還能俯瞰京都。【推薦】這天的紅葉重點；秋季可能採預約制，建議訂 10:00 前後的時段。旺季通常需注意預約或入場安排，若當年紅葉狀況最好，可優先保留。"}),
+    S("曼殊院","attraction","門跡寺院氣質典雅，白砂庭園與勅使門周邊楓色較沉靜。",{tags:["三選二","備選","較清幽"],dur:"約45–60分鐘",fullDesc:"曼殊院的庭園留白較多，氛圍比圓光寺安靜，適合作為洛北散步的收尾。【備選】圓光寺預約不到、或想人少一點時，改成詩仙堂＋曼殊院。三處全走會壓縮宇治時間，因此只選兩處；若希望少一點人潮，可把曼殊院排進組合。"})
   ]);
   split(4,"常寂光寺／寶筐院二選一",[
     S("常寂光寺","attraction","小倉山坡地上的紅葉名所，仁王門、多寶塔與嵯峨野遠景層層展開。",{tags:["與寶筐院擇一"],dur:"約60分鐘",fullDesc:"常寂光寺需要走一段階梯，但沿途楓樹密度高，登高後視野開闊。搭船抵達嵐山後若體力仍好，這裡較有完整的『山寺紅葉』體驗；雨後石階濕滑，鞋底抓地力要足。"}),
@@ -2067,6 +2066,7 @@ function renderDayContent(){
       <div class="weather-strip"><div class="ico${DAY_ICON_IMG[activeDay]!==undefined?' img-ico':''}">${dayIconHTML(activeDay,d.weatherIco)}</div><div class="txt"><b style="font-family:'Zen Kaku Gothic New', sans-serif; font-size:14px;">${d.enRegion}</b><br><span style="font-size:11.5px; opacity:0.85;">${d.wear}</span></div></div>
       ${stayQuickHTML}
     </div>
+    ${dayTimelineHTML(activeDay)}
     <div id="day-card-${activeDay}">
       <div class="subtab-content${['weather','transport','routemap','eat'].includes(curSubTab)?'':' active'}" data-type="spots">
         <div class="spots-seg" role="tablist"><button type="button" role="tab" data-view="main" class="${curSubTab==='more'?'':'on'}" onclick="setSpotsView(${activeDay},'main')">今日亮點<em>${mainList.length}</em></button><button type="button" role="tab" data-view="life" class="${curSubTab==='more'?'on':''}" onclick="setSpotsView(${activeDay},'life')">食衣住<em>${lifeList.length}</em></button></div>
@@ -2079,6 +2079,7 @@ function renderDayContent(){
       <div class="subtab-content${curSubTab==='eat'?' active':''}" data-type="eat">${curSubTab==='eat'?dayEatPanelHTML(activeDay):''}</div>
     </div>
   `;
+  dayContent.insertAdjacentHTML('beforeend',dayReviewHTML(activeDay));
   dayContent.insertAdjacentHTML('beforeend',`<div class="end-mama">${mamaBtnHTML('day'+activeDay,'wide')}<small>放不進任何景點的資訊，都可以記在這裡</small></div>`);
   {
     const _ei=Math.floor(Math.random()*CRITTER_IMGS.length);
@@ -2506,10 +2507,24 @@ const TODO_SEED=[
   {id:'todo-hotel',text:'確認每間飯店的入住時間、行李寄放與早晚餐',due:'2026-11-20'},
   {id:'todo-flight',text:'確認航班時間，線上報到',due:'2026-11-26'},
   {id:'todo-foliage',text:'看紅葉與天氣預報，決定 11/28 去大原、高雄還是鞍馬',due:'2026-11-25'},
-  {id:'todo-taxi1129',text:'11/28 晚上用 GO 預約 11/29 早上到永觀堂的計程車',due:'2026-11-28'}
+  {id:'todo-taxi1129',text:'11/28 晚上用 GO 預約 11/29 早上到永觀堂的計程車',due:'2026-11-28'},
+  {id:'todo-enkoji',text:'預約圓光寺 11/30 10:00 前後的時段（秋季特別拝観若採預約制）',due:'2026-11-10'},
+  {id:'todo-takkyubin',text:'11/29 晚上在烏丸四條飯店櫃檯寄宅急便：行李箱送到 Daiwa Roynet 奈良（先問奈良飯店能否代收、11/30 送達）',due:'2026-11-29'}
 ].map(t=>({...t,done:false,note:''}));
 let todoData=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_todos'));return Array.isArray(v)?normalizeStructuredList('kyoto_todos',v):structuredClone(TODO_SEED);}catch(e){return structuredClone(TODO_SEED);}})();
 function persistTodos(){safeSetItem('kyoto_todos',todoData);}
+(function addTodoSeedV2(){
+  try{
+    if(localStorage.getItem('kyoto_todo_seed_v2'))return;
+    localStorage.setItem('kyoto_todo_seed_v2','1');
+    if(!localStorage.getItem('kyoto_todos'))return; /* 新手機：清單會從雲端或預設清單來，不在這裡寫入，避免把別人刪掉的項目帶回來 */
+    const add=[
+      {id:'todo-enkoji',text:'預約圓光寺 11/30 10:00 前後的時段（秋季特別拝観若採預約制）',due:'2026-11-10'},
+      {id:'todo-takkyubin',text:'11/29 晚上在烏丸四條飯店櫃檯寄宅急便：行李箱送到 Daiwa Roynet 奈良（先問奈良飯店能否代收、11/30 送達）',due:'2026-11-29'}
+    ].filter(t=>!todoData.some(x=>x.id===t.id)).map(t=>({...t,done:false,note:''}));
+    if(add.length){todoData.push(...add);setTimeout(persistTodos,0);}
+  }catch(e){}
+})();
 function todoWho(){
   try{const e=(familyAuthSession&&familyAuthSession.email)||(readAuthSession()&&readAuthSession().email)||'';return e?e.split('@')[0]:'';}catch(e){return '';}
 }
@@ -2582,6 +2597,166 @@ function renderTodoBanner(){
   el.innerHTML=`<span class="tb-ic">✅</span><span class="tb-txt"><b>出發前待辦還有 ${left.length} 項</b>${late?`<small>${late} 項快到期或已過期</small>`:'<small>點這裡查看、勾選</small>'}</span><em>›</em>`;
 }
 function goToTodos(){setTab('guide');setTimeout(()=>document.getElementById('todoSection')?.scrollIntoView({behavior:'smooth',block:'start'}),80);}
+/* ============ v92：今日時間表（每天一張，可在編輯模式改，同步給家人） ============ */
+const DAY_TIMELINE=[
+`11:35 抵達關西機場，入境、領行李
+13:10 搭 HARUKA 到京都站（13:10–13:50 間的班次）
+15:00 到 Richmond 寄行李、休息
+17:00 搭計程車到東福寺（行李留在飯店）
+17:30 東福寺夜間貸切｜草坂門前集合，最晚 19:00 入場
+19:30 京都站周邊晚餐
+21:00 回飯店休息`,
+`07:20 出發（依當天選的方案：大原／高雄／鞍馬）
+08:30 抵達山區，慢慢散步
+12:00 當地午餐
+15:00 開始回程（山區班次少，不要拖太晚）
+17:00 回到烏丸四條休息
+18:30 晚餐（天ぷら天天天／京の焼肉処 弘）`,
+`07:20 搭計程車出發（前一晚用 GO 預約）
+07:45 永觀堂會館前集合
+08:00 永觀堂晨間貸切｜最晚 08:30 入場
+09:45 步行到南禪寺（約 10 分）
+10:30 天授庵
+11:15 無鄰菴
+12:15 午餐（南禪寺・岡崎一帶）
+13:30 計程車到真如堂（約 10 分）
+14:45 步行到金戒光明寺
+16:00 搭計程車回飯店休息
+18:00 晚餐`,
+`08:20 退房（行李前一晚已寄宅急便到奈良）
+08:30 搭計程車到詩仙堂
+09:00 詩仙堂
+10:00 圓光寺（秋季預約時段）
+11:00 計程車到京都站
+11:50 JR 奈良線到宇治
+12:15 宇治午餐
+13:00 平等院
+14:30 宇治川＋宇治上神社
+16:15 JR 奈良線往奈良
+17:00 入住 Daiwa Roynet 奈良
+18:00 飯店附近晚餐`,
+`06:45 出門，散步奈良公園（浮見堂、飛火野）
+08:30 回飯店退房
+09:00 取車（冬季胎、ETC 卡、保險）
+09:30 開車往龜岡（約 1.5 小時）
+11:00 到 Route Inn 龜岡停車、寄行李
+12:00 保津川漂流（約 2 小時）
+14:00 嵐山下船、簡單午餐
+15:00 天龍寺
+16:00 常寂光寺或寶筐院（擇一）
+16:45 JR 嵯峨野線回龜岡
+18:00 晚餐`,
+`09:00 從龜岡開車出發
+09:40 玉寶山 龍穩寺
+10:45 開往綾部
+11:45 大本本部 梅松苑
+12:45 綾部午餐
+13:30 開往京丹後（約 1.5 小時）
+15:00 入住シーサイド佐竹
+18:00 旅館晚餐`,
+`10:00 退房出發
+10:20 立岩・後ヶ濱海岸
+11:30 道之驛 てんきてんき丹後
+12:00 午餐（間人／網野）
+13:30 琴引濱（可省略）
+15:00 入住 HOTEL＆湖邸 艸花
+18:00 晚餐`,
+`09:00 退房出發
+10:20 金剛院
+11:30 開往天橋立
+12:30 天橋立午餐
+13:30 傘松公園或 View Land（只選一岸）
+15:30 開往西舞鶴
+16:15 入住 Route Inn 西舞鶴
+18:00 晚餐`,
+`08:45 退房出發
+09:00 舞鶴港とれとれセンター早午餐
+10:40 五老天空塔
+11:30 舞鶴紅磚公園
+13:00 開車回京都（約 2 小時）
+15:00 加油、還車
+16:00 入住 Richmond Hotel 京都站
+18:00 最後一晚晚餐`,
+`08:30 退房、行李寄放飯店
+08:45 西本願寺
+09:45 京都御苑
+11:15 下鴨神社＋糺之森
+13:15 計程車回飯店拿行李
+14:00 京都站
+15:00 搭 HARUKA 到關西機場（15:00–15:30 間）
+16:45 航空公司報到
+19:00 起飛 → 21:19 抵達桃園`
+];
+var timelineStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_timeline'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
+function persistTimeline(){safeSetItem('kyoto_timeline',timelineStore);}
+function timelineText(i){return typeof timelineStore[i]==='string'?timelineStore[i]:(DAY_TIMELINE[i]||'');}
+function parseTimeline(text){
+  return String(text||'').split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
+    const m=l.match(/^(\d{1,2})[:：](\d{2})\s*(.*)$/);
+    return m?{t:`${m[1].padStart(2,'0')}:${m[2]}`,text:m[3]}:{t:'',text:l};
+  });
+}
+function nowHHMM(){const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+function dayTimelineHTML(i){
+  const rows=parseTimeline(timelineText(i));if(!rows.length)return '';
+  const isToday=typeof tripTodayIndex==='function'&&tripTodayIndex()===i;
+  let nextIdx=-1;
+  if(isToday){const now=nowHHMM();nextIdx=rows.findIndex(r=>r.t&&r.t>=now);}
+  const items=rows.map((r,k)=>{
+    const cls=isToday?(nextIdx>=0&&k<nextIdx-1?' past':k===nextIdx-1&&nextIdx>0?' now':k===nextIdx?' next':(nextIdx<0&&r.t?' past':'')):'';
+    const [title,...rest]=r.text.split('｜');
+    return `<li class="tl-row${cls}"><span class="tl-time">${escHtml(r.t||'')}</span><span class="tl-dot" aria-hidden="true"></span><span class="tl-text"><b>${escHtml(title)}</b>${rest.length?`<small>${escHtml(rest.join('｜'))}</small>`:''}${cls===' now'?'<em>進行中</em>':cls===' next'?'<em>下一個</em>':''}</span></li>`;
+  }).join('');
+  const edited=typeof timelineStore[i]==='string';
+  return `<details class="day-timeline" ${isToday||!localStorage.getItem('kyoto_tl_closed_'+i)?'open':''} ontoggle="try{this.open?localStorage.removeItem('kyoto_tl_closed_${i}'):localStorage.setItem('kyoto_tl_closed_${i}','1')}catch(e){}"><summary><span>🕘 今日時間表</span><small>${isToday?'今天':'點這裡收合／展開'}</small></summary><ol class="tl-list">${items}</ol><div class="tl-foot"><span>時間是建議，依現場調整。</span><span class="edit-only"><button type="button" onclick="editTimeline(${i})">修改時間表</button>${edited?`<button type="button" class="del" onclick="resetTimeline(${i})">還原建議</button>`:''}</span></div></details>`;
+}
+function editTimeline(i){
+  openFormModal({title:`修改時間表：D${days[i].dayNum}・${days[i].date}`,fields:[{id:'t',label:'一行一項，開頭寫時間，例如「07:20 搭計程車出發」。想加小字說明，用「｜」隔開。',type:'textarea',rows:14,value:timelineText(i)}],saveText:'儲存',
+    onSave:v=>{if(!v.t){alert('時間表不能是空的；要回到建議版請按「還原建議」。');return false;}const prev=timelineStore[i];timelineStore[i]=v.t;persistTimeline();safeRenderDayContent();offerUndo('已更新時間表',()=>{if(prev===undefined)delete timelineStore[i];else timelineStore[i]=prev;persistTimeline();safeRenderDayContent();});}});
+}
+function resetTimeline(i){
+  if(!confirm('把這天的時間表還原成建議版本？'))return;
+  const prev=timelineStore[i];delete timelineStore[i];persistTimeline();safeRenderDayContent();
+  offerUndo('已還原建議時間表',()=>{timelineStore[i]=prev;persistTimeline();safeRenderDayContent();});
+}
+
+/* ============ v92：每日回顧（每個帳號各寫一則，全家都看得到） ============ */
+var reviewStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_reviews'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
+function persistReviews(){safeSetItem('kyoto_reviews',reviewStore);}
+const REVIEW_MOODS=[['great','😊','很開心'],['good','🙂','不錯'],['ok','😌','普通'],['tired','😴','好累']];
+function myReviewName(){const w=todoWho();return w||'這支手機';}
+function dayReviewHTML(i){
+  const day=reviewStore[i]||{},me=accountKey();
+  const entries=Object.entries(day).filter(([,r])=>r&&(r.text||r.img)).sort((a,b)=>(a[0]===me?-1:b[0]===me?1:String(a[1].at||'').localeCompare(String(b[1].at||''))));
+  const mood=m=>{const x=REVIEW_MOODS.find(z=>z[0]===m);return x?`<span class="rv-mood" title="${x[2]}">${x[1]} ${x[2]}</span>`:'';};
+  const card=([k,r])=>`<div class="rv-item${k===me?' mine':''}"><div class="rv-head"><span class="rv-av">${escHtml(String(r.name||'?').slice(0,1).toUpperCase())}</span><b>${escHtml(r.name||'家人')}${k===me?'<em>（我）</em>':''}</b>${mood(r.mood)}</div>${r.text?`<p>${brText(r.text)}</p>`:''}${r.img?`<img class="rv-img" src="${escAttr(r.img)}" data-src="${escAttr(r.img)}" alt="" loading="lazy" onclick="openAttachModal(this.dataset.src)">`:''}${k===me?`<div class="rv-acts"><button type="button" onclick="editMyReview(${i})">修改</button><button type="button" class="del" onclick="deleteMyReview(${i})">刪除</button></div>`:''}</div>`;
+  const mine=day[me]&&(day[me].text||day[me].img);
+  return `<section class="day-review"><h3>📝 今日回顧</h3><p class="rv-sub">每個人各寫一則：今天最喜歡什麼、一張照片，全家都看得到。</p>${entries.map(card).join('')||'<div class="rv-empty">還沒有人寫。今天結束時，寫一句話留給自己吧！</div>'}${mine?'':`<button type="button" class="rv-add" onclick="editMyReview(${i})">＋ 寫我的回顧</button>`}</section>`;
+}
+function editMyReview(i){
+  const me=accountKey(),cur=(reviewStore[i]||{})[me]||{};
+  openFormModal({title:`我的回顧：D${days[i].dayNum}・${days[i].date}`,fields:[
+    {id:'name',label:'顯示名字',value:cur.name||myReviewName()},
+    {id:'mood',label:'今天心情',type:'select',value:cur.mood||'great',options:REVIEW_MOODS.map(([v,e,l])=>({value:v,label:`${e} ${l}`}))},
+    {id:'text',label:'今天最喜歡的事、想記住的一句話',type:'textarea',rows:6,value:cur.text||''},
+    {id:'file',label:cur.img?'換一張照片（選填；不選就保留原本的）':'放一張今天最喜歡的照片（選填）',type:'file'}],saveText:'儲存',
+    onSave:v=>{
+      if(!v.text&&!v.file&&!cur.img){alert('寫一句話或放一張照片吧！');return false;}
+      return (async()=>{
+        let img=cur.img||'';
+        if(v.file){try{img=await uploadMediaFile(v.file,'reviews');}catch(err){reportUploadError(err);return false;}}
+        (reviewStore[i]=reviewStore[i]||{})[me]={name:v.name||myReviewName(),mood:v.mood,text:v.text,img,at:new Date().toISOString()};
+        persistReviews();safeRenderDayContent();
+      })();
+    }});
+}
+function deleteMyReview(i){
+  const me=accountKey(),day=reviewStore[i];if(!day||!day[me])return;
+  if(!confirm('刪除我這天的回顧？（8 秒內可復原）'))return;
+  const prev=day[me];delete day[me];persistReviews();safeRenderDayContent();
+  offerUndo('已刪除回顧',()=>{(reviewStore[i]=reviewStore[i]||{})[me]=prev;persistReviews();safeRenderDayContent();});
+}
+
 
 function renderRulesList() {
   const wrap = document.getElementById('rulesListWrap');
@@ -2769,7 +2944,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=91').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=92').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3389,7 +3564,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v91-2026-10-10';
+const APP_VERSION='v92-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -5207,8 +5382,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=91';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=91';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=92';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=92';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }

@@ -2218,3 +2218,45 @@ body.mode-travel .driver-edit{display:none;}
 .todo-banner small{font-size:13px;color:#3f7a52;}
 .todo-banner em{font-style:normal;font-size:24px;color:#2f8a52;}
 .spot-edit-field input[type=date]{width:100%;box-sizing:border-box;min-height:46px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;font-size:16px;background:#fff;}
+
+/* ===== v92：今日時間表、每日回顧 ===== */
+.day-timeline{margin:0 0 14px;padding:4px 14px 10px;border-radius:20px;background:#fffdf7;border:1.5px solid #f0d9a8;box-shadow:0 6px 16px -14px rgba(120,70,20,.5);}
+.day-timeline summary{display:flex;align-items:center;gap:8px;min-height:48px;cursor:pointer;list-style:none;}
+.day-timeline summary::-webkit-details-marker{display:none;}
+.day-timeline summary span{font-size:17px;font-weight:900;color:var(--ink);}
+.day-timeline summary small{margin-left:auto;font-size:12.5px;color:#a07a55;}
+.tl-list{list-style:none;margin:2px 0 6px;padding:0;position:relative;}
+.tl-row{display:grid;grid-template-columns:52px 14px 1fr;align-items:start;gap:8px;padding:7px 0;position:relative;}
+.tl-row::before{content:'';position:absolute;left:66px;top:0;bottom:0;width:2px;background:#f0dfc4;}
+.tl-row:first-child::before{top:16px;}.tl-row:last-child::before{bottom:calc(100% - 16px);}
+.tl-time{font-size:15px;font-weight:900;color:#b8431f;font-variant-numeric:tabular-nums;padding-top:1px;}
+.tl-dot{width:12px;height:12px;margin-top:5px;border-radius:50%;background:#fff;border:3px solid #e08a4c;position:relative;z-index:1;}
+.tl-text b{display:block;font-size:15.5px;font-weight:800;color:var(--ink);line-height:1.45;}
+.tl-text small{display:block;margin-top:2px;font-size:13px;color:#8a6a55;line-height:1.5;}
+.tl-text em{display:inline-block;margin-top:4px;font-style:normal;font-size:12px;font-weight:900;padding:1px 10px;border-radius:999px;background:#fff1dc;color:#b8431f;}
+.tl-row.past{opacity:.45;}
+.tl-row.now .tl-dot{background:#e08a4c;}
+.tl-row.now em{background:#b8431f;color:#fff;}
+.tl-row.next .tl-dot{border-color:#2f8a52;}
+.tl-row.next em{background:#e6f4ea;color:#23683d;}
+.tl-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:space-between;font-size:12.5px;color:#a07a55;}
+.tl-foot button{min-height:38px;padding:0 14px;border:0;border-radius:999px;background:#eef3fb;color:var(--blue);font:inherit;font-size:13.5px;font-weight:800;cursor:pointer;margin-left:6px;}
+.tl-foot button.del{background:#fde4df;color:#c1502f;}
+body.large-text .tl-text b{font-size:16px!important;}
+.day-review{margin:18px 0 6px;padding:14px;border-radius:20px;background:linear-gradient(160deg,#f7f1fc,#fffaf3);border:1.5px solid #e2d3f0;}
+.day-review h3{margin:0;font-size:18px;color:#4b3270;}
+.rv-sub{margin:4px 0 10px;font-size:13px;color:#7a6a8a;line-height:1.6;}
+.rv-item{background:#fff;border-radius:16px;padding:12px;margin-bottom:10px;border:1px solid #ece2f6;}
+.rv-item.mine{border-color:#c9b0e6;}
+.rv-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.rv-av{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:#7a4fb0;color:#fff;font-weight:900;font-size:15px;flex:none;}
+.rv-head b{font-size:15.5px;color:var(--ink);}
+.rv-head b em{font-style:normal;font-size:12.5px;color:#8a6aa5;margin-left:2px;}
+.rv-mood{margin-left:auto;font-size:13.5px;font-weight:800;color:#5b3a82;background:#f3ecfa;border-radius:999px;padding:2px 10px;}
+.rv-item p{margin:8px 0 0;font-size:15.5px;line-height:1.7;color:var(--ink);white-space:pre-line;}
+.rv-img{display:block;width:100%;max-height:260px;object-fit:cover;border-radius:12px;margin-top:8px;cursor:zoom-in;}
+.rv-acts{display:flex;gap:6px;justify-content:flex-end;margin-top:8px;}
+.rv-acts button{min-height:38px;padding:0 14px;border:0;border-radius:999px;background:#eef3fb;color:var(--blue);font:inherit;font-size:13.5px;font-weight:800;cursor:pointer;}
+.rv-acts button.del{background:#fde4df;color:#c1502f;}
+.rv-empty{padding:10px 4px;font-size:14px;color:#7a6a8a;}
+.rv-add{width:100%;min-height:50px;border:1.5px dashed #a98bd0;border-radius:14px;background:#fff;color:#5b3a82;font:inherit;font-size:15.5px;font-weight:900;cursor:pointer;}
