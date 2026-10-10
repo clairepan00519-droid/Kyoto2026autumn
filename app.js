@@ -2803,28 +2803,31 @@ const REVIEW_MOODS=[
   ['disappointed','有點可惜','明天會更好的！']];
 const OLD_MOOD_MAP={great:'excited',good:'content',ok:'content'};
 function moodInfo(m){m=OLD_MOOD_MAP[m]||m;const x=REVIEW_MOODS.find(z=>z[0]===m);return x?{key:x[0],label:x[1],sub:x[2],img:`images/mood-${x[0]}.webp`}:null;}
+/* v95：心情可複選，存成 "excited,touched"（舊的單一值也相容） */
+function moodList(m){const seen=new Set();return String(m||'').split(',').map(x=>OLD_MOOD_MAP[x.trim()]||x.trim()).filter(x=>x&&!seen.has(x)&&seen.add(x)&&REVIEW_MOODS.some(z=>z[0]===x));}
 function myReviewName(){const w=todoWho();return w||'這支手機';}
 function myEmail(){try{return (familyAuthSession&&familyAuthSession.email)||(readAuthSession()&&readAuthSession().email)||'';}catch(e){return '';}}
 function dayReviewHTML(i){
   const day=reviewStore[i]||{},me=accountKey();
   const entries=Object.entries(day).filter(([,r])=>r&&(r.text||r.img||r.mood)).sort((a,b)=>(a[0]===me?-1:b[0]===me?1:String(a[1].at||'').localeCompare(String(b[1].at||''))));
-  const card=([k,r])=>{const mi=moodInfo(r.mood);return `<div class="rv-item${k===me?' mine':''}"><div class="rv-head">${mi?`<img class="rv-deer" src="${mi.img}" alt="${escAttr(mi.label)}" width="56" height="56">`:`<span class="rv-av">${escHtml(String(r.name||'?').slice(0,1).toUpperCase())}</span>`}<div class="rv-who"><b>${escHtml(r.name||'家人')}${k===me?'<em>（我）</em>':''}</b>${mi?`<span class="rv-mood">${escHtml(mi.label)}</span>`:''}</div></div>${r.text?`<p>${brText(r.text)}</p>`:''}${r.img?`<img class="rv-img" src="${escAttr(r.img)}" data-src="${escAttr(r.img)}" alt="" loading="lazy" onclick="openAttachModal(this.dataset.src)">`:''}${k===me?`<div class="rv-acts"><button type="button" onclick="editMyReview(${i})">修改</button><button type="button" class="rv-del" onclick="deleteMyReview(${i})">刪除</button></div>`:''}</div>`;};
+  const card=([k,r])=>{const ms=moodList(r.mood).map(moodInfo);const mi=ms[0];return `<div class="rv-item${k===me?' mine':''}"><div class="rv-head">${mi?`<img class="rv-deer" src="${mi.img}" alt="${escAttr(mi.label)}" width="56" height="56">`:`<span class="rv-av">${escHtml(String(r.name||'?').slice(0,1).toUpperCase())}</span>`}<div class="rv-who"><b>${escHtml(r.name||'家人')}${k===me?'<em>（我）</em>':''}</b></div></div>${ms.length?`<div class="rv-moods">${ms.map((x,n)=>`<span class="rv-mood">${n?`<img src="${x.img}" alt="" width="26" height="26">`:''}${escHtml(x.label)}</span>`).join('')}</div>`:''}${r.text?`<p>${brText(r.text)}</p>`:''}${r.img?`<img class="rv-img" src="${escAttr(r.img)}" data-src="${escAttr(r.img)}" alt="" loading="lazy" onclick="openAttachModal(this.dataset.src)">`:''}${k===me?`<div class="rv-acts"><button type="button" onclick="editMyReview(${i})">修改</button><button type="button" class="rv-del" onclick="deleteMyReview(${i})">刪除</button></div>`:''}</div>`;};
   const mine=day[me]&&(day[me].text||day[me].img||day[me].mood);
   const email=myEmail();
-  return `<section class="day-review"><h3><img src="images/mood-content.webp" alt="" width="40" height="40">今日回顧</h3><p class="rv-sub">今天過得怎麼樣呀？選一隻小鹿代表你的心情，再說說今天最喜歡的瞬間～全家都看得到喔 🍁</p>${entries.map(card).join('')||'<div class="rv-empty">還沒有人寫喔～<br>睡前來跟小鹿說說今天吧！</div>'}${mine?'':`<button type="button" class="rv-add" onclick="editMyReview(${i})">＋ 寫我的回顧</button>`}<p class="rv-acct">${email?`目前用 <b>${escHtml(email)}</b> 寫`:'目前沒有登入'}・<button type="button" class="rv-switch" onclick="logoutFamily()">不是你？換帳號</button></p></section>`;
+  return `<section class="day-review"><h3><img src="images/mood-content.webp" alt="" width="40" height="40">今日回顧</h3><p class="rv-sub">今天過得怎麼樣呀？選幾隻小鹿代表你的心情，再說說今天最喜歡的瞬間～全家都看得到喔 🍁</p>${entries.map(card).join('')||'<div class="rv-empty">還沒有人寫喔～<br>睡前來跟小鹿說說今天吧！</div>'}${mine?'':`<button type="button" class="rv-add" onclick="editMyReview(${i})">＋ 寫我的回顧</button>`}<p class="rv-acct">${email?`目前用 <b>${escHtml(email)}</b> 寫`:'目前沒有登入'}・<button type="button" class="rv-switch" onclick="logoutFamily()">不是你？換帳號</button></p></section>`;
 }
 function moodPickerHTML(cur){
-  cur=OLD_MOOD_MAP[cur]||cur||'';
-  return `<input type="hidden" data-f="mood" value="${escAttr(cur)}"><div class="mood-grid" role="radiogroup">${REVIEW_MOODS.map(([k,l,sub])=>`<button type="button" class="mood-opt${k===cur?' on':''}" data-mood="${k}" role="radio" aria-checked="${k===cur}"><img src="images/mood-${k}.webp" alt="" width="64" height="64"><b>${escHtml(l)}</b><small>${escHtml(sub)}</small></button>`).join('')}</div>`;
+  const sel=moodList(cur);
+  return `<input type="hidden" data-f="mood" value="${escAttr(sel.join(','))}"><div class="mood-grid" role="group">${REVIEW_MOODS.map(([k,l,sub])=>`<button type="button" class="mood-opt${sel.includes(k)?' on':''}" data-mood="${k}" role="checkbox" aria-checked="${sel.includes(k)}"><i class="mood-check" aria-hidden="true">✓</i><img src="images/mood-${k}.webp" alt="" width="64" height="64"><b>${escHtml(l)}</b><small>${escHtml(sub)}</small></button>`).join('')}</div>`;
 }
 function initMoodPicker(wrap){
   const hid=wrap.querySelector('[data-f="mood"]');
-  wrap.querySelectorAll('.mood-opt').forEach(b=>b.onclick=()=>{wrap.querySelectorAll('.mood-opt').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-checked',x===b);});hid.value=b.dataset.mood;});
+  wrap.querySelectorAll('.mood-opt').forEach(b=>b.onclick=()=>{const on=!b.classList.contains('on');b.classList.toggle('on',on);b.setAttribute('aria-checked',on);
+    let sel=moodList(hid.value).filter(x=>x!==b.dataset.mood);if(on)sel.push(b.dataset.mood);hid.value=sel.join(',');});
 }
 function editMyReview(i){
   const me=accountKey(),cur=(reviewStore[i]||{})[me]||{};
   openFormModal({title:`🦌 D${days[i].dayNum}・${days[i].date} 的我`,fields:[
-    {id:'mood',type:'custom',label:'今天的心情是哪一隻小鹿？',html:moodPickerHTML(cur.mood),init:initMoodPicker,noFocus:true},
+    {id:'mood',type:'custom',label:'今天的心情是哪幾隻小鹿？（可以選好幾隻喔）',html:moodPickerHTML(cur.mood),init:initMoodPicker,noFocus:true},
     {id:'text',label:'今天最喜歡的瞬間是…？',type:'textarea',rows:5,value:cur.text||'',placeholder:'例如：永觀堂的紅葉在陽光下好像在發光！'},
     {id:'file',label:cur.img?'換一張照片（選填；不選就保留原本的）':'放一張今天最喜歡的照片（選填）',type:'file'},
     {id:'name',label:'大家看到的名字',value:cur.name||myReviewName()}],saveText:'存起來 🍁',
@@ -3061,7 +3064,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=94').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=95').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3684,7 +3687,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v94-2026-10-10';
+const APP_VERSION='v95-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -5504,8 +5507,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=94';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=94';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=95';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=95';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }

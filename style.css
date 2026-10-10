@@ -2314,3 +2314,10 @@ body.large-text .tl-text b{font-size:16px!important;}
 .ta-shift{display:flex;align-items:center;gap:8px;flex:1 1 200px;min-height:44px;padding:4px 12px;border-radius:12px;background:#e6f4ea;color:#23683d;font-size:14px;font-weight:800;cursor:pointer;}
 .spot-edit-field .ta-shift input{width:22px;height:22px;flex:0 0 22px;margin:0;}
 .ta-shift.dim{opacity:.55;}
+/* v95：心情複選 */
+.mood-opt{position:relative;}
+.mood-check{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;border:2px solid #ecd9bf;background:#fff;color:transparent;font-style:normal;font-size:14px;font-weight:900;line-height:20px;text-align:center;}
+.mood-opt.on .mood-check{background:#e08a4c;border-color:#e08a4c;color:#fff;}
+.rv-moods{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px;}
+.rv-moods .rv-mood{display:inline-flex;align-items:center;gap:2px;margin-left:0;font-size:13px;font-weight:800;padding:2px 10px;border-radius:999px;background:#fff1dc;color:#b8431f;}
+.rv-moods .rv-mood img{width:26px;height:26px;object-fit:contain;margin:-4px 0 -4px -6px;}
