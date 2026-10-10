@@ -2314,3 +2314,24 @@ body.large-text .tl-text b{font-size:16px!important;}
 .ta-shift{display:flex;align-items:center;gap:8px;flex:1 1 200px;min-height:44px;padding:4px 12px;border-radius:12px;background:#e6f4ea;color:#23683d;font-size:14px;font-weight:800;cursor:pointer;}
 .spot-edit-field .ta-shift input{width:22px;height:22px;flex:0 0 22px;margin:0;}
 .ta-shift.dim{opacity:.55;}
+/* v95：心情複選 */
+.mood-opt{position:relative;}
+.mood-check{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;border:2px solid #ecd9bf;background:#fff;color:transparent;font-style:normal;font-size:14px;font-weight:900;line-height:20px;text-align:center;}
+.mood-opt.on .mood-check{background:#e08a4c;border-color:#e08a4c;color:#fff;}
+.rv-moods{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px;}
+.rv-moods .rv-mood{display:inline-flex;align-items:center;gap:2px;margin-left:0;font-size:13px;font-weight:800;padding:2px 10px;border-radius:999px;background:#fff1dc;color:#b8431f;}
+.rv-moods .rv-mood img{width:26px;height:26px;object-fit:contain;margin:-4px 0 -4px -6px;}
+/* v96：一天多方案（11/28 四選一） */
+.tl-plans{margin:4px 0 8px;padding:10px;border-radius:14px;background:#fff8ee;border:1px solid #f3e1c7;}
+.tl-plan-status{font-size:13.5px;color:#7a5a40;margin-bottom:8px;}
+.tl-plan-status b{color:#23683d;}
+.tl-plan-tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
+.tl-plan-tab{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-height:54px;padding:7px 10px;border:2px solid #f0e2cc;border-radius:12px;background:#fff;font:inherit;text-align:left;cursor:pointer;}
+.tl-plan-tab b{font-size:15px;font-weight:900;color:var(--ink);}
+.tl-plan-tab small{font-size:11.5px;color:#a07a55;line-height:1.35;}
+.tl-plan-tab.on{border-color:#e08a4c;background:#fff0dc;box-shadow:0 3px 10px rgba(224,138,76,.2);}
+.tl-plan-tab.on b{color:#b8431f;}
+.tl-plan-tab i{position:absolute;top:-8px;right:6px;font-style:normal;font-size:11px;font-weight:900;padding:1px 8px;border-radius:999px;background:#2f8a52;color:#fff;}
+.tl-plan-sub{margin:8px 2px 0;font-size:13.5px;font-weight:800;color:#7a3d1c;}
+.tl-plan-decide{display:block;width:100%;min-height:46px;margin-top:8px;border:0;border-radius:999px;background:#2f8a52;color:#fff;font:inherit;font-size:15px;font-weight:900;cursor:pointer;}
+.tc-picked{font-style:normal;font-size:11.5px;font-weight:900;margin-left:6px;padding:1px 8px;border-radius:999px;background:#2f8a52;color:#fff;}
