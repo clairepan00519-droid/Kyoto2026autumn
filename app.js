@@ -740,7 +740,7 @@ const days = [
     S("HOTEL＆湖邸 艸花","hotel","15:00 入住，這日把旅館本身當作行程。",{tags:["慢旅"],img:"https://images.unsplash.com/photo-1500534314209-a25ddb2bd4297?auto=format&fit=crop&w=1200&q=82"}),
     S("間人／網野午餐","food","依當天海岸動線選擇，不為餐廳大幅繞路。",{img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"})
   ]},
-{dayNum:"8",date:"12/4",weekday:"五",region:"京丹後 → 金剛院 → 天橋立 → 舞鶴",enRegion:"Kyotango \u2192 Amanohashidate \u2192 Maizuru",drive:"🚗 約 100–130 km",title:"橋立暮景",dayDesc:"海之京都・金剛院與天橋立遠景",wear:"防風保暖，纜車與展望台體感更冷",weatherIco:"🌉",spots:[
+{dayNum:"8",date:"12/4",weekday:"五",region:"京丹後 → 金剛院 → 天橋立 → 舞鶴",enRegion:"Kyotango \u2192 Amanohashidate \u2192 Maizuru",drive:"🚗 約 130 km",title:"橋立暮景",dayDesc:"海之京都・金剛院與天橋立遠景",wear:"防風保暖，纜車與展望台體感更冷",weatherIco:"🌉",spots:[
     S("金剛院","attraction","舞鶴山間古寺，作為天橋立前的寧靜停靠。",{dur:"約60–90分鐘",fullDesc:"上午退房後前往，不要再增加過多寺院，保留天橋立的日照時間。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
     S("府中側：籠神社＋傘松公園","attraction","已搭過 View Land 時選這岸。",{tags:["方案A"],dur:"約2–3小時",fullDesc:"以籠神社與傘松公園為主，不做沙洲完整徒步或繞行。",img:"https://images.unsplash.com/photo-1500534314209-a25ddb2bd4297?auto=format&fit=crop&w=1200&q=82"}),
     S("文珠側：View Land＋智恩寺","attraction","未看過飛龍觀時選這岸。",{tags:["方案B"],dur:"約2–3小時",fullDesc:"View Land、智恩寺與沙洲前段即可；天橋立只選一岸。",img:"https://images.unsplash.com/photo-1500534314209-a25ddb2bd4297?auto=format&fit=crop&w=1200&q=82"})
@@ -790,12 +790,12 @@ const transportPlans = [
     {from:'真如堂',to:'金戒光明寺',mode:'🚶 步行',time:'5–10 分',note:'寺域南側小路相連，不必搭車'},
     {from:'金戒光明寺',to:'飯店（烏丸四條）',mode:'🚕 計程車',time:'20–30 分',note:'走到岡崎道或丸太町通較好叫車；約 ¥2,000–2,800'}]},
   {summary:'上午洛北計程車串寺；回飯店取行李後，京都站搭 JR 奈良線至宇治、奈良。', alert:'宇治段優先搭「みやこ路快速」；快速是否直達奈良依當班車確認。', routes:[
-    {from:'飯店',to:'詩仙堂',mode:'🚕 計程車',time:'30–45 分',note:'約 ¥3,000–4,300／車'},
-    {from:'詩仙堂',to:'圓光寺',mode:'🚶 步行',time:'5–10 分',note:'最順路'},
-    {from:'修學院區',to:'飯店',mode:'🚕 計程車',time:'30–45 分',note:'約 ¥3,300–4,800；先走到大路較好叫'},
-    {from:'飯店',to:'京都站',mode:'🚕 計程車',time:'10–20 分',note:'約 ¥1,200–2,000；有行李推薦'},
-    {from:'京都站',to:'宇治',mode:'🚆 JR 奈良線',time:'17–20 分',note:'普通車約 25–30 分'},
-    {from:'宇治',to:'奈良',mode:'🚆 JR 奈良線',time:'35–50 分',note:'依車次銜接'}]},
+    {from:'飯店',to:'詩仙堂',mode:'🚕 計程車',time:'30–45 分',note:'建議 08:15 出發，09:00 開門前後抵達；約 ¥3,000–4,300／車'},
+    {from:'詩仙堂',to:'圓光寺',mode:'🚶 步行',time:'5–10 分',note:'約 10:00 移動，停留約 1 小時；圓光寺秋季可能要預約，出發前確認'},
+    {from:'修學院區',to:'飯店',mode:'🚕 計程車',time:'30–45 分',note:'約 11:15 叫車回飯店拿行李；約 ¥3,300–4,800；先走到大路較好叫'},
+    {from:'飯店',to:'京都站',mode:'🚕 計程車',time:'10–20 分',note:'約 12:15 出發；約 ¥1,200–2,000；有行李推薦'},
+    {from:'京都站',to:'宇治',mode:'🚆 JR 奈良線',time:'17–20 分',note:'12:45 前後搭車，約 13:15 到宇治先吃午餐；普通車約 25–30 分'},
+    {from:'宇治',to:'奈良',mode:'🚆 JR 奈良線',time:'35–50 分',note:'平等院、宇治川逛完，約 16:30 搭車，17:30 前後到奈良；依車次銜接'}]},
   {summary:'清晨奈良公園散步 → 退房取車 → 開車約 1.5 小時到龜岡，車停飯店 → 步行搭保津川漂流到嵐山 → 傍晚搭 JR 回龜岡。', alert:'時間以保津川預約班次往回推（冬季班次較少，以官網為準）。取車時順便租 ETC 卡，並請店員把導航目的地設成 Route Inn 龜岡。', routeKey:'v86', routes:[
     {from:'飯店（奈良）',to:'奈良公園',mode:'🚶 步行',time:'20–30 分',note:'建議 06:45–07:00 出門，散步一至兩處（浮見堂、飛火野）；也可搭計程車約 5–10 分'},
     {from:'奈良公園',to:'飯店（退房後去取車）',mode:'🚕 計程車／步行',time:'約 1 小時（含退房、取車手續）',note:'建議 08:30 前回飯店退房；09:00 取車，確認冬季胎、ETC 卡與保險'},
@@ -819,16 +819,16 @@ const transportPlans = [
     {from:'HOTEL＆湖邸 艸花',to:'金剛院',mode:'🚗 自駕',time:'約 1 小時 15 分–1 小時 30 分',note:'09:00 退房出發，約 10:20 抵達，參觀約 1 小時'},
     {from:'金剛院',to:'天橋立',nav:'天橋立 京都府宮津市',mode:'🚗 自駕',time:'約 50–60 分',note:'11:30 出發，12:30 前後抵達；先午餐，再依選的岸搭纜車或吊椅'},
     {from:'天橋立',to:'Route Inn 西舞鶴',mode:'🚗 自駕',time:'約 40–50 分',note:'15:30 前離開，約 16:15 入住；晚餐在西舞鶴'}]},
-  {summary:'早上舞鶴三站（市場早午餐 → 五老天空塔 → 紅磚公園），13:00 出發回京都還車。', alert:'車程為估算，以導航即時路況為準；山路與海岸路放慢。回京都車程至少約 2 小時，京都市區傍晚塞車；還車前記得加滿油。', drive:true, routeKey:'v87', routes:[
-    {from:'Route Inn 西舞鶴',to:'舞鶴港とれとれセンター',mode:'🚗 自駕',time:'約 5–10 分',note:'08:30 前後抵達，海鮮早午餐'},
-    {from:'とれとれセンター',to:'五老天空塔',mode:'🚗 自駕',time:'約 20–25 分',note:'約 10:00 抵達，展望約 45 分'},
-    {from:'五老天空塔',to:'舞鶴紅磚公園',mode:'🚗 自駕',time:'約 15 分',note:'約 11:00–12:30 散步'},
+  {summary:'早上舞鶴三站（09:00 市場早午餐 → 五老天空塔 → 紅磚公園），13:00 出發回京都還車。', alert:'車程為估算，以導航即時路況為準；山路與海岸路放慢。回京都車程至少約 2 小時，京都市區傍晚塞車；還車前記得加滿油。', drive:true, routeKey:'v87', routes:[
+    {from:'Route Inn 西舞鶴',to:'舞鶴港とれとれセンター',mode:'🚗 自駕',time:'約 5–10 分',note:'09:00 開門時抵達（通常 09:00 起營業），海鮮早午餐'},
+    {from:'とれとれセンター',to:'五老天空塔',mode:'🚗 自駕',time:'約 20–25 分',note:'約 10:15 出發、10:40 抵達，展望約 45 分'},
+    {from:'五老天空塔',to:'舞鶴紅磚公園',mode:'🚗 自駕',time:'約 15 分',note:'約 11:30–12:45 散步'},
     {from:'舞鶴',to:'京都還車點',mode:'🚗 自駕',time:'約 2 小時以上',note:'13:00 出發，約 15:00–15:30 還車；預留市區塞車'},
     {from:'京都站周邊還車點',to:'Richmond Hotel',mode:'🚶／🚕',time:'5–15 分',note:'計程車約 ¥700–1,300'}]},
   {summary:'市區三段計程車最省力；13:15 左右由下鴨神社叫車回飯店，京都站搭 HARUKA。', alert:'建議搭 15:00–15:30 間 HARUKA；19:00 起飛，勿再追加遠距景點。', routes:[
-    {from:'飯店',to:'西本願寺',mode:'🚶／🚕',time:'步行 15–20 分',note:'計程車約 ¥700–1,100'},
-    {from:'西本願寺',to:'京都御苑 堺町御門',mode:'🚕 計程車',time:'15–25 分',note:'約 ¥1,600–2,400／車'},
-    {from:'京都御苑',to:'下鴨神社',mode:'🚕 計程車',time:'10–15 分',note:'約 ¥1,200–1,800；園內不能上車'},
+    {from:'飯店',to:'西本願寺',mode:'🚶／🚕',time:'步行 15–20 分',note:'08:30 退房、行李寄放飯店後出發；計程車約 ¥700–1,100'},
+    {from:'西本願寺',to:'京都御苑 堺町御門',mode:'🚕 計程車',time:'15–25 分',note:'約 09:45 出發；約 ¥1,600–2,400／車'},
+    {from:'京都御苑',to:'下鴨神社',mode:'🚕 計程車',time:'10–15 分',note:'約 11:15 出發；約 ¥1,200–1,800；園內不能上車'},
     {from:'下鴨神社',to:'京都站／飯店',mode:'🚕 計程車',time:'25–40 分',note:'約 ¥2,800–4,000；13:15 左右叫車'},
     {from:'京都站',to:'KIX',mode:'🚆 JR 特急 HARUKA',time:'75–85 分',note:'免轉車'}]}
 ];
@@ -1082,7 +1082,7 @@ const transportGeneralTips = ['全程準備 ICOCA，日常路段直接刷卡最�
 
   // 每日穿搭改為依地區與活動差異化。
   const wears=[
-    '機場與車站溫差大：薄發熱衣＋針織層＋可收納外套，鞋子以長時間移動舒適為主。',
+    '機場與車站溫差大：薄發熱衣＋針織層＋可收納外套；傍晚東福寺夜間參觀很冷，加圍巾、手套與保暖外套。',
     '大原／高雄／鞍馬皆比市中心冷：保暖內層、薄羽絨、防風外套、圍巾、手套與抓地鞋。',
     '東山步行量大：排汗內層＋毛衣＋輕羽絨，午後回市區可脫層，鞋底需防滑。',
     '洛北早晨偏冷、宇治午後較溫和：洋蔥式三層穿搭，帶輕便雨具並避免厚重手提包。',
@@ -2769,7 +2769,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=90').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=91').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3389,7 +3389,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v90-2026-10-10';
+const APP_VERSION='v91-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -5207,8 +5207,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=90';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=90';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=91';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=91';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
