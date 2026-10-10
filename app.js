@@ -740,8 +740,8 @@ const days = [
     S("HOTEL＆湖邸 艸花","hotel","15:00 入住，這日把旅館本身當作行程。",{tags:["慢旅"],img:"https://images.unsplash.com/photo-1500534314209-a25ddb2bd4297?auto=format&fit=crop&w=1200&q=82"}),
     S("間人／網野午餐","food","依當天海岸動線選擇，不為餐廳大幅繞路。",{img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"})
   ]},
-{dayNum:"8",date:"12/4",weekday:"五",region:"京丹後 → 金剛院 → 天橋立 → 舞鶴",enRegion:"Kyotango \u2192 Amanohashidate \u2192 Maizuru",drive:"🚗 約 130 km",title:"橋立暮景",dayDesc:"海之京都・金剛院與天橋立遠景",wear:"防風保暖，纜車與展望台體感更冷",weatherIco:"🌉",spots:[
-    S("金剛院","attraction","舞鶴山間古寺，作為天橋立前的寧靜停靠。",{dur:"約60–90分鐘",fullDesc:"上午退房後前往，不要再增加過多寺院，保留天橋立的日照時間。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
+{dayNum:"8",date:"12/4",weekday:"五",region:"京丹後 → 天橋立 → 舞鶴",enRegion:"Kyotango \u2192 Amanohashidate \u2192 Maizuru",drive:"🚗 約 70 km",title:"橋立暮景",dayDesc:"海之京都・天橋立與舞鶴之夜",wear:"防風保暖，纜車與展望台體感更冷",weatherIco:"🌉",spots:[
+    S("金剛院","attraction","舞鶴山間古寺，12/5 早上的第一站。",{dur:"約60分鐘",fullDesc:"原本排在 12/4，但那天旅館住到退房時間才出發，所以改到 12/5 早上：08:30 從西舞鶴出發，09:00 開門時抵達，人少又安靜。之後再去五老天空塔、紅磚公園。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
     S("府中側：籠神社＋傘松公園","attraction","已搭過 View Land 時選這岸。",{tags:["方案A"],dur:"約2–3小時",fullDesc:"以籠神社與傘松公園為主，不做沙洲完整徒步或繞行。",img:"https://images.unsplash.com/photo-1500534314209-a25ddb2bd4297?auto=format&fit=crop&w=1200&q=82"}),
     S("文珠側：View Land＋智恩寺","attraction","未看過飛龍觀時選這岸。",{tags:["方案B"],dur:"約2–3小時",fullDesc:"View Land、智恩寺與沙洲前段即可；天橋立只選一岸。",img:"https://images.unsplash.com/photo-1500534314209-a25ddb2bd4297?auto=format&fit=crop&w=1200&q=82"})
   ],moreSpots:[
@@ -809,20 +809,20 @@ const transportPlans = [
     {from:'玉寶山 龍穩寺',to:'大本本部 梅松苑',mode:'🚗 自駕',time:'約 50–70 分',note:'約 10:45 出發，11:45 前後抵達綾部，參觀約 1 小時'},
     {from:'大本本部 梅松苑',to:'綾部站周邊（午餐）',mode:'🚗 自駕',time:'約 5–10 分',note:'12:45–13:30 午餐，選好停車的店'},
     {from:'綾部',to:'シーサイド佐竹',mode:'🚗 自駕',time:'約 1 小時 15 分–1 小時 45 分',note:'13:30 出發，約 15:00 抵達入住；途中可在休息站上廁所'}]},
-  {summary:'自駕日｜京丹後海岸短距離移動，每段 10–30 分；15:00 到下一間旅館。', alert:'車程為估算，以導航即時路況為準；山路與海岸路放慢。強風或大雨時縮短海岸停留，改走道之驛＋咖啡雨備；琴引濱看時間與天氣再決定。', drive:true, routeKey:'v87', routes:[
-    {from:'シーサイド佐竹',to:'立岩（後ヶ濱海岸）',mode:'🚗 自駕',time:'約 15–30 分',note:'10:00 退房出發，海岸停留約 1 小時'},
-    {from:'立岩',to:'道之驛 てんきてんき丹後',mode:'🚗 自駕',time:'約 5 分',note:'11:30 前後休息、買伴手禮'},
-    {from:'道之驛',to:'間人／網野（午餐）',mode:'🚗 自駕',time:'約 10–30 分',note:'12:00–13:00 午餐，依位置選順路的店'},
-    {from:'午餐',to:'琴引濱',mode:'🚗 自駕',time:'約 10–25 分',note:'13:30–14:30 海灘散步、咖啡（可省略）'},
+  {summary:'自駕日｜旅館很好，住到退房時間（約 11:00）再出發；京丹後海岸短距離移動，每段 10–30 分，15:00 前後到下一間旅館。', alert:'車程為估算，以導航即時路況為準；山路與海岸路放慢。強風或大雨時縮短海岸停留，改走道之驛＋咖啡雨備；琴引濱看時間與天氣再決定。', drive:true, routeKey:'v87', routes:[
+    {from:'シーサイド佐竹',to:'立岩（後ヶ濱海岸）',mode:'🚗 自駕',time:'約 15–30 分',note:'住到退房時間，約 11:00 出發（退房時間依方案，前一天問櫃檯）；海岸停留約 50 分'},
+    {from:'立岩',to:'道之驛 てんきてんき丹後',mode:'🚗 自駕',time:'約 5 分',note:'12:15 前後休息、買伴手禮'},
+    {from:'道之驛',to:'間人／網野（午餐）',mode:'🚗 自駕',time:'約 10–30 分',note:'12:45–13:45 午餐，依位置選順路的店'},
+    {from:'午餐',to:'琴引濱',mode:'🚗 自駕',time:'約 10–25 分',note:'14:00–14:40 海灘散步、咖啡（累了就省略，直接去旅館）'},
     {from:'琴引濱',to:'HOTEL＆湖邸 艸花',mode:'🚗 自駕',time:'約 10–30 分',note:'15:00 入住，這天把旅館當作行程'}]},
-  {summary:'自駕日｜京丹後 → 金剛院 → 天橋立 → 西舞鶴，約 130 km；建議 09:00 出發、16:30 前到飯店。', alert:'車程為估算，以導航即時路況為準；山路與海岸路放慢。天橋立只選一岸；強風可能影響纜車、單軌與吊椅。', drive:true, routeKey:'v87', routes:[
-    {from:'HOTEL＆湖邸 艸花',to:'金剛院',mode:'🚗 自駕',time:'約 1 小時 15 分–1 小時 30 分',note:'09:00 退房出發，約 10:20 抵達，參觀約 1 小時'},
-    {from:'金剛院',to:'天橋立',nav:'天橋立 京都府宮津市',mode:'🚗 自駕',time:'約 50–60 分',note:'11:30 出發，12:30 前後抵達；先午餐，再依選的岸搭纜車或吊椅'},
-    {from:'天橋立',to:'Route Inn 西舞鶴',mode:'🚗 自駕',time:'約 40–50 分',note:'15:30 前離開，約 16:15 入住；晚餐在西舞鶴'}]},
-  {summary:'早上舞鶴三站（09:00 市場早午餐 → 五老天空塔 → 紅磚公園），13:00 出發回京都還車。', alert:'車程為估算，以導航即時路況為準；山路與海岸路放慢。回京都車程至少約 2 小時，京都市區傍晚塞車；還車前記得加滿油。', drive:true, routeKey:'v87', routes:[
-    {from:'Route Inn 西舞鶴',to:'舞鶴港とれとれセンター',mode:'🚗 自駕',time:'約 5–10 分',note:'09:00 開門時抵達（通常 09:00 起營業），海鮮早午餐'},
-    {from:'とれとれセンター',to:'五老天空塔',mode:'🚗 自駕',time:'約 20–25 分',note:'約 10:15 出發、10:40 抵達，展望約 45 分'},
-    {from:'五老天空塔',to:'舞鶴紅磚公園',mode:'🚗 自駕',time:'約 15 分',note:'約 11:30–12:45 散步'},
+  {summary:'自駕日｜旅館很好，住到退房時間（約 11:00）再出發 → 天橋立午餐＋只逛一岸 → 西舞鶴，約 70 km。金剛院改到 12/5 早上（就在舞鶴）。', alert:'車程為估算，以導航即時路況為準。12 月 16:45 前後天黑，天橋立 15:30 前離開。天橋立只選一岸；強風可能影響纜車、單軌與吊椅。', drive:true, routeKey:'v100', routes:[
+    {from:'HOTEL＆湖邸 艸花',to:'天橋立',nav:'天橋立 京都府宮津市',mode:'🚗 自駕',time:'約 50–60 分',note:'住到退房時間，約 11:00 出發（湖邸 11:00、本館 10:00，依你們的房型），12:00 前後到，先午餐'},
+    {from:'天橋立',to:'Route Inn 西舞鶴',mode:'🚗 自駕',time:'約 40–50 分',note:'13:00–15:00 只逛一岸，15:30 前離開，約 16:15 入住；晚餐在西舞鶴'}]},
+  {summary:'早上舞鶴：金剛院 → 五老天空塔 → 紅磚公園 → とれとれセンター海鮮午餐，13:00 出發回京都還車。', alert:'車程為估算，以導航即時路況為準。金剛院 09:00 開門；回京都車程至少約 2 小時，京都市區傍晚塞車；還車前記得加滿油。', drive:true, routeKey:'v100', routes:[
+    {from:'Route Inn 西舞鶴',to:'金剛院',mode:'🚗 自駕',time:'約 20–25 分',note:'08:30 退房出發，09:00 開門時抵達，三重塔與楓林約 1 小時'},
+    {from:'金剛院',to:'五老天空塔',mode:'🚗 自駕',time:'約 15–20 分',note:'約 10:00 出發，展望約 40 分'},
+    {from:'五老天空塔',to:'舞鶴紅磚公園',mode:'🚗 自駕',time:'約 15 分',note:'約 11:00–11:45 散步'},
+    {from:'舞鶴紅磚公園',to:'舞鶴港とれとれセンター',mode:'🚗 自駕',time:'約 20 分',note:'12:00 海鮮午餐；就在舞鶴西 IC 附近，吃完直接上高速'},
     {from:'舞鶴',to:'京都還車點',mode:'🚗 自駕',time:'約 2 小時以上',note:'13:00 出發，約 15:00–15:30 還車；預留市區塞車'},
     {from:'京都站周邊還車點',to:'Richmond Hotel',mode:'🚶／🚕',time:'5–15 分',note:'計程車約 ¥700–1,300'}]},
   {summary:'市區三段計程車最省力；13:15 左右由下鴨神社叫車回飯店，京都站搭 HARUKA。', alert:'建議搭 15:00–15:30 間 HARUKA；19:00 起飛，勿再追加遠距景點。', routes:[
@@ -847,12 +847,12 @@ const transportGeneralTips = ['全程準備 ICOCA，日常路段直接刷卡最�
     "川舟嵐影・保津川與嵯峨野的一日",
     "丹波晚楓・穿越山寺奔向日本海",
     "潮騷慢泊・丹後海岸的靜謐休日",
-    "海之京都・金剛院與天橋立遠景",
+    "海之京都・天橋立與舞鶴之夜",
     "港町餘韻・舞鶴紅磚與灣景之晨",
     "京洛惜別・銀杏晚楓與歸途"
   ];
   days.forEach((d,i)=>d.title=dayTitles[i]);
-  const routeLabels=['關西機場 → 京都站','大原／高雄／鞍馬・貴船','永觀堂 → 南禪寺 → 無鄰菴 → 真如堂','修學院 → 宇治 → 奈良','奈良 → 龜岡 → 嵐山','龜岡 → 南丹 → 綾部 → 京丹後','京丹後海岸','金剛院 → 天橋立 → 舞鶴','舞鶴 → 京都','京都 → 關西機場'];
+  const routeLabels=['關西機場 → 京都站','大原／高雄／鞍馬・貴船','永觀堂 → 南禪寺 → 無鄰菴 → 真如堂','修學院 → 宇治 → 奈良','奈良 → 龜岡 → 嵐山','龜岡 → 南丹 → 綾部 → 京丹後','京丹後海岸','天橋立 → 舞鶴','金剛院 → 舞鶴 → 京都','京都 → 關西機場'];
   days.forEach((d,i)=>d.enRegion=routeLabels[i]);
 
   const all=()=>days.flatMap(d=>[...d.spots,...d.moreSpots]);
@@ -983,7 +983,7 @@ const transportGeneralTips = ['全程準備 ICOCA，日常路段直接刷卡最�
     '奈良 → 龜岡 → 嵐山',
     '龜岡 → 南丹 → 綾部 → 京丹後',
     '京丹後海岸',
-    '京丹後 → 金剛院 → 天橋立 → 舞鶴',
+    '京丹後 → 天橋立 → 舞鶴',
     '舞鶴 → 京都',
     '京都 → 關西機場'
   ];
@@ -1123,7 +1123,7 @@ const transportGeneralTips = ['全程準備 ICOCA，日常路段直接刷卡最�
     ['一川嵐色','川舟嵐影・保津川與嵯峨野的一日'],
     ['山盡見海','丹波晚楓・穿越山寺奔向日本海'],
     ['海辺無事','潮騷慢泊・丹後海岸的靜謐休日'],
-    ['橋立暮景','海之京都・金剛院與天橋立遠景'],
+    ['橋立暮景','海之京都・天橋立與舞鶴之夜'],
     ['港町別章','港町餘韻・舞鶴紅磚與灣景之晨'],
     ['餘白京都','京洛惜別・銀杏晚楓與歸途']
   ];
@@ -1526,9 +1526,9 @@ function getOrderKey(dayIdx, listType){ return dayIdx + '-' + listType; }
 
 /* 內建的預設顯示順序（沒有自己調整過順序時使用）。
    11/29：永觀堂 → 南禪寺 → 天授庵 → 無鄰菴 → 午餐 → 真如堂 → 金戒光明寺 */
-const BUILTIN_ORDER={'2-main':['d2-m1','d2-m2','d2-m3','d2-m4','d2-m5','d2-m0','d2-m6']};
+const BUILTIN_ORDER={'2-main':['d2-m1','d2-m2','d2-m3','d2-m4','d2-m5','d2-m0','d2-m6'],'8-main':['d7-m0','d8-m1','d8-m2','d8-m0']};
 /* 改版前存的順序不含新加入的景點：視為舊順序、不採用（資料不刪除），改用新的內建順序 */
-const BUILTIN_ORDER_SINCE={'2-main':'d2-m5'};
+const BUILTIN_ORDER_SINCE={'2-main':'d2-m5','8-main':'d7-m0'};
 function savedOrder(okey){
   const o=orderStore[okey];
   if(!o||!o.length)return null;
@@ -1663,8 +1663,14 @@ function transportSegmentExtrasHTML(dayIdx,segmentKey){
 /* 交通步驟改版（routeKey）後，掛在舊步驟上的補充說明／圖片不會不見，改放到「其他舊版交通補充」 */
 function isOrphanTransportSeg(dayIdx,key){
   const plan=transportPlans[dayIdx];
-  if(key&&plan&&plan.choices){const m=/^choice-(\d+)-\d+$/.exec(key);if(m&&plan.choices[+m[1]]&&plan.choices[+m[1]].key)return true;}
-  return !!(key&&plan&&plan.routeKey&&/^(route-\d+|drive-0)$/.test(key));
+  if(!key||!plan)return false;
+  /* 只處理內建交通步驟的 key；不在目前步驟清單裡的，就放到「其他舊版交通補充」，不會消失 */
+  if(!/^(route|v\d+|choice-\d+(-v\d+)?)-\d+$|^drive-0$/.test(key))return false;
+  const cur=new Set();
+  (plan.routes||[]).forEach((r,i)=>cur.add(`${plan.routeKey||'route'}-${i}`));
+  (plan.choices||[]).forEach((c,ci)=>(c.routes||[]).forEach((r,i)=>cur.add(`${c.key||'choice-'+ci}-${i}`)));
+  if(plan.drive&&!plan.routes)cur.add('drive-0');
+  return !cur.has(key);
 }
 function legacyTransportExtrasHTML(dayIdx){
   const data=transportExtrasFor(dayIdx);
@@ -2511,10 +2517,21 @@ const TODO_SEED=[
   {id:'todo-foliage',text:'看紅葉與天氣預報，決定 11/28 去大原、高雄還是鞍馬',due:'2026-11-25'},
   {id:'todo-taxi1129',text:'11/28 晚上用 GO 預約 11/29 早上到永觀堂的計程車',due:'2026-11-28'},
   {id:'todo-enkoji',text:'預約圓光寺 11/30 10:00 前後的時段（秋季特別拝観若採預約制）',due:'2026-11-10'},
-  {id:'todo-takkyubin',text:'11/29 晚上在烏丸四條飯店櫃檯寄宅急便：行李箱送到 Daiwa Roynet 奈良（先問奈良飯店能否代收、11/30 送達）',due:'2026-11-29'}
+  {id:'todo-takkyubin',text:'11/29 晚上在烏丸四條飯店櫃檯寄宅急便：行李箱送到 Daiwa Roynet 奈良（先問奈良飯店能否代收、11/30 送達）',due:'2026-11-29'},
+  {id:'todo-checkout',text:'確認シーサイド佐竹（12/3）與艸花（12/4）的退房時間，想住到最晚再走（佐竹約 10:00–11:00、湖邸 11:00／本館 10:00，依方案）',due:'2026-11-20'}
 ].map(t=>({...t,done:false,note:''}));
 let todoData=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_todos'));return Array.isArray(v)?normalizeStructuredList('kyoto_todos',v):structuredClone(TODO_SEED);}catch(e){return structuredClone(TODO_SEED);}})();
 function persistTodos(){safeSetItem('kyoto_todos',todoData);}
+(function addTodoSeedV3(){
+  try{
+    if(localStorage.getItem('kyoto_todo_seed_v3'))return;
+    localStorage.setItem('kyoto_todo_seed_v3','1');
+    if(!localStorage.getItem('kyoto_todos'))return;
+    const add=[{id:'todo-checkout',text:'確認シーサイド佐竹（12/3）與艸花（12/4）的退房時間，想住到最晚再走（佐竹約 10:00–11:00、湖邸 11:00／本館 10:00，依方案）',due:'2026-11-20'}]
+      .filter(t=>!todoData.some(x=>x.id===t.id)).map(t=>({...t,done:false,note:''}));
+    if(add.length){todoData.push(...add);persistTodos();}
+  }catch(e){}
+})();
 (function addTodoSeedV2(){
   try{
     if(localStorage.getItem('kyoto_todo_seed_v2'))return;
@@ -2656,25 +2673,26 @@ const DAY_TIMELINE=[
 13:30 開往京丹後（約 1.5 小時）
 15:00 入住シーサイド佐竹
 18:00 旅館晚餐`,
-`10:00 退房出發
-10:20 立岩・後ヶ濱海岸
-11:30 道之驛 てんきてんき丹後
-12:00 午餐（間人／網野）
-13:30 琴引濱（可省略）
+`08:00 慢慢吃早餐、泡湯、看海｜旅館很好，不趕
+11:00 退房出發｜退房時間依方案，前一天問櫃檯
+11:20 立岩・後ヶ濱海岸
+12:15 道之驛 てんきてんき丹後
+12:45 午餐（間人／網野）
+14:00 琴引濱（累了就省略）
 15:00 入住 HOTEL＆湖邸 艸花
 18:00 晚餐`,
-`09:00 退房出發
-10:20 金剛院
-11:30 開往天橋立
-12:30 天橋立午餐
-13:30 傘松公園或 View Land（只選一岸）
-15:30 開往西舞鶴
+`08:00 慢慢吃早餐、享受湖邊｜旅館很好，不趕
+11:00 退房出發｜湖邸 11:00、本館 10:00，依房型
+12:00 天橋立午餐
+13:00 傘松公園或 View Land（只選一岸）
+15:30 開往西舞鶴（約 45 分）
 16:15 入住 Route Inn 西舞鶴
 18:00 晚餐`,
-`08:45 退房出發
-09:00 舞鶴港とれとれセンター早午餐
-10:40 五老天空塔
-11:30 舞鶴紅磚公園
+`08:30 退房出發
+09:00 金剛院｜從 12/4 移過來，開門時人最少
+10:20 五老天空塔
+11:00 舞鶴紅磚公園
+12:00 舞鶴港とれとれセンター海鮮午餐
 13:00 開車回京都（約 2 小時）
 15:00 加油、還車
 16:00 入住 Richmond Hotel 京都站
@@ -3135,7 +3153,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=99').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=100').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3758,7 +3776,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v99-2026-10-10';
+const APP_VERSION='v100-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -4460,9 +4478,12 @@ function plannedEntriesFor(dayIdx){
 var spotDayStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_spot_day'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
 function persistSpotDay(){safeSetItem('kyoto_spot_day',spotDayStore);}
 function naturalDayOf(key){const m=String(key).match(/^d(\d+)-[msc]\d+$/);return m&&days[Number(m[1])]?Number(m[1]):null;}
+/* v100：內建的預設搬移（12/4 退房延後，金剛院改到 12/5 早上）；使用者自己搬過的優先 */
+const BUILTIN_SPOT_DAY={'d7-m0':8};
 function spotDayOf(key){
   const v=(spotDayStore||{})[key];
   if(typeof v==='number'&&days[v])return v;
+  if(Object.prototype.hasOwnProperty.call(BUILTIN_SPOT_DAY,key))return BUILTIN_SPOT_DAY[key];
   return naturalDayOf(key);
 }
 function isSpotMoved(key){const n=naturalDayOf(key),e=spotDayOf(key);return n!=null&&e!==n;}
@@ -4484,7 +4505,7 @@ function openSpotDayModal(key){
     onSave:v=>{
       const to=Number(v.day);if(!days[to]||to===cur)return;
       const prev=Object.prototype.hasOwnProperty.call(spotDayStore,key)?spotDayStore[key]:undefined;
-      if(to===nat)delete spotDayStore[key];else spotDayStore[key]=to;
+      if(to===nat&&!Object.prototype.hasOwnProperty.call(BUILTIN_SPOT_DAY,key))delete spotDayStore[key];else spotDayStore[key]=to;
       persistSpotDay();
       if(hiddenFixedSpotsStore[to]&&hiddenFixedSpotsStore[to].includes(key)){hiddenFixedSpotsStore[to]=hiddenFixedSpotsStore[to].filter(k=>k!==key);persistHiddenFixedSpots();}
       renderDayChips();renderDayContent();updateSpotCount&&updateSpotCount();
@@ -5578,8 +5599,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=99';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=99';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=100';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=100';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
