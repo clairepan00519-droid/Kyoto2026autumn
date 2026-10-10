@@ -683,10 +683,9 @@ const days = [
     S("京都鶏白湯そば 純","food","京都站周邊快速麵食備案。",{img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"})
   ]},
 {dayNum:"2",date:"11/28",weekday:"六",region:"紅葉機動日・四選一",enRegion:"Ohara / Takao / Kurama / Oharano",drive:"🚌 依紅葉與天氣選一條路線",title:"楓信未定",dayDesc:"山里錦秋・四境擇一的紅葉物語",wear:"山區加圍巾、手套、厚襪與防風外套",weatherIco:"🍂",spots:[
-    S("大原：三千院＋寶泉院＋寂光院","attraction","苔庭、額緣庭園配抹茶，再散步到寂光院；坡度中等。",{tags:["方案A","最推薦"],dur:"08:00–17:00",fullDesc:"三千院（聚碧園、有清園、童地藏）→ 寶泉院額緣庭園喝抹茶 → 實光院 → 午餐湯豆腐或味噌鍋 → 沿鄉間小路到寂光院。整體步調慢、景點集中，最適合全家。寶泉院、實光院可視體力只選一間。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
-    S("高雄：神護寺＋西明寺＋高山寺","attraction","紅葉密度最高，但神護寺有約 350 階石階。",{tags:["方案B","紅葉密度"],dur:"07:45–17:00",fullDesc:"市巴士 8 號到高雄 → 神護寺（金堂、山門石階）→ 沿清瀧川到西明寺（指月橋）→ 河邊午餐 → 栂尾高山寺（石水院）。紅葉見頃時最有季節感；腿力不夠時高山寺可以省略。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
-    S("鞍馬寺＋貴船神社","activity","翻過木之根道到貴船，山路最多、體力需求最高。",{tags:["方案C","山林"],dur:"08:00–17:30",fullDesc:"叡山電車到鞍馬 → 鞍馬寺本殿金堂、金剛床 → 木之根道、奧之院魔王殿下到貴船（約 1.5 小時山路）→ 午餐 → 貴船神社本宮、結社、奧宮。下雨濕滑或體力不足時，不要翻山：鞍馬寺看完原路回車站，搭電車到貴船口再上貴船。",img:"https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&w=1200&q=82"}),
-    S("大原野：勝持寺＋大原野神社＋正法寺","attraction","西山的安靜紅葉，人潮最少；巴士班次很少。",{tags:["方案D","人少"],dur:"08:30–16:30",fullDesc:"阪急到東向日轉巴士到南春日町 → 勝持寺（花之寺）紅葉庭園 → 大原野神社（紅葉參道、鹿神使、鯉澤池）→ 午餐或茶屋 → 正法寺（庭園與遠山景觀）。週六也相對清幽；巴士約 1 小時 1–2 班，錯過就搭計程車。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"})
+    S("三千院＋大原散步","attraction","適合想看苔庭、落葉與安靜村落的低至中強度版本。",{tags:["方案A","最悠閒"],dur:"半日至一日",fullDesc:"大原路線步調最慢，適合紅葉已進入落葉期或前一日移動疲累時選擇。可圍繞三千院與村落散步，不必塞滿寺院。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
+    S("高雄：神護寺＋西明寺","attraction","紅葉密度高，但階梯與移動強度較高。",{tags:["方案B","紅葉密度"],dur:"約5–7小時",fullDesc:"以神護寺與西明寺為主，高山寺只在時間與體力充足時加入。若紅葉仍在見頃，這條路線最有季節感。",img:"https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=82"}),
+    S("鞍馬寺（貴船視體力）","activity","晴朗時適合山林散步；是否翻山至貴船現場決定。",{tags:["方案C","山林"],dur:"約4–7小時",fullDesc:"不預設一定完成鞍馬到貴船的完整健行。路況濕滑、天色轉暗或體力不足時，原路折返即可。",img:"https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&w=1200&q=82"})
   ],moreSpots:[
     S("Daiwa Roynet Hotel 烏丸四條","hotel","連住兩晚，方便回飯店休息與逛烏丸、河原町。",{img:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=82"}),
     S("新風館＋LE LABO","shopping","晚間回市區後的輕鬆逛街組合。",{img:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=82"}),
@@ -2770,7 +2769,14 @@ function dayTimelineHTML(i){
     return `<li class="tl-row${cls}" role="button" tabindex="0" title="點一下修改這一項" onclick="editTimelineRow(${i},${k})"><span class="tl-time">${escHtml(r.t||'')}</span><span class="tl-dot" aria-hidden="true"></span><span class="tl-text"><b>${escHtml(title)}</b>${rest.length?`<small>${escHtml(rest.join('｜'))}</small>`:''}${cls===' now'?'<em>進行中</em>':cls===' next'?'<em>下一個</em>':''}</span><span class="tl-pen" aria-hidden="true">✏️</span></li>`;
   }).join('');
   const edited=typeof timelineStore[tlKey(i)]==='string';
-  return `<details class="day-timeline" ${isToday||!localStorage.getItem('kyoto_tl_closed_'+i)?'open':''} ontoggle="try{this.open?localStorage.removeItem('kyoto_tl_closed_${i}'):localStorage.setItem('kyoto_tl_closed_${i}','1')}catch(e){}"><summary><span><img class="tl-icon" src="images/tl-deer.webp" alt="" width="34" height="34">今日時間表</span><small>${isToday?'今天':'點這裡收合／展開'}</small></summary>${dayPlanBarHTML(i)}<ol class="tl-list">${items}</ol><div class="tl-foot"><span>點任一行就能修改；時間是建議，依現場調整。</span><span class="tl-btns"><button type="button" class="tl-add" onclick="editTimelineRow(${i},-1)">＋ 新增一項</button><button type="button" onclick="editTimeline(${i})">整張修改</button>${edited?`<button type="button" class="tl-reset" onclick="resetTimeline(${i})">還原建議</button>`:''}</span></div></details>`;
+  let closed=false;try{closed=!isToday&&!!localStorage.getItem('kyoto_tl_closed_'+i);}catch(e){}
+  const peek=rows.find(r=>r.t)||rows[0];
+  return `<div class="day-timeline${closed?' closed':''}" data-tl-day="${i}"><button type="button" class="tl-head" aria-expanded="${!closed}" onclick="toggleTimeline(this)"><span class="tl-head-title"><img class="tl-icon" src="images/tl-deer.webp" alt="" width="34" height="34">今日時間表</span><span class="tl-head-hint"><span class="tl-when-open">收起 ▲</span><span class="tl-when-closed">點開看 ▼</span></span></button><div class="tl-peek">${peek?`${escHtml(peek.t||'')} ${escHtml(peek.text.split('｜')[0])}… 共 ${rows.length} 項`:''}</div><div class="tl-body">${dayPlanBarHTML(i)}<ol class="tl-list">${items}</ol><div class="tl-foot"><span>點任一行就能修改；時間是建議，依現場調整。</span><span class="tl-btns"><button type="button" class="tl-add" onclick="editTimelineRow(${i},-1)">＋ 新增一項</button><button type="button" onclick="editTimeline(${i})">整張修改</button>${edited?`<button type="button" class="tl-reset" onclick="resetTimeline(${i})">還原建議</button>`:''}</span></div></div></div>`;
+}
+function toggleTimeline(btn){
+  const card=btn.closest('.day-timeline');if(!card)return;
+  const closed=!card.classList.contains('closed');card.classList.toggle('closed',closed);btn.setAttribute('aria-expanded',String(!closed));
+  try{const k='kyoto_tl_closed_'+card.dataset.tlDay;closed?localStorage.setItem(k,'1'):localStorage.removeItem(k);}catch(e){}
 }
 function editTimeline(i){
   openFormModal({title:`修改時間表：D${days[i].dayNum}・${days[i].date}`,fields:[{id:'t',label:'一行一項，開頭寫時間，例如「07:20 搭計程車出發」。想加小字說明，用「｜」隔開。',type:'textarea',rows:14,value:timelineText(i)}],saveText:'儲存',
@@ -3126,7 +3132,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=96').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=98').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3749,7 +3755,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v96-2026-10-10';
+const APP_VERSION='v98-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -5569,8 +5575,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=96';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=96';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=98';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=98';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
