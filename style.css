@@ -2345,3 +2345,16 @@ body.large-text .tl-text b{font-size:16px!important;}
 .day-timeline.closed .tl-body{display:none;}
 .tl-peek{display:none;font-size:13.5px;color:#8a6a55;padding:0 2px 6px;}
 .day-timeline.closed .tl-peek{display:block;}
+/* v101：出發前待辦可收合；D5–D9 這類長日期標籤不再溢出 */
+.todo-head{display:flex;align-items:center;gap:8px;width:100%;min-height:48px;padding:0;border:0;background:none;font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.todo-head h3{margin:0;}
+.todo-peek{font-size:13px;font-weight:800;color:#8a6a55;}
+.todo-hint{margin-left:auto;flex:0 0 auto;font-size:13px;font-weight:800;color:#b8431f;background:#fff1dc;border-radius:999px;padding:5px 12px;}
+#todoSection .tl-when-closed{display:none;}
+#todoSection.closed .tl-when-open{display:none;}
+#todoSection.closed .tl-when-closed{display:inline;}
+#todoSection.closed .todo-body{display:none;}
+#todoSection:not(.closed) .todo-peek{display:none;}
+.transport-card-compact>summary{grid-template-columns:auto minmax(0,1fr) auto!important;}
+.transport-day{white-space:nowrap;width:auto!important;min-width:42px;padding:0 7px;box-sizing:border-box;}
+.transport-card-compact .transport-day{min-width:34px;}

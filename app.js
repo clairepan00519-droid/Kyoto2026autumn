@@ -2577,7 +2577,13 @@ function renderTodos(){
       <button type="button" class="td-add" onclick="addTodo()">＋ 新增待辦</button>`;
   }
   renderTodoBanner();
+  const peek=document.getElementById('todoPeek');if(peek)peek.textContent=left?`還有 ${left} 項`:'全部完成 🎉';
+  applyTodoCollapsed();
 }
+/* v101：出發前待辦可以收起來（記在這支手機上） */
+function todoCollapsed(){try{return localStorage.getItem('kyoto_todo_closed')==='1';}catch(e){return false;}}
+function applyTodoCollapsed(){const sec=document.getElementById('todoSection');if(!sec)return;const c=todoCollapsed();sec.classList.toggle('closed',c);document.getElementById('todoHead')?.setAttribute('aria-expanded',String(!c));}
+function toggleTodoSection(){try{todoCollapsed()?localStorage.removeItem('kyoto_todo_closed'):localStorage.setItem('kyoto_todo_closed','1');}catch(e){}applyTodoCollapsed();}
 function toggleTodo(id,checked){
   const t=todoData.find(x=>x.id===id);if(!t)return;
   t.done=!!checked;if(checked){t.doneBy=todoWho();t.doneAt=new Date().toISOString();}else{delete t.doneBy;delete t.doneAt;}
@@ -2615,7 +2621,7 @@ function renderTodoBanner(){
   if(!el){el=document.createElement('button');el.type='button';el.id='todoBanner';el.className='todo-banner';el.onclick=goToTodos;host.prepend(el);}
   el.innerHTML=`<span class="tb-ic">✅</span><span class="tb-txt"><b>出發前待辦還有 ${left.length} 項</b>${late?`<small>${late} 項快到期或已過期</small>`:'<small>點這裡查看、勾選</small>'}</span><em>›</em>`;
 }
-function goToTodos(){setTab('guide');setTimeout(()=>document.getElementById('todoSection')?.scrollIntoView({behavior:'smooth',block:'start'}),80);}
+function goToTodos(){try{localStorage.removeItem('kyoto_todo_closed');}catch(e){}applyTodoCollapsed();setTab('guide');setTimeout(()=>document.getElementById('todoSection')?.scrollIntoView({behavior:'smooth',block:'start'}),80);}
 /* ============ v92：今日時間表（每天一張，可在編輯模式改，同步給家人） ============ */
 const DAY_TIMELINE=[
 `11:35 抵達關西機場，入境、領行李
@@ -3153,7 +3159,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=100').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=101').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3776,7 +3782,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v100-2026-10-10';
+const APP_VERSION='v101-2026-10-10';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -5599,8 +5605,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=100';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=100';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=101';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=101';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
