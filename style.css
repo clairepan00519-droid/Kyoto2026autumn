@@ -2358,3 +2358,6 @@ body.large-text .tl-text b{font-size:16px!important;}
 .transport-card-compact>summary{grid-template-columns:auto minmax(0,1fr) auto!important;}
 .transport-day{white-space:nowrap;width:auto!important;min-width:42px;padding:0 7px;box-sizing:border-box;}
 .transport-card-compact .transport-day{min-width:34px;}
+/* v103：展開的卡片不再限制最高 2500px（照片多時下面的「刪除」等按鈕被切掉、滑不到） */
+.guide-card.open .guide-details-wrap{max-height:none;}
+.sub-spot-card.open .sub-spot-details-wrap{max-height:none;}
