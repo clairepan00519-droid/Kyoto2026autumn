@@ -2361,3 +2361,9 @@ body.large-text .tl-text b{font-size:16px!important;}
 /* v103：展開的卡片不再限制最高 2500px（照片多時下面的「刪除」等按鈕被切掉、滑不到） */
 .guide-card.open .guide-details-wrap{max-height:none;}
 .sub-spot-card.open .sub-spot-details-wrap{max-height:none;}
+/* v104：預約資訊不用展開就看得到 */
+.book-peek{display:flex;gap:5px;align-items:flex-start;margin-top:6px;padding:5px 9px;border-radius:10px;background:#eef7f0;border:1px solid #cfe6d6;color:#1f5e37;font-size:13px;font-weight:700;line-height:1.45;}
+.book-peek>span:last-child{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line;word-break:break-word;}
+.book-peek.todo{background:#fff6e6;border-color:#f3dcae;color:#8a5a12;}
+.book-peek.paid{background:#eef3fb;border-color:#cfdcf0;color:#2c4f86;}
+.guide-card.open .book-peek>span:last-child,.sub-spot-card.open .book-peek>span:last-child{-webkit-line-clamp:unset;}
