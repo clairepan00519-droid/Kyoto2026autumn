@@ -2186,7 +2186,7 @@ async function fetchWeatherFor(k, attempt){
   const timeout = setTimeout(()=>controller.abort(), 9000);
   try{
     if(!navigator.onLine) throw new Error('OFFLINE');
-    const base = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m,precipitation,weather_code&daily=sunrise,sunset,uv_index_max&timezone=Asia%2FTokyo`;
+    const base = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m,precipitation,weather_code&daily=sunrise,sunset,uv_index_max,temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max&forecast_days=16&timezone=Asia%2FTokyo`;
     /* 優先使用日本氣象廳（JMA）模式的數值；若該模式暫時無資料，自動退回一般預報，避免整個天氣頁空白。 */
     let res = await fetch(base + '&models=jma_seamless', { signal: controller.signal }).catch(()=>null);
     let data = (res && res.ok) ? await res.json().catch(()=>null) : null;
@@ -3159,7 +3159,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=108').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=109').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3782,7 +3782,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v108-2026-11-27';
+const APP_VERSION='v109-2026-11-27';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -4091,7 +4091,7 @@ function weatherEntryFor(k){return liveWeatherCache[k]||loadWeatherCache()[k]||n
 async function refreshDayWeather(){
   if(!navigator.onLine){alert('目前離線，無法更新。');return;}
   const cities=DAY_CITIES[activeDay]||['Kyoto'];
-  try{await Promise.all(cities.map(k=>fetchWeatherFor(k,0)));}catch(e){}
+  try{await Promise.all([...cities.map(k=>fetchWeatherFor(k,0)),fetchJMA(true)]);}catch(e){}
   if(typeof activeDay==='number')renderDayContent();
 }
 /* (v52 已改寫) */
@@ -4324,6 +4324,7 @@ function daySunText(dayIdx,cityKey){
   return r?`日出 ${r.rise}　日落 ${r.set}`:'';
 }
 function dayWeatherPanelHTML(i){
+  setTimeout(()=>refreshJMAAndRender(false),0);
   const d=days[i],cities=DAY_CITIES[i]||['Kyoto'];
   const cards=cities.map(k=>{
     const e=weatherEntryFor(k),cw=e&&e.data&&e.data.current;
@@ -4335,7 +4336,7 @@ function dayWeatherPanelHTML(i){
     const when=e.fetchedAt?new Date(e.fetchedAt).toLocaleString('zh-TW',{hour12:false,month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
     return `<div class="dw-card"><div class="dw-place">${escHtml(CITIES[k].label)}${e.stale?'<em>快取</em>':''}</div>${sunRow}<div class="dw-main"><span>${wxIconHTML(cw.weather_code,temp,cw.wind_speed_10m)}</span><b>${temp}°C</b><i>${desc}</i></div><div class="dw-metrics">風 ${cw.wind_speed_10m} km/h　雨量 ${cw.precipitation} mm</div>${when?`<small>目前氣象更新 ${when}</small>`:''}${tenki}</div>`;
   }).join('');
-  return `<div class="day-panel"><div class="dp-title"><span>今日天氣與穿搭</span></div><div class="dw-wear"><span>建議穿搭：${escHtml(d.wear||'')}</span>${cities.some(k=>{const e=weatherEntryFor(k),c=e&&e.data&&e.data.current&&e.data.current.weather_code;return [51,53,55,56,57,61,63,65,66,67,80,81,82,95,96,99].includes(c);})?'<img class="dw-art" src="images/deer-rain.webp" alt="" width="54" height="69">':''}</div><div class="dw-grid">${cards}</div><button type="button" class="dp-btn" onclick="refreshDayWeather()">更新即時氣象</button><p class="dp-note">日出日落依 ${d.date} 日期計算；氣溫為「現在」的天氣，出發前 2–3 天請再看 tenki.jp 預報。</p><button type="button" class="dp-link" onclick="setTab('weather')">看完整天氣與雨雲圖 ›</button></div>`;
+  return `<div class="day-panel"><div class="dp-title"><span>今日天氣與穿搭</span></div><div class="dw-wear"><span>建議穿搭：${escHtml(d.wear||'')}</span>${cities.some(k=>{const e=weatherEntryFor(k),c=e&&e.data&&e.data.current&&e.data.current.weather_code;return [51,53,55,56,57,61,63,65,66,67,80,81,82,95,96,99].includes(c);})?'<img class="dw-art" src="images/deer-rain.webp" alt="" width="54" height="69">':''}</div>${dayForecastHTML(i)}<div class="dw-now-title">🕒 現在的天氣（不是 ${d.date} 的預報）</div><div class="dw-grid">${cards}</div><button type="button" class="dp-btn" onclick="refreshDayWeather()">更新天氣</button><p class="dp-note">日出日落依 ${d.date} 日期計算。上方預報來自日本氣象廳（大區域：京都南部／北部、奈良），細的地點用 Open-Meteo 預報補上。</p><button type="button" class="dp-link" onclick="setTab('weather')">看完整天氣與雨雲圖 ›</button></div>`;
 }
 
 /* ---------- 小驚喜（點角落的小動物：小知識、笑話、旅程照片；同帳號盡量不重複） ---------- */
@@ -5613,8 +5614,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=108';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=108';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=109';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=109';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
@@ -6009,3 +6010,104 @@ function cycleSysPad(){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',applySysInsets);else applySysInsets();
 window.addEventListener('resize',()=>setTimeout(applySysInsets,100));
+
+/* ============ v109：日本氣象廳（JMA）官方預報 ============
+   京都府 260000（南部 260010／北部 260020，氣溫點：京都、舞鶴）、奈良縣 290000（北部 290010，氣溫點：奈良）。
+   短期預報＝今天～後天（天氣文字、每 6 小時降雨機率、最高最低）；週間預報＝之後到第 7 天。
+   抓不到（離線、被擋）時改用 Open-Meteo 每日預報，不會整塊空白。 */
+const JMA_REGION={Kyoto:'ks',Ohara:'ks',Kurama:'ks',Arashiyama:'ks',Uji:'ks',Kameoka:'ks',Kyotango:'kn',Amanohashidate:'kn',Maizuru:'kn',Nara:'nn'};
+const JMA_REG_INFO={ks:{pref:'260000',area:'260010',temp:'京都',label:'京都府南部'},kn:{pref:'260000',area:'260020',temp:'舞鶴',label:'京都府北部'},nn:{pref:'290000',area:'290010',temp:'奈良',label:'奈良縣北部'}};
+var jmaCache=(()=>{try{return JSON.parse(localStorage.getItem('kyoto_jma_cache'))||{};}catch(e){return {};}})();
+let jmaLoading=null;
+function jmaDate(t){return String(t||'').slice(0,10);}
+async function fetchJMA(force){
+  const fresh=Object.keys(JMA_REG_INFO).every(r=>jmaCache[r]&&Date.now()-jmaCache[r].at<60*60*1000);
+  if(!force&&fresh)return false;
+  if(!navigator.onLine)return false;
+  if(jmaLoading)return jmaLoading;
+  jmaLoading=(async()=>{
+    let changed=false;
+    for(const pref of ['260000','290000']){
+      try{
+        const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),9000);
+        const r=await fetch(`https://www.jma.go.jp/bosai/forecast/data/forecast/${pref}.json`,{signal:ctl.signal,cache:'no-store'});clearTimeout(to);
+        if(!r.ok)continue;const j=await r.json();
+        Object.entries(JMA_REG_INFO).filter(([,v])=>v.pref===pref).forEach(([reg,info])=>{const d=parseJMA(j,info);if(d&&Object.keys(d).length){jmaCache[reg]={at:Date.now(),days:d};changed=true;}});
+      }catch(e){}
+    }
+    if(changed){try{localStorage.setItem('kyoto_jma_cache',JSON.stringify(jmaCache));}catch(e){}}
+    jmaLoading=null;return changed;
+  })();
+  return jmaLoading;
+}
+/* 解析成 {'2026-11-27':{code,text,max,min,pops:[..4],pop}} */
+function parseJMA(j,info){
+  const out={};const day=d=>(out[d]=out[d]||{});
+  const pickArea=(areas,code,name)=>(areas||[]).find(a=>a.area&&(a.area.code===code||a.area.name===name))||null;
+  try{
+    const st=j[0]&&j[0].timeSeries||[];
+    const w=st[0];if(w){const a=pickArea(w.areas,info.area)||(w.areas||[])[0];if(a)w.timeDefines.forEach((t,k)=>{const o=day(jmaDate(t));o.code=a.weatherCodes&&a.weatherCodes[k];o.text=a.weathers&&a.weathers[k]?String(a.weathers[k]).replace(/　/g,' '):'';});}
+    const p=st[1];if(p){const a=pickArea(p.areas,info.area)||(p.areas||[])[0];if(a)p.timeDefines.forEach((t,k)=>{const v=a.pops&&a.pops[k];if(v===''||v==null)return;const o=day(jmaDate(t));const h=Number(String(t).slice(11,13));o.pops=o.pops||[null,null,null,null];o.pops[Math.min(3,Math.floor(h/6))]=Number(v);});}
+    const tt=st[2];if(tt){const a=pickArea(tt.areas,null,info.temp);if(a)tt.timeDefines.forEach((t,k)=>{const v=a.temps&&a.temps[k];if(v===''||v==null)return;const o=day(jmaDate(t));const h=Number(String(t).slice(11,13));if(h<6)o.min=Number(v);else o.max=Number(v);o.tp=a.area.name;});
+      /* 早上發布時，今天的「最低」與「最高」可能相同（代表已過），只保留最高 */
+      Object.values(out).forEach(o=>{if(o.min!=null&&o.max!=null&&o.min===o.max)delete o.min;});}
+    const wk=j[1]&&j[1].timeSeries||[];
+    const w2=wk[0];if(w2){const a=(w2.areas||[])[0];if(a)w2.timeDefines.forEach((t,k)=>{const o=day(jmaDate(t));if(o.code==null&&a.weatherCodes)o.code=a.weatherCodes[k];const pv=a.pops&&a.pops[k];if(!o.pops&&pv!==''&&pv!=null)o.pop=Number(pv);if(a.reliabilities&&a.reliabilities[k])o.rel=a.reliabilities[k];o.weekly=o.weekly||!o.text;});}
+    const t2=wk[1];if(t2){const a=pickArea(t2.areas,null,info.temp)||(t2.areas||[])[0];if(a)t2.timeDefines.forEach((t,k)=>{const o=day(jmaDate(t));const mx=a.tempsMax&&a.tempsMax[k],mn=a.tempsMin&&a.tempsMin[k];let used=false;if(o.max==null&&mx!==''&&mx!=null){o.max=Number(mx);used=true;}if(o.min==null&&mn!==''&&mn!=null){o.min=Number(mn);used=true;}if(used&&!o.tp)o.tp=a.area.name;});}
+  }catch(e){}
+  return out;
+}
+function jmaIcon(code){
+  const c=Number(code);if(!c)return '🌡️';
+  const g=Math.floor(c/100);
+  if(g===1)return c===100?'☀️':[101,110,111].includes(c)?'🌤️':'🌦️';
+  if(g===2)return c===200?'☁️':[201,210,211].includes(c)?'⛅':(String(c).match(/^2(0[4-6]|1[5-7]|2[0-9]|3[0-9]|50|60|70)$/)?'🌨️':'🌧️');
+  if(g===3)return [303,304,309,314,322,329,340,350,361,371].includes(c)?'🌨️':'🌧️';
+  if(g===4)return '❄️';
+  return '🌡️';
+}
+function jmaText(code){
+  const c=Number(code),g=Math.floor(c/100);
+  if(g===1)return c===100?'晴':[101,110,111].includes(c)?'晴時多雲':'晴偶雨';
+  if(g===2)return c===200?'多雲':[201,210,211].includes(c)?'多雲時晴':'多雲偶雨';
+  if(g===3)return '雨';if(g===4)return '雪';return '';
+}
+/* 簡單把常見日文天氣詞換成中文 */
+function jmaTextZh(t){
+  if(!t)return '';
+  return t.replace(/晴れ/g,'晴').replace(/くもり/g,'多雲').replace(/曇り/g,'多雲').replace(/時々/g,'時').replace(/一時/g,'短暫').replace(/のち/g,'→').replace(/所により/g,'局部').replace(/雷を伴う/g,'伴隨雷').replace(/激しく降る/g,'大').replace(/夜/g,'晚上').replace(/朝/g,'早上').replace(/昼前/g,'中午前').replace(/昼過ぎ/g,'中午後').replace(/夕方/g,'傍晚').replace(/から/g,'起').replace(/では/g,'').replace(/ +/g,' ').trim();
+}
+function omDaily(k,iso){
+  const e=weatherEntryFor(k),d=e&&e.data&&e.data.daily;if(!d||!d.time)return null;const x=d.time.indexOf(iso);if(x<0)return null;
+  const v=f=>d[f]&&d[f][x]!=null?d[f][x]:null;
+  if(v('temperature_2m_max')==null)return null;
+  return {max:v('temperature_2m_max'),min:v('temperature_2m_min'),code:v('weather_code'),pop:v('precipitation_probability_max')};
+}
+function dayForecastHTML(i){
+  const iso=dayISO(i),d=days[i],cities=DAY_CITIES[i]||['Kyoto'];
+  const regs=[...new Set(cities.map(k=>JMA_REGION[k]).filter(Boolean))];
+  const rows=[];const seen={};
+  regs.forEach(reg=>{
+    const f=jmaCache[reg]&&jmaCache[reg].days&&jmaCache[reg].days[iso];
+    if(!f||(f.code==null&&f.max==null))return;
+    /* 週間預報是整個府縣一起的：同一府縣內容一樣就合成一行 */
+    const dk=[JMA_REG_INFO[reg].pref,f.code,f.text||'',f.max,f.min,f.pop,(f.pops||[]).join(',')].join('|');
+    if(seen[dk]!=null){rows[seen[dk]]=rows[seen[dk]].replace(/<div class="fc-place">([^<]*)/,(m,x)=>`<div class="fc-place">${x.replace(/(南部|北部)$/,'')}`);return;}
+    seen[dk]=rows.length;
+    const temp=`${f.max!=null?`<b class="hi">${Math.round(f.max)}°</b>`:''}${f.min!=null?`<b class="lo">${Math.round(f.min)}°</b>`:''}`;
+    const pops=f.pops&&f.pops.some(v=>v!=null)?`<div class="fc-pops">${['0–6','6–12','12–18','18–24'].map((l,k)=>`<span class="${f.pops[k]>=50?'wet':''}"><small>${l}時</small>${f.pops[k]==null?'—':f.pops[k]+'%'}</span>`).join('')}</div>`:(f.pop!=null?`<div class="fc-pops one"><span class="${f.pop>=50?'wet':''}"><small>降雨機率</small>${f.pop}%</span>${f.rel?`<em>可信度 ${escHtml(f.rel)}</em>`:''}</div>`:'');
+    rows.push(`<div class="fc-row"><div class="fc-ic">${jmaIcon(f.code)}</div><div class="fc-main"><div class="fc-place">${JMA_REG_INFO[reg].label}<small>（氣溫：${escHtml(f.tp||JMA_REG_INFO[reg].temp)}）</small></div><div class="fc-text">${escHtml(f.text?jmaTextZh(f.text):jmaText(f.code))}</div>${pops}</div><div class="fc-temp">${temp}</div></div>`);
+  });
+  let src='日本氣象廳';
+  if(!rows.length){
+    cities.forEach(k=>{const f=omDaily(k,iso);if(!f)return;const [ic,ds]=wmoInfo(f.code);
+      rows.push(`<div class="fc-row"><div class="fc-ic">${ic}</div><div class="fc-main"><div class="fc-place">${escHtml(CITIES[k].label)}</div><div class="fc-text">${escHtml(ds)}</div>${f.pop!=null?`<div class="fc-pops one"><span class="${f.pop>=50?'wet':''}"><small>降雨機率</small>${Math.round(f.pop)}%</span></div>`:''}</div><div class="fc-temp"><b class="hi">${Math.round(f.max)}°</b><b class="lo">${Math.round(f.min)}°</b></div></div>`);});
+    src='Open-Meteo（日本氣象廳模型）';
+  }
+  const t0=new Date(iso+'T00:00:00+09:00').getTime(),past=t0+86400000<Date.now();
+  const body=rows.length?rows.join(''):`<div class="fc-empty">${past?'這天已經過了。':'還太遠，大約前 7 天會出現氣象廳預報。'}</div>`;
+  return `<div class="fc-card"><div class="fc-title">📅 ${d.date}（${d.weekday}）的預報<small>${rows.length?src:''}</small></div>${body}</div>`;
+}
+function refreshJMAAndRender(force){fetchJMA(force).then(ch=>{if(ch&&typeof activeDay==='number'&&(activeSubTabStore[activeDay]==='weather'))safeRenderDayContent();}).catch(()=>{});}
+setTimeout(()=>refreshJMAAndRender(false),3000);
+window.addEventListener('online',()=>refreshJMAAndRender(true));
