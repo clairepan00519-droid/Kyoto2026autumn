@@ -1,5 +1,5 @@
 /* 京都・奈良・丹後行程：App Shell、圖片與已瀏覽內容離線快取 */
-const CACHE_VERSION='kyoto-trip-v108';
+const CACHE_VERSION='kyoto-trip-v109';
 const SHELL_CACHE=`kyoto-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE=`kyoto-runtime-${CACHE_VERSION}`;
 /* 圖片快取獨立於版本：更新網站不會清掉已下載的圖片，也不必重新下載 */
@@ -26,7 +26,7 @@ self.addEventListener('activate',event=>{
     }));
 });
 
-function isWeather(url){return url.hostname.includes('api.open-meteo.com')||url.hostname.includes('api.rainviewer.com');}
+function isWeather(url){return url.hostname.includes('api.open-meteo.com')||url.hostname.includes('www.jma.go.jp')||url.hostname.includes('api.rainviewer.com');}
 function isStaticLib(url){return url.hostname.includes('fonts.googleapis.com')||url.hostname.includes('fonts.gstatic.com')||url.hostname.includes('cdnjs.cloudflare.com');}
 function imageFallback(){
   const svg='<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700"><rect width="100%" height="100%" fill="#eadfce"/><text x="600" y="330" text-anchor="middle" font-size="50" font-family="sans-serif" fill="#745b49">京都・奈良・丹後</text><text x="600" y="390" text-anchor="middle" font-size="25" font-family="sans-serif" fill="#745b49">離線圖片尚未下載</text></svg>';
