@@ -2385,3 +2385,9 @@ body.large-text .tl-text b{font-size:16px!important;}
 body.tools-pinned #main-header .header-top{position:fixed;z-index:650;box-sizing:border-box;padding:calc(6px + env(safe-area-inset-top,0px)) 12px 6px;background:rgba(255,248,236,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 4px 14px -8px rgba(90,50,20,.45);border-radius:0 0 16px 16px;}
 .bottom-nav{bottom:calc(max(12px, env(safe-area-inset-bottom)) + var(--vv-gap,0px))!important;}
 body.tools-pinned .guide-card.open>.guide-header,body.tools-pinned .sub-spot-card.open>.sub-spot-header{top:var(--pin-top,0px)!important;}
+/* v108：手機沒回報安全區時，自己留出狀態列／底部按鈕的空間 */
+body.sys-pad{padding-top:var(--sys-top,0px);}
+body.sys-pad .bottom-nav{bottom:calc(12px + var(--sys-bottom,0px) + var(--vv-gap,0px))!important;}
+body.sys-pad{padding-bottom:calc(110px + var(--sys-bottom,0px));}
+body.sys-pad.mode-edit .edit-mode-bar{top:var(--sys-top,0px);}
+body.sys-pad .undo-toast,body.sys-pad .update-banner{bottom:calc(84px + var(--sys-bottom,0px))!important;}
