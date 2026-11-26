@@ -3159,7 +3159,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=107').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=108').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3782,7 +3782,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v107-2026-11-27';
+const APP_VERSION='v108-2026-11-27';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -4162,6 +4162,7 @@ function openToolsSheet(){
   const install=isStandalone()?'<p class="sheet-note">✅ 已用 App 模式開啟。</p>':(deferredInstall?'<button type="button" class="sheet-btn primary" data-act="install">📲 安裝到主畫面</button>':(ios?'<p class="sheet-note">iPhone／iPad：用 <b>Safari</b> 開啟 → 點下方「分享」→「加入主畫面」。</p>':'<p class="sheet-note">用 Chrome 開啟 → 右上角選單 →「安裝應用程式」或「加到主畫面」。</p>'));
   const wrap=document.createElement('div');wrap.id='toolsSheet';wrap.className='sheet-wrap';
   wrap.innerHTML=`<div class="sheet" role="dialog" aria-label="工具與設定"><div class="sheet-grab"></div><div class="sheet-head"><b>⚙️ 工具與設定</b><button type="button" data-close aria-label="關閉">✕</button></div><div class="sheet-body">
+    <section><h4>📱 畫面</h4><p class="sheet-note">如果最上面的按鈕被手機的時間列擋住、或最下面的選單被手機按鈕擋住，按這裡切換。</p><div class="sheet-row one"><button type="button" data-act="syspad">上下留空間：${({auto:'自動',on:'開（一定留空間）',off:'關'})[sysPadMode()]}</button></div></section>
     <section><h4>👤 帳號</h4><p class="sheet-note">目前登入：<b>${escHtml(myEmail()||'沒有登入')}</b></p><div class="sheet-row one"><button type="button" data-act="logout">登出／換帳號</button></div></section>
     <section><h4>📲 安裝成 App</h4>${install}</section>
     <section><h4>離線使用</h4><p class="sheet-note" id="offlineStatusRow">檢查中…</p><div class="sheet-row one"><button type="button" data-act="precache">下載全部圖片到這台裝置</button></div><p class="sheet-note" style="margin-top:6px">網頁本身與你的資料會自動保留；圖片需要下載一次，之後沒網路也能看。</p></section>
@@ -4182,7 +4183,8 @@ function openToolsSheet(){
     precache:()=>startOfflinePrecache(true),
     surprise:()=>{closeToolsSheet();showSurprise();},
     force:()=>{closeToolsSheet();forceRefreshApp();},
-    logout:()=>{closeToolsSheet();logoutFamily();}
+    logout:()=>{closeToolsSheet();logoutFamily();},
+    syspad:()=>cycleSysPad()
   };
   wrap.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>acts[b.dataset.act]&&acts[b.dataset.act]());
   renderDeviceStatus();updateOfflineRow();
@@ -5611,8 +5613,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=107';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=107';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=108';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=108';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
@@ -5964,7 +5966,7 @@ document.addEventListener('DOMContentLoaded',renderFoliageMaps);
     let pinned=false;
     const place=()=>{if(!pinned)return;const app=document.querySelector('.app')||document.body;const r=app.getBoundingClientRect();
       const bar=document.querySelector('.edit-mode-bar');const bh=(bar&&getComputedStyle(bar).display!=='none')?bar.getBoundingClientRect().height:0;
-      top.style.left=r.left+'px';top.style.width=r.width+'px';top.style.top=bh+'px';document.documentElement.style.setProperty('--pin-top',Math.round(bh+top.offsetHeight)+'px');};
+      top.style.left=r.left+'px';top.style.width=r.width+'px';const st=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sys-top'))||0;top.style.top=(bh+st)+'px';document.documentElement.style.setProperty('--pin-top',Math.round(bh+st+top.offsetHeight)+'px');};
     const setPinned=on=>{if(on===pinned)return;pinned=on;
       if(on){holder.style.height=top.offsetHeight+'px';document.body.classList.add('tools-pinned');place();}
       else{document.body.classList.remove('tools-pinned');holder.style.height='0';top.style.left=top.style.width=top.style.top='';document.documentElement.style.removeProperty('--pin-top');}};
@@ -5982,3 +5984,28 @@ document.addEventListener('DOMContentLoaded',renderFoliageMaps);
   window.addEventListener('resize',navGap);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{init();navGap();});else{init();navGap();}
 })();
+
+/* v108：有些手機（例如 Samsung）把安裝的 App 畫到狀態列和底部按鈕下面，卻不告訴網頁要留多少空間。
+   偵測到「App 高度＝整個螢幕高度」且瀏覽器回報 0 時，自己留出上下空間；⚙️ 裡也可以手動開關。 */
+function sysPadMode(){try{return localStorage.getItem('kyoto_sys_pad')||'auto';}catch(e){return 'auto';}}
+function applySysInsets(){
+  const root=document.documentElement;
+  const probe=document.createElement('div');probe.style.cssText='position:fixed;top:0;left:0;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);';
+  document.body.appendChild(probe);const cs=getComputedStyle(probe);const envT=parseFloat(cs.paddingTop)||0,envB=parseFloat(cs.paddingBottom)||0;probe.remove();
+  const portrait=window.innerHeight>window.innerWidth;
+  const fullScreen=portrait&&screen.height&&Math.abs(window.innerHeight-screen.height)<=6;
+  const mode=sysPadMode();
+  const on=mode==='on'||(mode==='auto'&&fullScreen&&envT<1&&envB<1);
+  root.style.setProperty('--sys-top',on?'32px':'0px');
+  root.style.setProperty('--sys-bottom',on?'48px':'0px');
+  document.body.classList.toggle('sys-pad',on);
+}
+function cycleSysPad(){
+  const order={auto:'on',on:'off',off:'auto'};const next=order[sysPadMode()]||'auto';
+  try{localStorage.setItem('kyoto_sys_pad',next);}catch(e){}
+  applySysInsets();
+  const lbl={auto:'自動',on:'開（一定留空間）',off:'關'};showToast('上下留空間：'+lbl[next]);
+  const b=document.querySelector('#toolsSheet [data-act="syspad"]');if(b)b.textContent='上下留空間：'+lbl[next];
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',applySysInsets);else applySysInsets();
+window.addEventListener('resize',()=>setTimeout(applySysInsets,100));
