@@ -2367,3 +2367,21 @@ body.large-text .tl-text b{font-size:16px!important;}
 .book-peek.todo{background:#fff6e6;border-color:#f3dcae;color:#8a5a12;}
 .book-peek.paid{background:#eef3fb;border-color:#cfdcf0;color:#2c4f86;}
 .guide-card.open .book-peek>span:last-child,.sub-spot-card.open .book-peek>span:last-child{-webkit-line-clamp:unset;}
+/* v105：每日降雨提醒精簡醒目，和下面的行程卡保持距離 */
+#dayRainSlot .rain-banner.day{margin:8px 0 18px;}
+.rain-banner.day{align-items:center;gap:10px;padding:8px 12px;border-radius:14px;border:0;box-shadow:0 6px 14px -8px rgba(30,90,170,.55);}
+.rain-banner.day.hi{background:linear-gradient(135deg,#2f7fd8,#1f5fb5);color:#fff;}
+.rain-banner.day.mid{background:#e3efff;color:#174a86;border:1.5px solid #9cc4ee;box-shadow:none;}
+.rain-banner.day .rb-pct{flex:none;display:inline-flex;align-items:center;gap:2px;font-size:20px;line-height:1;padding:6px 10px;border-radius:12px;background:rgba(255,255,255,.2);}
+.rain-banner.day.mid .rb-pct{background:#fff;}
+.rain-banner.day .rb-pct b{font-size:20px;font-weight:900;}
+.rain-banner.day .rb-text{display:flex;flex-direction:column;min-width:0;line-height:1.35;}
+.rain-banner.day .rb-text b{font-size:15px;font-weight:900;}
+.rain-banner.day .rb-text span{font-size:13px;opacity:.95;}
+.rain-banner.day .rb-text small{font-size:12px;margin-top:2px;opacity:.9;}
+/* v106：上方工具列捲動後固定；下方導覽列不被手機導覽列蓋住 */
+.tools-sentinel{height:1px;margin-bottom:-1px;}
+.tools-holder{height:0;}
+body.tools-pinned #main-header .header-top{position:fixed;z-index:650;box-sizing:border-box;padding:calc(6px + env(safe-area-inset-top,0px)) 12px 6px;background:rgba(255,248,236,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 4px 14px -8px rgba(90,50,20,.45);border-radius:0 0 16px 16px;}
+.bottom-nav{bottom:calc(max(12px, env(safe-area-inset-bottom)) + var(--vv-gap,0px))!important;}
+body.tools-pinned .guide-card.open>.guide-header,body.tools-pinned .sub-spot-card.open>.sub-spot-header{top:var(--pin-top,0px)!important;}

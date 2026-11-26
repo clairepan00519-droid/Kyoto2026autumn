@@ -3159,7 +3159,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=104').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=106').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3782,7 +3782,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v104-2026-11-08';
+const APP_VERSION='v106-2026-11-26';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -5460,16 +5460,20 @@ function dayRainInfo(dayIdx){
 }
 function dayRainy(i){try{const r=dayRainInfo(i);return !!(r&&r.prob>=50);}catch(e){return false;}}
 const RAIN_ICON='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 3C9 7.5 6.5 10.3 6.5 13.5a5.5 5.5 0 0 0 11 0C17.5 10.3 15 7.5 12 3z" fill="#4a90d9"/><path d="M9.6 14.2a2.4 2.4 0 0 0 2 2.2" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>';
+/* v105：每日頁的降雨提醒改成精簡、醒目的一條（大大的機率＋一句話） */
 function dayRainBannerHTML(dayIdx){
-  const lines=[];
   const r=dayRainInfo(dayIdx);
-  if(r&&r.prob>=50)lines.push(`預報這天降雨機率約 <b>${Math.round(r.prob)}%</b>（${escHtml(r.city)}），記得帶雨具、鞋子選防滑的。`);
-  else if(r&&r.prob>=30)lines.push(`預報這天有 ${Math.round(r.prob)}% 降雨機率（${escHtml(r.city)}），包包放一把折疊傘比較安心。`);
+  const soon=[];
   if(typeof tripTodayIndex==='function'&&tripTodayIndex()===dayIdx){
-    (DAY_CITIES[dayIdx]||[]).forEach(k=>{const s=rainSoon(k,6);if(s)lines.push(`${escHtml(CITIES[k].label)}：${s.ahead<=0?'現在或馬上':s.ahead+' 小時後'}可能下雨（機率約 ${Math.round(s.prob)}%）。`);});
+    (DAY_CITIES[dayIdx]||[]).forEach(k=>{const s=rainSoon(k,6);if(s)soon.push(`${escHtml(CITIES[k].label)} ${s.ahead<=0?'現在或馬上':s.ahead+' 小時後'}可能下雨（${Math.round(s.prob)}%）`);});
   }
-  if(!lines.length)return '';
-  return `<div class="rain-banner">${RAIN_ICON}<div><b>降雨提醒</b>${lines.map(x=>`<p>${x}</p>`).join('')}</div></div>`;
+  const hi=r&&r.prob>=50,mid=r&&r.prob>=30&&!hi;
+  if(!hi&&!mid&&!soon.length)return '';
+  const pct=r&&(hi||mid)?Math.round(r.prob):(soon.length?null:0);
+  const title=hi?'這天會下雨':mid?'可能下雨':'等一下可能下雨';
+  const tip=hi?'帶雨具、穿防滑鞋':mid?'包包放一把折疊傘':'';
+  const where=r&&(hi||mid)?escHtml(r.city):'';
+  return `<div class="rain-banner day ${hi||soon.length?'hi':'mid'}" role="note"><span class="rb-pct">☔${pct!=null?`<b>${pct}%</b>`:''}</span><div class="rb-text"><b>${title}</b>${where||tip?`<span>${[where,tip].filter(Boolean).join('・')}</span>`:''}${soon.length?`<small>${soon.join('；')}</small>`:''}</div></div>`;
 }
 function ensureRainForDay(dayIdx){
   const keys=DAY_CITIES[dayIdx]||[];
@@ -5607,8 +5611,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=104';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=104';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=106';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=106';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
@@ -5948,4 +5952,33 @@ document.addEventListener('DOMContentLoaded',renderFoliageMaps);
     if (summaries[s.name]) s.desc = summaries[s.name];
     else if (summaries[normalized]) s.desc = summaries[normalized];
   });
+})();
+
+/* v106：上方工具列（★／編輯／字放大／⚙️）捲動後固定在畫面最上面；
+   下方導覽列依瀏覽器實際可見範圍往上抬（Samsung 瀏覽器有時會被手機導覽列蓋住） */
+(function pinToolsAndNav(){
+  function init(){
+    const top=document.querySelector('#main-header .header-top');if(!top||!('IntersectionObserver' in window))return;
+    const sentinel=document.createElement('div');sentinel.className='tools-sentinel';top.parentNode.insertBefore(sentinel,top);
+    const holder=document.createElement('div');holder.className='tools-holder';top.parentNode.insertBefore(holder,top.nextSibling);
+    let pinned=false;
+    const place=()=>{if(!pinned)return;const app=document.querySelector('.app')||document.body;const r=app.getBoundingClientRect();
+      const bar=document.querySelector('.edit-mode-bar');const bh=(bar&&getComputedStyle(bar).display!=='none')?bar.getBoundingClientRect().height:0;
+      top.style.left=r.left+'px';top.style.width=r.width+'px';top.style.top=bh+'px';document.documentElement.style.setProperty('--pin-top',Math.round(bh+top.offsetHeight)+'px');};
+    const setPinned=on=>{if(on===pinned)return;pinned=on;
+      if(on){holder.style.height=top.offsetHeight+'px';document.body.classList.add('tools-pinned');place();}
+      else{document.body.classList.remove('tools-pinned');holder.style.height='0';top.style.left=top.style.width=top.style.top='';document.documentElement.style.removeProperty('--pin-top');}};
+    new IntersectionObserver(es=>es.forEach(e=>setPinned(!e.isIntersecting&&e.boundingClientRect.top<0)),{threshold:0}).observe(sentinel);
+    let raf=0;const later=()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;place();});};
+    window.addEventListener('resize',later);window.addEventListener('scroll',later,{passive:true});document.addEventListener('click',()=>setTimeout(place,50),true);
+  }
+  function navGap(){
+    const vv=window.visualViewport;if(!vv)return;
+    const gap=window.innerHeight-(vv.height+vv.offsetTop);
+    /* 太大的差距通常是鍵盤打開，不跟著抬 */
+    document.documentElement.style.setProperty('--vv-gap',(gap>0&&gap<140?Math.round(gap):0)+'px');
+  }
+  if(window.visualViewport){visualViewport.addEventListener('resize',navGap);visualViewport.addEventListener('scroll',navGap);}
+  window.addEventListener('resize',navGap);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{init();navGap();});else{init();navGap();}
 })();
