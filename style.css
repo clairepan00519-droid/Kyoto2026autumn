@@ -2379,3 +2379,9 @@ body.large-text .tl-text b{font-size:16px!important;}
 .rain-banner.day .rb-text b{font-size:15px;font-weight:900;}
 .rain-banner.day .rb-text span{font-size:13px;opacity:.95;}
 .rain-banner.day .rb-text small{font-size:12px;margin-top:2px;opacity:.9;}
+/* v106：上方工具列捲動後固定；下方導覽列不被手機導覽列蓋住 */
+.tools-sentinel{height:1px;margin-bottom:-1px;}
+.tools-holder{height:0;}
+body.tools-pinned #main-header .header-top{position:fixed;z-index:650;box-sizing:border-box;padding:calc(6px + env(safe-area-inset-top,0px)) 12px 6px;background:rgba(255,248,236,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 4px 14px -8px rgba(90,50,20,.45);border-radius:0 0 16px 16px;}
+.bottom-nav{bottom:calc(max(12px, env(safe-area-inset-bottom)) + var(--vv-gap,0px))!important;}
+body.tools-pinned .guide-card.open>.guide-header,body.tools-pinned .sub-spot-card.open>.sub-spot-header{top:var(--pin-top,0px)!important;}

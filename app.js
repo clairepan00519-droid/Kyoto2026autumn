@@ -3159,7 +3159,7 @@ window.addEventListener('offline', updateNetStatus);
 /* ============ Service Worker（離線快取整個網頁） ============ */
 if (navigator.serviceWorker) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=105').then(()=>navigator.serviceWorker.ready).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=106').then(()=>navigator.serviceWorker.ready).catch(()=>{});
   });
 }
 document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')imageErrorFallback(e.target);},true);
@@ -3782,7 +3782,7 @@ const TENKI_LINKS={
 /* =====================================================================
    v48：收藏／預約狀態／提醒、自駕即時路況、版本與同步比對
    ===================================================================== */
-const APP_VERSION='v105-2026-11-26';
+const APP_VERSION='v106-2026-11-26';
 
 /* ---------- 收藏 ★／預約狀態／提醒 ---------- */
 let marksStore=(()=>{try{const v=JSON.parse(localStorage.getItem('kyoto_marks'));return v&&typeof v==='object'&&!Array.isArray(v)?v:{};}catch(e){return {};}})();
@@ -5611,8 +5611,8 @@ function loadLeaflet(){
   if(window.L&&window.L.map)return Promise.resolve(window.L);
   if(window._leafletP)return window._leafletP;
   window._leafletP=new Promise((res,rej)=>{
-    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=105';document.head.appendChild(l);}
-    const sc=document.createElement('script');sc.src='leaflet.js?v=105';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
+    if(!document.getElementById('leafletCss')){const l=document.createElement('link');l.id='leafletCss';l.rel='stylesheet';l.href='leaflet.css?v=106';document.head.appendChild(l);}
+    const sc=document.createElement('script');sc.src='leaflet.js?v=106';sc.onload=()=>res(window.L);sc.onerror=()=>{window._leafletP=null;rej(new Error('leaflet'));};document.head.appendChild(sc);
   });
   return window._leafletP;
 }
@@ -5952,4 +5952,33 @@ document.addEventListener('DOMContentLoaded',renderFoliageMaps);
     if (summaries[s.name]) s.desc = summaries[s.name];
     else if (summaries[normalized]) s.desc = summaries[normalized];
   });
+})();
+
+/* v106：上方工具列（★／編輯／字放大／⚙️）捲動後固定在畫面最上面；
+   下方導覽列依瀏覽器實際可見範圍往上抬（Samsung 瀏覽器有時會被手機導覽列蓋住） */
+(function pinToolsAndNav(){
+  function init(){
+    const top=document.querySelector('#main-header .header-top');if(!top||!('IntersectionObserver' in window))return;
+    const sentinel=document.createElement('div');sentinel.className='tools-sentinel';top.parentNode.insertBefore(sentinel,top);
+    const holder=document.createElement('div');holder.className='tools-holder';top.parentNode.insertBefore(holder,top.nextSibling);
+    let pinned=false;
+    const place=()=>{if(!pinned)return;const app=document.querySelector('.app')||document.body;const r=app.getBoundingClientRect();
+      const bar=document.querySelector('.edit-mode-bar');const bh=(bar&&getComputedStyle(bar).display!=='none')?bar.getBoundingClientRect().height:0;
+      top.style.left=r.left+'px';top.style.width=r.width+'px';top.style.top=bh+'px';document.documentElement.style.setProperty('--pin-top',Math.round(bh+top.offsetHeight)+'px');};
+    const setPinned=on=>{if(on===pinned)return;pinned=on;
+      if(on){holder.style.height=top.offsetHeight+'px';document.body.classList.add('tools-pinned');place();}
+      else{document.body.classList.remove('tools-pinned');holder.style.height='0';top.style.left=top.style.width=top.style.top='';document.documentElement.style.removeProperty('--pin-top');}};
+    new IntersectionObserver(es=>es.forEach(e=>setPinned(!e.isIntersecting&&e.boundingClientRect.top<0)),{threshold:0}).observe(sentinel);
+    let raf=0;const later=()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;place();});};
+    window.addEventListener('resize',later);window.addEventListener('scroll',later,{passive:true});document.addEventListener('click',()=>setTimeout(place,50),true);
+  }
+  function navGap(){
+    const vv=window.visualViewport;if(!vv)return;
+    const gap=window.innerHeight-(vv.height+vv.offsetTop);
+    /* 太大的差距通常是鍵盤打開，不跟著抬 */
+    document.documentElement.style.setProperty('--vv-gap',(gap>0&&gap<140?Math.round(gap):0)+'px');
+  }
+  if(window.visualViewport){visualViewport.addEventListener('resize',navGap);visualViewport.addEventListener('scroll',navGap);}
+  window.addEventListener('resize',navGap);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{init();navGap();});else{init();navGap();}
 })();
